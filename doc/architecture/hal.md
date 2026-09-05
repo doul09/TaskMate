@@ -32,25 +32,27 @@ GPIO mapping, and starts generated drivers by their configured run level.
 - Public selection headers provide one include path per HAL capability and reject missing
   implementations at compile time.
 - All six registered drivers expose one control entry point limited to the common run-level, life
-  cycle, status, bit, and last-error contract; operational APIs reject calls while their driver is
-  not running.
-- Driver-specific operations are separate public HAL functions reached from upper layers through a
-  syscall. The public I2C API exposes an incremental address scan: each call returns the next
-  acknowledged address, and a dedicated completion error resets the scan cursor for the following
-  pass.
+  cycle, status, bit, and last-error contract; most operational I/O APIs reject calls while their
+  driver is not running.
+- Driver-specific operations are separate public HAL functions. USART reads and I2C discovery used
+  by SCLI are mediated by syscalls. The public I2C API exposes an incremental address scan from
+  `0x00` through `0x7E`: each call returns the next acknowledged address, and a dedicated completion
+  error resets the scan cursor for the following pass.
 - Static generated driver registration and callback wiring keep firmware allocation deterministic.
 - The USART uses fixed-size power-of-two buffers, and thread stacks include canaries checked during
   scheduling.
 
 ### Remaining weaknesses
-- Experimental calls in `TaskMate.c` still bypass the intended normal application path. 
+- The `system` service directly includes the RTC/LCD HAL headers and calls their operational APIs,
+  bypassing the intended services -> sysCall boundary.
 - `hal/public` exposes concrete implementation headers rather than stable neutral contracts;
   capability requirements remain encoded as preprocessor branches and naming conventions.
 - Architecture, MCU, and board startup hooks are empty. Boot special-cases run-level-zero USART and
   the scheduler timer, ignores life cycle returns, reports success unconditionally, and cannot unwind
   a partial hardware startup.
-- I2C and USART contain unbounded polling or synchronous transmission. LCD/RTC ignore I2C failures,
-  and pointer, LCD row/column, address, and timeout contracts remain incomplete.
+- I2C and USART contain unbounded polling or synchronous transmission. LCD/RTC translate I2C
+  failures to a generic dependency error, while the `system` service ignores their results; address
+  and timeout contracts remain incomplete.
 - Initial AVR thread frames hard-code the third program-counter byte to zero, and the build
   deliberately caps usable flash at 64 KiB. Naked context-switch assembly has no automated ABI,
   behavioural, cycle, or stack-depth validation.

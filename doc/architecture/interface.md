@@ -15,12 +15,13 @@ guards were applied consistently, and the register-bit macros used by AVR driver
 - the generated error enum and shared `FLOW`/`WARN`/`FAIL`/`PANIC` level type;
 - shared string-storage types and build-time libc/debug options;
 - general bit/string helper macros and a local null definition;
-- protected, generated module-count and run-level definitions used by autoCode and selected core files.
+- generated module counts, fixed run-level definitions, and shared driver/module limits used by
+  autoCode and selected core files.
 
-Most headers are type, enum, constant, or macro contracts. Critical module/run-level headers additionally
-require `TM_SYSTEM_CRITICAL_ALLOWED`, with authorised translation units receiving that definition from
-the build. This makes the directory both a portability-contract layer and a home for a small amount of
-generated kernel configuration.
+Most headers are type, enum, constant, or macro contracts. The build guarded-header mechanism is
+currently applied to selected HAL context/interrupt/stack headers and generated sysCore headers, not
+to the interface headers themselves. This makes the directory both a portability-contract layer and
+a home for a small amount of generated kernel configuration.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -37,7 +38,9 @@ generated kernel configuration.
   stack sizing, and generated kernel counts, coupling separate consumers to one broad contract.
 - `macros.h` uses GNU `__typeof__` and register-oriented size dispatch, while `define.h` provides
   its own `NULL`; these choices reduce compiler neutrality and overlap standard C facilities.
-- Driver states, module types, and run levels remain compact integer values. Driver control commands
-  and status bits are typed enums, but setters do not consistently mask or validate their range.
+- Driver states, module types, and run levels remain compact integer values. The six driver
+  control implementations now validate run levels and status-bit selectors, but generated thread
+  status values are still emitted as raw integer literals and the shared control-data union cannot
+  encode which field is valid for a command.
 - Contracts remain incomplete for timers, serial transport, scheduling context, ISR safety,
   optional HAL capabilities, and structured error handling.

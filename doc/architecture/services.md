@@ -6,7 +6,7 @@ Services were introduced after early core scheduling work to provide reusable sy
 message service was later removed.
 
 After v0.28, services moved into `srcs/system/services` as part of the explicit system/user split. Their
-headers and generated registration were adapted to the new include layout. More recently, the message
+headers and generated registration were adapted to the new include layout. More recently, the system
 and CLI loops adopted the cooperative-yield syscall while waiting on software time counters, reducing
 their deliberate spin time between polling cycles.
 
@@ -14,14 +14,13 @@ their deliberate spin time between polling cycles.
 `services_init.rc` registers two system threads at `RUN_SERVICE`. autoCode assigns each a fixed thread
 record and stack:
 
-- `system` currently provides the system-service loop and cooperatively waits through the software
-  time-counter syscalls;
+- `system` directly reads the RTC and writes the LCD through HAL APIs, then cooperatively waits
+  through the software time-counter syscalls;
 - `scli` reads USART RX only through `sc_usartRead()`, assembles at most 63 bytes in a fixed local
   buffer, tokenizes the chunk, and dispatches the `driver`, `i2c`, and `thread` commands.
 
-The system and SCLI both call `sc_coopYield()` while
-waiting. Resources are fixed at compile time, with no heap allocation or service registry beyond the
-generated module database.
+The system and SCLI both call `sc_coopYield()` while waiting. Resources are fixed at compile time,
+with no heap allocation or service registry beyond the generated module database.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -33,12 +32,13 @@ generated module database.
   explicit thread/driver list and life cycle commands through syscalls.
 - USART RX returns explicit `err_codes_t` values across the syscall boundary. An empty RX buffer is
   normal polling state; other errors are reported through the error catalogue.
-- No source or header below `srcs/system/services/` includes a HAL header or calls a `hal_*` API.
+- SCLI and its command handlers use syscalls rather than including HAL headers.
 - Command parsing remains outside scheduler policy and kernel data structures.
 
 ### Remaining weaknesses
-- The former direct service-to-HAL bridge is removed, but the header-boundary configuration does not
-  yet express a general prohibition against future HAL includes under `system/services/`.
+- `system.c` currently includes `hal/public/rtc.h` and `hal/public/lcd.h` and calls both drivers
+  directly. This is a live violation of the intended services -> sysCall -> HAL path, and the
+  header-boundary configuration does not reject it.
 - `tm_libc` still reaches target-specific string and output primitives through its documented
   transversal HAL backend. This is not a direct service-to-HAL bridge, but it remains target-coupled.
 - SCLI polls the UART and processes each received chunk immediately instead of accumulating a
