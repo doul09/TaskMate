@@ -6,8 +6,6 @@
 After v0.28, the system/user/HAL directory reorganisation changed the generator inputs. The selected
 hardware target now provides ordered header and source lists through the build system, while
 `signals.gpio`, typed `*.rc` entries, and the global `*.err` catalog feed additional generated regions.
-Recent work also normalised generated identifiers and kept generated zones compatible with the
-project formatting and static-analysis rules.
 
 ## Current implementation
 `bmake` compiles `srcs/autoCode/` as a host program with Clang and writes a target-specific
@@ -24,8 +22,7 @@ Each destination is copied to a `.tmp` file, regenerated, compared with the exis
 only when its content changed. A target-scoped stamp makes generation a prerequisite of dependency
 collection, compilation, and linking. The generated data fixes module counts, stacks, function tables,
 module run-level fields, generic driver address metadata populated by the current `-i2c`
-option, error codes, and logical GPIO identifiers at build time. `TaskMate_info.h` is generated
-separately by the Make build and is not an autoCode output.
+option, error codes, and logical GPIO identifiers at build time. 
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -45,9 +42,5 @@ separately by the Make build and is not an autoCode output.
 - Input lines still use a fixed 256-byte buffer without an explicit overlong-line check. Token
   pointers are grown with host-side `realloc()` for each token, so allocation failure terminates the
   generator and a long physical line can be parsed as multiple fragments.
-- The host generator includes runtime interface definitions and emits concrete kernel structures,
-  include paths, status encodings, and callback names, tightly coupling both sides of the build.
-  Error levels are nevertheless shared through `interfaces/error_level.h`; autoCode does not
-  redefine them.
 - There is no automated valid/invalid corpus, boundary test suite, failure-injection test, or
   manifest recording input hashes and generator/tool versions.

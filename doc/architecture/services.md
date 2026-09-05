@@ -25,15 +25,11 @@ with no heap allocation or service registry beyond the generated module database
 ## Well-built code and implementation weaknesses
 ### Strengths
 - Service threads, stacks, and SCLI buffers have fixed memory costs.
-- autoCode gives services the same explicit type and run-level metadata as other modules.
-- The cooperative wait path allows another thread to run instead of intentionally consuming every
-  slice.
 - SCLI uses fixed line/argument bounds, table-driven dispatch, RAM/ROM-aware comparisons, and
   explicit thread/driver list and life cycle commands through syscalls.
 - USART RX returns explicit `err_codes_t` values across the syscall boundary. An empty RX buffer is
   normal polling state; other errors are reported through the error catalogue.
 - SCLI and its command handlers use syscalls rather than including HAL headers.
-- Command parsing remains outside scheduler policy and kernel data structures.
 
 ### Remaining weaknesses
 - `system.c` currently includes `hal/public/rtc.h` and `hal/public/lcd.h` and calls both drivers

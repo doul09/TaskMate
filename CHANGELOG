@@ -1,3 +1,6 @@
+	autoCode tokenizer go dynamic
+	upgrade i2c scan address
+	spelling corections in documentation
 	autoCode code upgrade in C and makefiles, error system related
 
 TaskMate 0.29

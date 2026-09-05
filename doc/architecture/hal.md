@@ -3,8 +3,7 @@
 ## Historical developments
 TaskMate started as AVR-centric code, then moved to a layered HAL model (notably around v0.21) with architecture (`hal/arch`), MCU (`hal/mcu`), and board (`hal/board`) separation. This progressively removed direct hardware code from `sysCore` and enabled cleaner portability planning (amd64 test path, arm target roadmap).
 
-After v0.28, the repository completed a broader system/user/HAL split, removed the old `hal_` and
-`_impl` source-file naming, and introduced `hal/drivers` for reusable device drivers. Target-specific
+After v0.28, the repository completed a broader system/user/HAL splita nd introduced `hal/drivers` for reusable device drivers. Target-specific
 GPIO wiring moved into `user/target`, while AVR context save/restore and scheduler-timer work moved
 progressively into explicit assembly. Panic handling moved to the AVR architecture layer, interrupt
 headers were clarified, and common register-bit operations were centralised.
@@ -34,17 +33,9 @@ GPIO mapping, and starts generated drivers by their configured run level.
 - All six registered drivers expose one control entry point limited to the common run-level, life
   cycle, status, bit, and last-error contract; most operational I/O APIs reject calls while their
   driver is not running.
-- Driver-specific operations are separate public HAL functions. USART reads and I2C discovery used
-  by SCLI are mediated by syscalls. The public I2C API exposes an incremental address scan from
-  `0x00` through `0x7E`: each call returns the next acknowledged address, and a dedicated completion
-  error resets the scan cursor for the following pass.
 - Static generated driver registration and callback wiring keep firmware allocation deterministic.
-- The USART uses fixed-size power-of-two buffers, and thread stacks include canaries checked during
-  scheduling.
 
 ### Remaining weaknesses
-- The `system` service directly includes the RTC/LCD HAL headers and calls their operational APIs,
-  bypassing the intended services -> sysCall boundary.
 - `hal/public` exposes concrete implementation headers rather than stable neutral contracts;
   capability requirements remain encoded as preprocessor branches and naming conventions.
 - Architecture, MCU, and board startup hooks are empty. Boot special-cases run-level-zero USART and

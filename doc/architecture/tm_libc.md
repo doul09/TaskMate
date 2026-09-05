@@ -30,8 +30,6 @@ implementation is intentionally much smaller than a conforming C stdio/string li
   null text, zero capacity, bounded copy, and termination when capacity is available.
 - The supported formatting subset and its temporary storage are fixed; there is no heap allocation.
 - Invalid padding exits through the common clean-up path instead of leaving the formatter lock set.
-- The output backend is selected through a HAL public entry point rather than AVR register access in
-  the formatter itself.
 
 ### Remaining weaknesses
 - Formatting still uses one global buffer and a non-atomic byte lock. Contention yields only once

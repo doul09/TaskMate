@@ -45,5 +45,4 @@ module database also live in sysCore; run levels are stored directly in module s
   cycle/scan result, logs success unconditionally, and cannot unwind a partial startup.
   Scheduler and software-counter timer setup also ignore callback/control failures.
 - Stack canaries detect only boundary corruption at a context switch; there is no stack high-water
-  measurement or per-thread sizing evidence. The target-specific RTC/LCD experimental code now runs
-  inside the `system` service and directly crosses from services to HAL.
+  measurement or per-thread sizing evidence.

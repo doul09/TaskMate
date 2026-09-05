@@ -26,8 +26,6 @@ reaches zero. Periodic scheduler interrupts still preempt the task during that w
 - Their identical, bounded loop bodies make scheduler and GPIO behaviour easy to compare on hardware.
 
 ### Remaining weaknesses
-- Both tasks spin on `sc_threadGetSTC()` and do not use the cooperative-yield call, so they consume
-  every assigned CPU slice while delayed.
 - Period, deadline, priority, stack need, and worst-case execution time are not declared or checked;
   the fixed 256-byte stack is assigned without per-task sizing evidence.
 - Run levels currently provide only runnable/stopped gating for threads; `RUN_USER` has no

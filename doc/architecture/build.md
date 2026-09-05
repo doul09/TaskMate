@@ -12,8 +12,7 @@ A key step in this evolution is the integration of `autoCode` as a first-class b
 After v0.28, the source tree was separated into system, user, HAL, interfaces, and `tm_libc`
 domains. Target selection moved to `user/target/<HWT>/hwt.mk`, which includes the matching board, MCU,
 and architecture fragments. Header allow-list parsing moved to a dedicated AWK script, compiler warning
-coverage was expanded, and Make variable names were normalised by role (`PATH_`, `FILES_`, `VAL_`,
-`OPT_`, and `CFLAGS_`).
+coverage was expanded, and Make variable names were normalised by role.
 
 ## Current implementation
 The default `HWT=test1` selects `srcs/user/target/test1/hwt.mk`. That file adds target sources and
@@ -22,7 +21,7 @@ the AVR8 architecture and compiler configuration. These fragments accumulate sou
 HAL include lists, preprocessor target symbols, memory limits, programmer settings, and AVR compiler
 flags.
 
-The `all` target runs the generated `.gitignore` rule, the architecture-boundary check, target-scoped
+The `all` target runs the architecture-boundary check, target-scoped
 autoCode generation, dependency aggregation, AVR compilation/linking, memory-usage extraction, and
 line counting. Objects, dependency files, maps, firmware output, autoCode configuration, and stamps live
 under `build/`, with firmware artefacts separated by the selected hardware stack. Compile-time guards
@@ -38,15 +37,12 @@ protect critical headers, while `scripts/header_allow.awk` scans the source tree
   MCU and board fragments contribute their own target values and source paths.
 - A missing hardware target, incomplete hardware stack, missing GPIO declaration file, unavailable
   HAL implementation, or forbidden critical include fails before firmware execution.
-- Target-specific objects and reports stay under a predictable `build/<hardware-stack>/` path.
 - The AVR configuration enables a broad warning set, link-time optimisation, section garbage
   collection, dependency files, and explicit flash/RAM reporting.
 
 ### Remaining weaknesses
 - The portable required-program list includes documentation, analysis, backup, and editor tools;
   their absence blocks even `clean`. Stamp caching also does not recheck tools until inputs change.
-- Target compatibility is encoded by nested Make includes and validated against a flat list of
-  complete stacks; only `test1 / arduinoMega / atmega2560 / avr8` is present today.
 - Source and `*.rc` discovery use unsorted `find` output, so compile/link and module ordering can
   depend on filesystem enumeration even though error-file discovery is sorted.
 - Build metadata includes dates, Git state, and a revision count, while tool versions are not

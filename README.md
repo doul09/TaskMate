@@ -19,8 +19,8 @@ logic, system behaviour, and hardware dependencies, ensuring both portability an
 
 > <span style="color:green"> **Project Stats (v0.28 [^1] )**</span>
 >
->  <span style="color:green">652 commits • 145 source files • 8364 lines of code •
-> binary size: 11080 bytes (Flash) • RAM usage: 1866 bytes</span>
+>  <span style="color:green">725 commits • 150 source files • 9247 lines of code •
+> binary size: 13610 bytes (Flash) • RAM usage: 1779 bytes</span>
 
 > ⚠️ <span style="color:red">**Development Status**</span>
 >
@@ -105,10 +105,6 @@ making the system easier to evolve and refactor.
 AutoCode is used to generate parts of the system from simple configuration files.
 It helps maintain consistency, reduce boilerplate, and keep the overall structure aligned with the intended architecture.
 All generation happens at build time, with static allocation, ensuring zero runtime overhead and fully deterministic behaviour.
-
-
-See: [Portability](doc/rules/portability.md)
-See: [More about autoCode](doc/rules/autoCode.md)
 
 ---
 

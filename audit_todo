@@ -13,7 +13,6 @@ TODO :
 - drivers returns status, setup error code and emit event.
 - add system task to handle runlevels
 - glogal status/error/event system
-- error types flow/warning/fail/panic
 - IPC / message server
 - memory slab allocator uint64_t bitmap
 

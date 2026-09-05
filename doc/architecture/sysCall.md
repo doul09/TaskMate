@@ -19,8 +19,7 @@ The syscall layer currently has three small API groups:
 
 `sc_coopYield()` disables interrupts, marks the current module as yielded, reloads the scheduler timer
 near its compare point, restores the interrupt state, and waits until the round-robin scheduler clears
-the yielded bit when that thread is selected again. The layer does not perform privilege switching or
-memory isolation; it is a C API and architectural boundary.
+the yielded bit when that thread is selected again. 
 
 `sc_usartRead()` validates its output pointer and translates a successful HAL read to `ERR_NO_ERROR`.
 When the driver rejects the read, the syscall returns its exact last error. The read and error snapshot
@@ -29,9 +28,6 @@ share one short AVR atomic section so the RX ISR cannot replace the error betwee
 `sc_i2cScan()` first consumes the incremental `hal_i2cScan()` API into a static ten-address table.
 It then marks drivers whose declared I2C address was not found as dead, and finally clears the
 life-cycle and dead bits of dead drivers found during the scan so they return to `DRV_STATE_OFF`.
-A normal end-of-scan indication is translated to `ERR_NO_ERROR`; other HAL errors are propagated
-unchanged. If more than ten devices respond, the syscall reports a full scan-address buffer and
-leaves all driver states unchanged.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -40,13 +36,9 @@ leaves all driver states unchanged.
   update run-level state in AVR atomic sections; the scheduler now skips stopped threads.
 - Driver count, information, and life cycle calls use one generated control callback per driver
   instead of exposing private life cycle functions to services.
-- Upper-layer GPIO code uses logical signal types and does not receive physical pin structures.
 - The cooperative-yield mechanism reuses the existing scheduler interrupt and adds no dynamic state.
 
 ### Remaining weaknesses
-- SCLI reaches USART and I2C through this layer, but the `system` service directly calls the RTC/LCD
-  HAL APIs. The transversal `tm_libc` dependency is intentional and is not part of that direct
-  bridge.
 - The build-time header policy does not forbid general HAL public headers from service sources, so
   it does not catch the current RTC/LCD boundary violation.
 - `sc_threadStart()` accepts unvalidated run levels and, when no saved level exists, records the
