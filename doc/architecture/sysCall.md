@@ -6,8 +6,8 @@ As TaskMate layered architecture matured, `sysCall` became the mediation layer b
 After v0.28, GPIO calls were kept in the dedicated `sc_gpio` façade while the general syscall file was
 adapted to the separated sysCore/HAL tree. In August 2026, an explicit cooperative-yield path was added:
 a thread can mark itself yielded and request an early scheduler-timer interrupt instead of waiting only
-for the next periodic preemption. USART RX was subsequently moved behind `sc_usartRead()`, removing the
-last direct HAL access from the service sources.
+for the next periodic preemption. USART RX was subsequently moved behind `sc_usartRead()`, removing
+direct HAL access from the SCLI sources.
 
 ## Current implementation
 The syscall layer currently has three small API groups:
@@ -44,11 +44,11 @@ leaves all driver states unchanged.
 - The cooperative-yield mechanism reuses the existing scheduler interrupt and adds no dynamic state.
 
 ### Remaining weaknesses
-- The service HAL bridge is removed, but the top-level experimental HAL calls in `TaskMate.c` still
-  bypass the normal application path. The transversal `tm_libc` dependency is intentional and is not
-  part of the former bridge.
-- The build-time header policy does not yet forbid every HAL public header from service sources, so
-  the absence of a direct bridge currently also relies on source-level review.
+- SCLI reaches USART and I2C through this layer, but the `system` service directly calls the RTC/LCD
+  HAL APIs. The transversal `tm_libc` dependency is intentional and is not part of that direct
+  bridge.
+- The build-time header policy does not forbid general HAL public headers from service sources, so
+  it does not catch the current RTC/LCD boundary violation.
 - `sc_threadStart()` accepts unvalidated run levels and, when no saved level exists, records the
   supplied level without applying it to status. Repeated `sc_threadStop()` overwrites the saved
   level with `RL_RUN_NONE`.

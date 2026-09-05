@@ -11,22 +11,21 @@ project formatting and static-analysis rules.
 
 ## Current implementation
 `bmake` compiles `srcs/autoCode/` as a host program with Clang and writes a target-specific
-configuration file containing the TaskMate version/build number and paths to input lists. The program
-then:
+configuration file containing the paths to its input lists and selected GPIO file. The program then:
 
 - parses the selected `*.rc` files, whose module entries contain separate `-type <data>` and
   `-run <data>` pairs plus an optional driver-only `-i2c <address>` pair, into fixed-size driver and
   thread databases;
-- aggregates `*.err` declarations and their `LOW`, `MID`, or `HIGH` criticality;
+- aggregates `*.err` declarations and their `FLOW`, `WARN`, `FAIL`, or `PANIC` level;
 - reads the selected HAL/target header lists and `signals.gpio`;
-- rewrites the tagged regions in module, run-level, error, GPIO, HAL include, and system-information
-  files.
+- rewrites the tagged regions in module, error, GPIO, and combined HAL include files.
 
 Each destination is copied to a `.tmp` file, regenerated, compared with the existing file, and replaced
 only when its content changed. A target-scoped stamp makes generation a prerequisite of dependency
 collection, compilation, and linking. The generated data fixes module counts, stacks, function tables,
-run-level tables, generic driver address metadata populated by the current `-i2c` option, error codes,
-and logical GPIO identifiers at build time.
+module run-level fields, generic driver address metadata populated by the current `-i2c`
+option, error codes, and logical GPIO identifiers at build time. `TaskMate_info.h` is generated
+separately by the Make build and is not an autoCode output.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -35,19 +34,17 @@ and logical GPIO identifiers at build time.
 - Module types, run levels, same-type duplicate names, error severities, and GPIO line token counts
   receive explicit validation before the firmware is compiled.
 - Generated records include fixed thread contexts, saved run levels, driver control callbacks, and
-  ROM-backed names, generic driver address metadata, avoiding runtime discovery and dynamic allocation.
+  ROM-backed names and generic driver address metadata, avoiding runtime module registration and
+  dynamic allocation.
 - Generation is integrated into the dependency graph, produces a reviewable log, and preserves an
   existing destination when its generated content is unchanged.
 
 ### Remaining weaknesses
 - Replacement is performed one destination at a time. It removes the old file before renaming the
   temporary file, ignores `remove()`/`rename()` failures, and cannot roll back earlier replacements.
-- Fixed-size parsing silently truncates excess tokens and long lines. Module-name and module-count
-  checks contain boundary conditions that can admit an out-of-bounds terminating byte or array
-  index.
-- File comparison uses `feof()` before checking the result of `fgets()`, so unequal-length or failed
-  reads can compare stale buffer contents. Paths copied with `strncpy()` are not explicitly
-  terminated.
+- Input lines still use a fixed 256-byte buffer without an explicit overlong-line check. Token
+  pointers are grown with host-side `realloc()` for each token, so allocation failure terminates the
+  generator and a long physical line can be parsed as multiple fragments.
 - The host generator includes runtime interface definitions and emits concrete kernel structures,
   include paths, status encodings, and callback names, tightly coupling both sides of the build.
   Error levels are nevertheless shared through `interfaces/error_level.h`; autoCode does not

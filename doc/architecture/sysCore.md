@@ -10,7 +10,7 @@ architecture layer, and the scheduler gained a cooperative-yield trigger in addi
 preemption.
 
 ## Current implementation
-`boot.c` starts the diagnostic USART, allocates generated driver/thread records and run-level tables,
+`boot.c` starts the diagnostic USART and initialises generated driver/thread records,
 calls architecture/MCU/board startup hooks, wires GPIO signals, and starts every generated driver in
 ascending configured run level. It runs the I2C discovery syscall immediately after starting the I2C
 driver, before higher-run-level dependent drivers start. `modules.c` owns a static database
@@ -22,12 +22,12 @@ round-robin selection across all generated threads. The naked AVR timer ISR save
 saved stack pointer to `tm_schedulerRR()`, installs the returned pointer, and restores context. A separate
 10 ms timer callback decrements every non-zero software counter. Cooperative yield accelerates the next
 scheduler interrupt; it does not remove a thread from the round-robin set. GPIO mapping/state and the
-generated but currently private run-level table also live in sysCore.
+module database also live in sysCore; run levels are stored directly in module status fields.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
-- Thread control blocks, stacks, driver records, and life cycle tables are statically allocated with
-  no runtime heap use.
+- Thread control blocks, stacks, and driver records are statically allocated. Driver life-cycle
+  state is file-local in HAL, and no runtime heap is used.
 - Context-switch mechanism is delegated to HAL/AVR code while selection policy remains in sysCore.
 - The scheduler now selects only threads with a non-zero run level, clears cooperative-yield state
   on resume, and panics explicitly when no runnable thread exists.
@@ -41,9 +41,9 @@ generated but currently private run-level table also live in sysCore.
 - Module pointer and current-thread getters/setters do not validate indexes. `thread_current` is
   shared with the scheduler ISR but is neither volatile nor governed by a documented access
   contract.
-- Boot special-cases USART, ignores every life cycle result, logs success unconditionally, and cannot
-  unwind a partial startup. Scheduler and software-counter timer setup also ignore callback/control
-  failures.
+- Boot special-cases USART, invokes the higher `sc_i2cScan()` layer from sysCore, ignores every life
+  cycle/scan result, logs success unconditionally, and cannot unwind a partial startup.
+  Scheduler and software-counter timer setup also ignore callback/control failures.
 - Stack canaries detect only boundary corruption at a context switch; there is no stack high-water
-  measurement or per-thread sizing evidence. The top-level file still contains target-specific
-  RTC/LCD experimental code before scheduler start.
+  measurement or per-thread sizing evidence. The target-specific RTC/LCD experimental code now runs
+  inside the `system` service and directly crosses from services to HAL.

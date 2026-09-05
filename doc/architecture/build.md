@@ -1,7 +1,11 @@
 # 🏗️ Architecture Note — build
 
 ## Historical developments
-TaskMate’s build system has evolved from a single entry Makefile into a layered BSD `bmake` stack split by concern: global orchestration (`Makefile`), reusable infrastructure (`mk/*.mk`), and target-dependent extension points (`src/hal/**/**_make.mk`). The current structure reflects two parallel needs: (1) deterministic firmware build for embedded targets and (2) host-side project tooling (autoCode generation, static checks, docs, editor helpers, and backup workflows).
+TaskMate’s build system has evolved from a single entry Makefile into a layered BSD `bmake`
+stack split by concern: global orchestration (`Makefile`), reusable infrastructure (`mk/*.mk`), and
+target-dependent extension points (`srcs/hal/**/**_make.mk`). The current structure reflects two
+parallel needs: (1) deterministic firmware build for embedded targets and (2) host-side project
+tooling (autoCode generation, static checks, docs, editor helpers, and backup workflows).
 
 A key step in this evolution is the integration of `autoCode` as a first-class build phase and the explicit `ARCH -> MCU -> BOARD` target validation path. Together, these choices move configuration errors and integration drift from runtime toward build time.
 
@@ -24,7 +28,7 @@ line counting. Objects, dependency files, maps, firmware output, autoCode config
 under `build/`, with firmware artefacts separated by the selected hardware stack. Compile-time guards
 protect critical headers, while `scripts/header_allow.awk` scans the source tree against
 `conf/header_allow.conf` before compilation. The complete hardware stack is also checked against
-`conf/hardware-tagets.conf` before compilation.
+`conf/hardware-targets.conf` before compilation.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -46,7 +50,7 @@ protect critical headers, while `scripts/header_allow.awk` scans the source tree
 - Source and `*.rc` discovery use unsorted `find` output, so compile/link and module ordering can
   depend on filesystem enumeration even though error-file discovery is sorted.
 - Build metadata includes dates, Git state, and a revision count, while tool versions are not
-  pinned.
-  `.BEGIN` also rewrites an ignored generated header in `srcs/interfaces/` on every invocation.
+  pinned. `.BEGIN` also evaluates the ignored `srcs/interfaces/TaskMate_info.h` on every invocation,
+  although a temporary-file comparison now avoids replacing it when its content is unchanged.
 - The build remains tied to BSD `bmake`, Unix utilities, AVR tools, and machine-specific
   USB/programmer paths; no second hardware stack currently exercises the intended portability.
