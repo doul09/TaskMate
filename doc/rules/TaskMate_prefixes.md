@@ -36,12 +36,13 @@ hardware-specific implementation details.
 
 ---
 
-### ● `sc_` — Security boundary (system calls)
+### ● `sc_` — Task-visible API boundary (system calls)
 
-**Controlled and limited access from tasks to system functionality**
+**Controlled and limited API access from tasks to system functionality**
 
 - Exposes a restricted API to user tasks
-- Clearly symbolises a privilege boundary
+- Clearly identifies calls that cross from tasks into system code
+- Does not imply privilege separation or memory isolation
 
 At a glance, it reads as:
 

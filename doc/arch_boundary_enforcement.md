@@ -1,5 +1,8 @@
 # 🚧 Architecture boundary enforcement
 
+This document describes the build mechanism. The rules that the mechanism
+enforces remain in `doc/rules/interfaces.md` and the architecture guide.
+
 TaskMate enforces architectural boundaries **at build time** to prevent accidental
 or unauthorised access to system-critical interfaces.
 This mechanism relies entirely on **static checks and conventions**,
