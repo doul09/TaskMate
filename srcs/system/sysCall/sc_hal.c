@@ -38,6 +38,7 @@ static bool sc_driverControl(const char *name, hal_driver_control_t command);
 static err_codes_t sc_driverOperationError(
 	hal_driver_state_t state,
 	hal_driver_state_t (*control)(hal_driver_control_t, hal_driver_control_data_t *));
+
 static bool sc_i2cAddressFound(uint8_t address);
 static void sc_i2cDriverSetOff(mod_driver_item_t *driver);
 
@@ -76,7 +77,7 @@ bool sc_driverGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level,
 	return *name != 0;
 }
 
-bool sc_driverInit(const char *name) { return sc_driverControl(name, DRV_CTRL_INIT); 
+bool sc_driverInit(const char *name) { return sc_driverControl(name, DRV_CTRL_INIT); }
 bool sc_driverStart(const char *name) { return sc_driverControl(name, DRV_CTRL_START); }
 bool sc_driverStop(const char *name) { return sc_driverControl(name, DRV_CTRL_STOP); }
 
