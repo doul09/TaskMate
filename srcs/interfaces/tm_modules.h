@@ -95,9 +95,13 @@ typedef union
 
 // Thread status bits
 // Bits [2:0] contain the run level
-#define TM_MOD_THREAD_TYPE_USER 3
-#define TM_MOD_THREAD_TYPE_SYS 4
-#define TM_MOD_THREAD_DEAD 5
-#define TM_MOD_THREAD_YIELDED 6
+typedef enum
+{
+	THREAD_BIT_TYPE_USER = 3,
+	THREAD_BIT_TYPE_SYS,
+	THREAD_BIT_INITIALIZED,
+	THREAD_BIT_DEAD,
+	THREAD_BIT_YIELDED
+} hal_thread_status_bit_t;
 
 #endif // INTERFACES_TM_MODULES_H

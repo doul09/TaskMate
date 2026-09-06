@@ -300,11 +300,11 @@ static void writeModulesList(const parse_tag_t *parse)
 
 	for( int i = 0; i < mod->modules_count; i++ )
 	{
-		if( mod->modules[i].subtype == TM_MOD_THREAD_TYPE_SYS )
+		if( mod->modules[i].subtype == THREAD_BIT_TYPE_SYS )
 		{
 			fprintf(parse->file, "#include \"system/services/%s.h\"\n", mod->modules[i].name);
 		}
-		if( mod->modules[i].subtype == TM_MOD_THREAD_TYPE_USER )
+		if( mod->modules[i].subtype == THREAD_BIT_TYPE_USER )
 		{
 			fprintf(parse->file, "#include \"user/tasks/%s.h\"\n", mod->modules[i].name);
 		}
