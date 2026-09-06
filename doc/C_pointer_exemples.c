@@ -1,8 +1,3 @@
-/**
- * @file C_pointer_exemples.c
- * @brief C pointer examples.
- */
-
 // Summary for pointers to functions
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -25,25 +20,13 @@
  *	(*p)++ // dereference pointer, and post-increment the value it points to
 */
 
-/* =============================================================================
- * Declarations - Include
- * ===========================================================================*/
-
 #include <stdio.h>
 #include <stdlib.h>
-
-/* -----------------------------------------------
- * Function prototypes
- * ---------------------------------------------*/
 
 void foo(int b);
 void bar(int *b);
 void bar2(int *b);
 void baz(int **b);
-
-/* =============================================================================
- * Implementation - Functions
- * ===========================================================================*/
 
 int main(void)
 {

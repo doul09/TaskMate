@@ -21,10 +21,10 @@
 #include "tm_libc/tm_string.h"
 
 /* -----------------------------------------------
- * Generated error catalog
+ * Generated error catalogue
  * ---------------------------------------------*/
 
-// [autoCode_tag] error_catalog
+// [autoCode_tag] error_catalogue
 // clang-format off
 /*
  * do not edit code between tag

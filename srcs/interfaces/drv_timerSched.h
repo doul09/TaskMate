@@ -33,7 +33,7 @@ typedef hal_timerSchedCallback_func_t *hal_timerSchedCallback_ptr_t;
  * ========================================================================== */
 
 hal_driver_state_t hal_timerSchedControl(hal_driver_control_t command,
-									 hal_driver_control_data_t *data);
+										 hal_driver_control_data_t *data);
 hal_driver_state_t hal_timerSchedSetCallback(hal_timerSchedCallback_ptr_t func_ptr);
 hal_driver_state_t hal_timerSchedLoad(void);
 

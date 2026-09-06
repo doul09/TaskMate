@@ -16,9 +16,8 @@
  * Declarations - Include
  * ===========================================================================*/
 
-#include "interfaces/drv_rtc.h"
-
 #include "interfaces/drv_i2c.h"
+#include "interfaces/drv_rtc.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
@@ -52,7 +51,7 @@ static uint8_t bcdToBin(uint8_t bcd) { return (uint8_t)((bcd >> 4) * 10u) + (bcd
 static uint8_t binToBcd(uint8_t val) { return (uint8_t)((val / 10u) << 4) | (val % 10u); }
 
 /* -----------------------------------------------
- * Driver lifecycle
+ * Driver life cycle
  * ---------------------------------------------*/
 
 static hal_driver_state_t rtcSetError(err_codes_t error)

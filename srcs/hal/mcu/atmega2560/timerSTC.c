@@ -16,12 +16,11 @@
  * Declarations - Include
  * ===========================================================================*/
 
-#include "interfaces/drv_timerSTC.h"
-
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/atomic.h>
 
+#include "interfaces/drv_timerSTC.h"
 #include "interfaces/tm_define.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
@@ -88,7 +87,7 @@ hal_driver_state_t hal_timerSTCSetCallback(hal_timerSTCCallback_t func_ptr)
 }
 
 /* -----------------------------------------------
- * Driver lifecycle
+ * Driver life cycle
  * ---------------------------------------------*/
 
 static hal_driver_state_t hal_timerSTCInit(void)

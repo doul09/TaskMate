@@ -48,9 +48,8 @@ static bool dateRead(hal_rtc_time_t *time);
 static bool dateWrite(const hal_rtc_time_t *time);
 static void datePrint(const hal_rtc_time_t *time);
 static void datePrintError(err_codes_t error);
-static bool dateParseField(
-	const char **cursor, char separator, uint8_t digit_count_min, uint8_t digit_count_max,
-	uint16_t *value);
+static bool dateParseField(const char **cursor, char separator, uint8_t digit_count_min,
+						   uint8_t digit_count_max, uint16_t *value);
 static bool dateParseTime(const char *text, hal_rtc_time_t *time);
 static bool dateParseDate(const char *text, hal_rtc_time_t *time);
 
@@ -79,8 +78,7 @@ bool dateCommand(uint8_t argc, char *argv[])
 
 	for( uint8_t i = 0; date_cmd[i].name != 0; i++ )
 	{
-		if( tm_strncmp(TM_STR_RAM(argv[1]), TM_STR_RAM(date_cmd[i].name), TM_STRING_SIZE_MAX) ==
-			0 )
+		if( tm_strncmp(TM_STR_RAM(argv[1]), TM_STR_RAM(date_cmd[i].name), TM_STRING_SIZE_MAX) == 0 )
 		{
 			return date_cmd[i].func(argc, argv);
 		}
@@ -202,9 +200,8 @@ static void datePrintError(err_codes_t error)
  * Input parsing
  * ---------------------------------------------*/
 
-static bool dateParseField(
-	const char **cursor, char separator, uint8_t digit_count_min, uint8_t digit_count_max,
-	uint16_t *value)
+static bool dateParseField(const char **cursor, char separator, uint8_t digit_count_min,
+						   uint8_t digit_count_max, uint16_t *value)
 {
 	if( (cursor == 0) || (*cursor == 0) || (value == 0) ) { return false; }
 
@@ -268,10 +265,7 @@ static bool dateParseDate(const char *text, hal_rtc_time_t *time)
 	{
 		return false;
 	}
-	if( (year < 2000u) || (year > 2099u) || (month < 1u) || (month > 12u) )
-	{
-		return false;
-	}
+	if( (year < 2000u) || (year > 2099u) || (month < 1u) || (month > 12u) ) { return false; }
 
 	uint8_t rtc_year = (uint8_t)(year - 2000u);
 

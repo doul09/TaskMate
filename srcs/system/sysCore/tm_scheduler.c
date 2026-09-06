@@ -44,7 +44,7 @@ static mod_thread_item_t *tm_schedulerSelectNext(uint8_t current);
  * ===========================================================================*/
 
 /* -----------------------------------------------
- * Scheduler lifecycle
+ * Scheduler life cycle
  * ---------------------------------------------*/
 
 void tm_schedulerInit(void)

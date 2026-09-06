@@ -16,12 +16,11 @@
  * Declarations - Include
  * ===========================================================================*/
 
-#include "interfaces/drv_lcd.h"
-
 #include <util/delay.h>
 
 #include "hal/public/tmlibc.h"
 #include "interfaces/drv_i2c.h"
+#include "interfaces/drv_lcd.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
@@ -59,7 +58,7 @@ static err_codes_t lcd_last_error = ERR_NO_ERROR;
  * ===========================================================================*/
 
 /* -----------------------------------------------
- * Driver lifecycle
+ * Driver life cycle
  * ---------------------------------------------*/
 
 static hal_driver_state_t lcdSetError(err_codes_t error)

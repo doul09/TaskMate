@@ -35,7 +35,7 @@ void sc_threadSetSTC(uint16_t count);
 uint16_t sc_threadGetSTC(void);
 
 /* -----------------------------------------------
- * Thread lifecycle
+ * Thread life cycle
  * ---------------------------------------------*/
 
 uint16_t sc_threadGetCount(void);

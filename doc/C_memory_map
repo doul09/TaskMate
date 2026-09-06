@@ -12,7 +12,7 @@
 |       Stack         | ← local variables, function calls (grows downwards)
 +---------------------+
 
-🕹️ Lifetime and access
+-- Lifetime and access --
 Data type           Allocation   Lifetime                      Access
 int a;              Stack        until the end of the block     fast (offset)
 static int a;       .data/.bss   until the end of the program   global (address)

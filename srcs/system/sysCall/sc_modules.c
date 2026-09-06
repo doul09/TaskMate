@@ -74,7 +74,7 @@ bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
 }
 
 /* -----------------------------------------------
- * Thread lifecycle
+ * Thread life cycle
  * ---------------------------------------------*/
 
 bool sc_threadStart(const char *name, uint8_t initial_run_level)

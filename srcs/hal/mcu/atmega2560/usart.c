@@ -16,10 +16,9 @@
  * Declarations - Include
  * ===========================================================================*/
 
-#include "interfaces/drv_usart.h"
-
 #include <avr/interrupt.h>
 
+#include "interfaces/drv_usart.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
@@ -67,7 +66,7 @@ static hal_driver_state_t usartSetError(err_codes_t error);
  * ===========================================================================*/
 
 /* -----------------------------------------------
- * Driver lifecycle
+ * Driver life cycle
  * ---------------------------------------------*/
 
 static hal_driver_state_t usartSetError(err_codes_t error)

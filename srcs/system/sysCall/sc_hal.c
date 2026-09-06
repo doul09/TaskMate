@@ -63,7 +63,7 @@ static void sc_i2cDriverSetOff(mod_driver_item_t *driver);
  * ===========================================================================*/
 
 /* -----------------------------------------------
- * Driver metadata and lifecycle
+ * Driver metadata and life cycle
  * ---------------------------------------------*/
 
 uint16_t sc_driverGetCount(void) { return TM_MOD_DRIVER_COUNT; }
@@ -109,10 +109,7 @@ bool sc_driverStop(const char *name) { return sc_driverControl(name, DRV_CTRL_ST
  * LCD operations
  * ---------------------------------------------*/
 
-err_codes_t sc_lcdClear(void)
-{
-	return sc_driverOperationError(hal_lcdClear(), hal_lcdControl);
-}
+err_codes_t sc_lcdClear(void) { return sc_driverOperationError(hal_lcdClear(), hal_lcdControl); }
 
 err_codes_t sc_lcdWriteString(tm_string_t str, uint8_t row, uint8_t col)
 {
@@ -281,5 +278,3 @@ static void sc_i2cDriverSetOff(mod_driver_item_t *driver)
 	control_data.status_bit = DRV_BIT_DEAD;
 	driver->control(DRV_CTRL_CLEARBIT, &control_data);
 }
-
-

@@ -70,7 +70,7 @@ int main(int argc, const char *argv[])
 	modules_database_t data_base;
 	setupDatabase(&data_base);
 
-	// Read error files and store entries in the error catalog
+	// Read error files and store entries in the error catalogue
 	error_catalog_t errors_catalog;
 	errors_catalog.error_count = 0;
 
