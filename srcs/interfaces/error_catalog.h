@@ -14,8 +14,6 @@
 #ifndef INTERFACES_ERROR_CATALOG_H
 #define INTERFACES_ERROR_CATALOG_H
 
-#include "interfaces/error_level.h"
-
 // [autoCode_tag] error_enum
 // clang-format off
 /*
