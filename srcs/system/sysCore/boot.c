@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "boot.h"
 
 #include "interfaces/drv_usart.h"
@@ -23,6 +27,10 @@
 #include "system/sysCore/modules.h"
 #include "system/sysCore/modules_list.h"
 #include "tm_libc/tm_syslog.h"
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
 
 void boot(void)
 {

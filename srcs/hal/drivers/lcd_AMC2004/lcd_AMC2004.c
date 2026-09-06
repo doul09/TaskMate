@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "interfaces/drv_lcd.h"
 
 #include <util/delay.h>
@@ -25,18 +29,38 @@
 // NOLINTBEGIN
 // NOLINT(readability-magic-numbers)
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static hal_driver_state_t lcdAMC2004Clear(void);
 static hal_driver_state_t lcdAMC2004SendCommand(uint8_t command);
 static hal_driver_state_t lcdSetError(err_codes_t error);
 
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
 static hal_driver_status_t lcd_status;
 static err_codes_t lcd_last_error = ERR_NO_ERROR;
+
+/* -----------------------------------------------
+ * Constants
+ * ---------------------------------------------*/
 
 #define LCDAMC2004_I2C_ADDR 0x3C // AiP31068L I2C address (Write mode)
 #define LCDAMC2004_CMD 0x80 // Co=1 RS = 0, Write Command
 #define LCDAMC2004_DATA 0x40 // Co=0 RS = 1, Write Data series
 #define LCDAMC2004_RAW 4
 #define LCDAMC2004_COL 20
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Driver lifecycle
+ * ---------------------------------------------*/
 
 static hal_driver_state_t lcdSetError(err_codes_t error)
 {
@@ -127,6 +151,10 @@ static hal_driver_state_t hal_lcdStop(void)
 	return hal_lcdGetStatus();
 }
 
+/* -----------------------------------------------
+ * LCD operations
+ * ---------------------------------------------*/
+
 static hal_driver_state_t lcdAMC2004SendCommand(uint8_t command)
 {
 	if( hal_i2cCommStart(LCDAMC2004_I2C_ADDR, HAL_I2C_WRITE) == DRV_STATE_ERROR )
@@ -202,6 +230,10 @@ hal_driver_state_t hal_lcdWriteString(tm_string_t str)
 	if( hal_i2cCommStop() == DRV_STATE_ERROR ) { return lcdSetError(ERR_HAL_DRIVER_DEPENDENCY); }
 	return DRV_STATE_RUNNING;
 }
+
+/* -----------------------------------------------
+ * Driver control
+ * ---------------------------------------------*/
 
 hal_driver_state_t hal_lcdControl(hal_driver_control_t command, hal_driver_control_data_t *data)
 {

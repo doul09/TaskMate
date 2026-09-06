@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "interfaces/drv_timerSched.h"
 
 #include <avr/interrupt.h>
@@ -26,11 +30,27 @@
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
 
+/* -----------------------------------------------
+ * Constants
+ * ---------------------------------------------*/
+
 const uint16_t TIMER1_OVERFLOW_COUNT = 2000; // Interrupt every 1ms (1.10^-3 x 16.10^6 )/8 = 2000
+
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
 
 static hal_timerSchedCallback_ptr_t sched_callback = NULL;
 static hal_driver_status_t timer_sched_status;
 static err_codes_t timer_sched_last_error = ERR_NO_ERROR;
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Driver state
+ * ---------------------------------------------*/
 
 static hal_driver_state_t timerSchedSetError(err_codes_t error)
 {
@@ -68,6 +88,10 @@ static hal_driver_state_t timerSchedRequireRunning(void)
 	return state;
 }
 
+/* -----------------------------------------------
+ * Callback and scheduler trigger
+ * ---------------------------------------------*/
+
 hal_driver_state_t hal_timerSchedSetCallback(hal_timerSchedCallback_ptr_t func_ptr)
 {
 	if( func_ptr == NULL ) { return timerSchedSetError(ERR_NULL_POINTER); }
@@ -85,6 +109,10 @@ hal_driver_state_t hal_timerSchedLoad(void)
 	TCNT1 = LOAD;
 	return DRV_STATE_RUNNING;
 }
+
+/* -----------------------------------------------
+ * Driver lifecycle
+ * ---------------------------------------------*/
 
 static hal_driver_state_t hal_timerSchedInit(void)
 {
@@ -144,6 +172,10 @@ static hal_driver_state_t hal_timerSchedStop(void)
 	return hal_timerSchedGetStatus();
 }
 
+/* -----------------------------------------------
+ * Context-switch interrupt
+ * ---------------------------------------------*/
+
 #define TM_SCHED_CALLBACK                        \
 	"in r24, 0x3d \n\t"                          \
 	"in r25, 0x3e \n\t"                          \
@@ -168,6 +200,10 @@ ISR(TIMER1_COMPA_vect, ISR_NAKED)
 	asm volatile(AVR8_CONTEXT_RESTORE);
 	asm volatile("reti \n\t");
 }
+
+/* -----------------------------------------------
+ * Driver control
+ * ---------------------------------------------*/
 
 hal_driver_state_t hal_timerSchedControl(hal_driver_control_t command,
 										 hal_driver_control_data_t *data)

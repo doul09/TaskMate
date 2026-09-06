@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "interfaces/drv_usart.h"
 
 #include <avr/interrupt.h>
@@ -22,7 +26,10 @@
 #include "mcu_define.h" // Get the USART baud rate
 #include "tmlibc.h"
 
-// Circular buffers
+/* -----------------------------------------------
+ * Circular buffers
+ * ---------------------------------------------*/
+
 // Always use a power of two for the buffer size to avoid modulo operations
 #define HAL_USART_BUFFER_SIZE 64
 
@@ -36,6 +43,10 @@ _Static_assert((HAL_USART_BUFFER_SIZE <= 256), "HAL_USART_BUFFER_SIZE must be 25
 #define CB_FULL(head, tail) (CB_NEXT(head) == (tail))
 #define CB_EMPTY(head, tail) ((head) == (tail))
 
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
 static volatile uint8_t buffer_rx[HAL_USART_BUFFER_SIZE];
 static volatile uint8_t buffer_tx[HAL_USART_BUFFER_SIZE];
 static volatile uint8_t buffer_rx_head = 0, buffer_rx_tail = 0;
@@ -44,8 +55,20 @@ static hal_driver_status_t usart_status;
 // Shared with the RX ISR; err_codes_t is one byte on the AVR8 build (-fshort-enums).
 static volatile err_codes_t usart_last_error = ERR_NO_ERROR;
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static err_codes_t usartWriteChar(uint8_t data);
 static hal_driver_state_t usartSetError(err_codes_t error);
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Driver lifecycle
+ * ---------------------------------------------*/
 
 static hal_driver_state_t usartSetError(err_codes_t error)
 {
@@ -120,7 +143,10 @@ static hal_driver_state_t hal_usartStop(void)
 	return hal_usartGetStatus();
 }
 
-// USART1 RX interrupt handler (triggered when data is received)
+/* -----------------------------------------------
+ * Receive path
+ * ---------------------------------------------*/
+
 ISR(USART1_RX_vect)
 {
 	uint8_t next_head = CB_NEXT(buffer_rx_head);
@@ -150,7 +176,10 @@ hal_driver_state_t hal_usartRead(uint8_t *data)
 	return DRV_STATE_RUNNING;
 }
 
-// Write a character to the TX buffer
+/* -----------------------------------------------
+ * Transmit path
+ * ---------------------------------------------*/
+
 static err_codes_t usartWriteChar(uint8_t data)
 {
 	uint8_t next_head = CB_NEXT(buffer_tx_head);
@@ -170,7 +199,6 @@ hal_driver_state_t hal_usartWriteChar(uint8_t data)
 	return DRV_STATE_RUNNING;
 }
 
-// send Tx buffer to usart
 hal_driver_state_t hal_usartSendTXBuffer(void)
 {
 	hal_driver_state_t state = usartRequireRunning();
@@ -185,7 +213,6 @@ hal_driver_state_t hal_usartSendTXBuffer(void)
 	return DRV_STATE_RUNNING;
 }
 
-// write string to Tx buffer
 hal_driver_state_t hal_usartWriteString(tm_string_t str)
 {
 	uint8_t index = 0;
@@ -206,6 +233,10 @@ hal_driver_state_t hal_usartWriteString(tm_string_t str)
 	}
 	return DRV_STATE_RUNNING;
 }
+
+/* -----------------------------------------------
+ * Driver control
+ * ---------------------------------------------*/
 
 hal_driver_state_t hal_usartControl(hal_driver_control_t command, hal_driver_control_data_t *data)
 {

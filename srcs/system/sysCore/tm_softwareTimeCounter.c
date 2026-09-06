@@ -12,12 +12,25 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "tm_softwareTimeCounter.h"
 
 #include "interfaces/drv_timerSTC.h"
 #include "system/sysCore/modules.h"
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static void tm_softwareTimeCounter(void);
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
 void tm_softwareTimeCounterInit(void) { hal_timerSTCSetCallback(tm_softwareTimeCounter); }
 
 void tm_softwareTimeCounter(void)

@@ -11,6 +11,10 @@
  * @brief Driver command implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "driver.h"
 
 #include "interfaces/tm_define.h"
@@ -20,6 +24,10 @@
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
 
+/* -----------------------------------------------
+ * Private types
+ * ---------------------------------------------*/
+
 typedef bool (*driver_cmd_func_t)(uint8_t argc, char *argv[]);
 
 typedef struct
@@ -28,11 +36,19 @@ typedef struct
 	driver_cmd_func_t func;
 } driver_cmd_t;
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static bool driverInit(uint8_t argc, char *argv[]);
 static bool driverStart(uint8_t argc, char *argv[]);
 static bool driverStop(uint8_t argc, char *argv[]);
 static bool driverList(uint8_t argc, char *argv[]);
 static bool driverHelp(uint8_t argc, char *argv[]);
+
+/* -----------------------------------------------
+ * Command table
+ * ---------------------------------------------*/
 
 static const driver_cmd_t driver_cmd[] = {
 	{"init", driverInit},
@@ -42,6 +58,14 @@ static const driver_cmd_t driver_cmd[] = {
 	{"help", driverHelp},
 	{0, 0},
 };
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Command dispatch
+ * ---------------------------------------------*/
 
 bool driver(uint8_t argc, char *argv[])
 {
@@ -63,6 +87,10 @@ bool driver(uint8_t argc, char *argv[])
 	driverHelp(0, NULL);
 	return false;
 }
+
+/* -----------------------------------------------
+ * Command handlers
+ * ---------------------------------------------*/
 
 static bool driverHelp(uint8_t argc, char *argv[])
 {

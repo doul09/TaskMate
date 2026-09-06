@@ -12,11 +12,19 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "parseInitrc.h"
 
 #include "fileUtility.h"
 #include "initrcCmdDispatch.h"
 #include "tokenizer.h"
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
 
 void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 {

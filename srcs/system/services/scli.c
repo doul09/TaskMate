@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "scli.h"
 
 #include <stdbool.h>
@@ -27,8 +31,16 @@
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
 
+/* -----------------------------------------------
+ * Constants
+ * ---------------------------------------------*/
+
 #define SCLI_LINE_SIZE 64
 #define SCLI_ARGUMENT_COUNT_MAX 4
+
+/* -----------------------------------------------
+ * Private types
+ * ---------------------------------------------*/
 
 typedef bool (*scli_cmd_func_t)(uint8_t argc, char *argv[]);
 
@@ -38,13 +50,25 @@ typedef struct
 	scli_cmd_func_t func;
 } scli_cmd_t;
 
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
 static char scli_line[SCLI_LINE_SIZE];
 static uint8_t scli_line_length;
+
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
 
 static err_codes_t scliRead(void);
 static void scliLineProcess(void);
 static uint8_t scliTokenize(char *line, char *argv[]);
 static bool scliCommandDispatch(uint8_t argc, char *argv[]);
+
+/* -----------------------------------------------
+ * Command table
+ * ---------------------------------------------*/
 
 static const scli_cmd_t scli_commands[] = {
 	{"date", dateCommand},
@@ -53,6 +77,14 @@ static const scli_cmd_t scli_commands[] = {
 	{"thread", thread},
 	{0, 0},
 };
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Service loop
+ * ---------------------------------------------*/
 
 void scli(void)
 {
@@ -68,6 +100,10 @@ void scli(void)
 		while( sc_threadGetSTC() > 0 ) { sc_coopYield(); };
 	}
 }
+
+/* -----------------------------------------------
+ * Input processing
+ * ---------------------------------------------*/
 
 static err_codes_t scliRead(void)
 {
@@ -128,6 +164,10 @@ static uint8_t scliTokenize(char *line, char *argv[])
 
 	return argc;
 }
+
+/* -----------------------------------------------
+ * Command dispatch
+ * ---------------------------------------------*/
 
 static bool scliCommandDispatch(uint8_t argc, char *argv[])
 {

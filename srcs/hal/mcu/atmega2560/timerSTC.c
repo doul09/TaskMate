@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "interfaces/drv_timerSTC.h"
 
 #include <avr/interrupt.h>
@@ -23,12 +27,28 @@
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
 
+/* -----------------------------------------------
+ * Constants
+ * ---------------------------------------------*/
+
 const uint16_t hal_timerSTC_OVERFLOW_COUNT =
 	625; // Interrupt every 10ms (10.10^-3 x 16.10^6 )/256 = 625
+
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
 
 static hal_timerSTCCallback_t stc_callback = NULL;
 static hal_driver_status_t timer_stc_status;
 static err_codes_t timer_stc_last_error = ERR_NO_ERROR;
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Driver state
+ * ---------------------------------------------*/
 
 static hal_driver_state_t timerSTCSetError(err_codes_t error)
 {
@@ -56,12 +76,20 @@ static hal_driver_state_t hal_timerSTCGetStatus(void)
 	return DRV_STATE_RUNNING;
 }
 
+/* -----------------------------------------------
+ * Callback configuration
+ * ---------------------------------------------*/
+
 hal_driver_state_t hal_timerSTCSetCallback(hal_timerSTCCallback_t func_ptr)
 {
 	if( func_ptr == NULL ) { return timerSTCSetError(ERR_NULL_POINTER); }
 	stc_callback = func_ptr;
 	return hal_timerSTCGetStatus();
 }
+
+/* -----------------------------------------------
+ * Driver lifecycle
+ * ---------------------------------------------*/
 
 static hal_driver_state_t hal_timerSTCInit(void)
 {
@@ -107,11 +135,19 @@ static hal_driver_state_t hal_timerSTCStop(void)
 	return hal_timerSTCGetStatus();
 }
 
+/* -----------------------------------------------
+ * Timer interrupt
+ * ---------------------------------------------*/
+
 ISR(TIMER3_COMPA_vect)
 {
 	// Software time counter callback
 	if( stc_callback != NULL ) { stc_callback(); }
 }
+
+/* -----------------------------------------------
+ * Driver control
+ * ---------------------------------------------*/
 
 hal_driver_state_t hal_timerSTCControl(hal_driver_control_t command,
 									   hal_driver_control_data_t *data)

@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "interfaces/drv_i2c.h"
 
 #include <avr/io.h>
@@ -25,15 +29,35 @@
 // NOLINTBEGIN
 // NOLINT(readability-magic-numbers)
 
+/* -----------------------------------------------
+ * Constants
+ * ---------------------------------------------*/
+
 #define I2C_TWBR_VALUE ((F_CPU / I2C_FREQ - 16) / 2)
+
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
 
 static hal_driver_status_t i2c_status;
 static err_codes_t i2c_last_error = ERR_NO_ERROR;
 static uint8_t i2c_scan_address = 0;
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static void i2cCommStop(void);
 static uint8_t i2cWrite(uint8_t data);
 static hal_driver_state_t i2cSetError(err_codes_t error);
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Driver state and startup
+ * ---------------------------------------------*/
 
 static hal_driver_state_t i2cSetError(err_codes_t error)
 {
@@ -99,6 +123,10 @@ static hal_driver_state_t hal_i2cStart(void)
 	return DRV_STATE_RUNNING;
 }
 
+/* -----------------------------------------------
+ * Bus discovery
+ * ---------------------------------------------*/
+
 hal_driver_state_t hal_i2cScan(uint8_t *address)
 {
 	hal_driver_state_t state = i2cRequireRunning();
@@ -130,6 +158,10 @@ hal_driver_state_t hal_i2cScan(uint8_t *address)
 	i2c_scan_address = 0;
 	return i2cSetError(ERR_HAL_I2C_SCAN_COMPLETE);
 }
+
+/* -----------------------------------------------
+ * Driver shutdown and bus transactions
+ * ---------------------------------------------*/
 
 static hal_driver_state_t hal_i2cStop(void)
 {
@@ -220,6 +252,10 @@ hal_driver_state_t hal_i2cRead(uint8_t *data, hal_i2c_ack_t ack)
 	*data = TWDR;
 	return DRV_STATE_RUNNING;
 }
+
+/* -----------------------------------------------
+ * Driver control
+ * ---------------------------------------------*/
 
 hal_driver_state_t hal_i2cControl(hal_driver_control_t command, hal_driver_control_data_t *data)
 {
