@@ -15,11 +15,12 @@
 #ifndef INTERFACES_TM_DEFINE_H
 #define INTERFACES_TM_DEFINE_H
 
-// General system definitions
+
 /* ============================================================================
  * Public definitions
  * ========================================================================== */
 
+// General system definitions
 #define NULL ((void *)0)
 
 #endif // INTERFACES_TM_DEFINE_H
