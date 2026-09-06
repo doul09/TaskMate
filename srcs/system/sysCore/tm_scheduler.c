@@ -20,7 +20,7 @@
 #include "hal/public/interrupt.h"
 #include "hal/public/panic.h"
 #include "hal/public/stack.h"
-#include "hal/public/timerSched.h"
+#include "interfaces/drv_timerSched.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
@@ -51,7 +51,7 @@ void tm_schedulerStart(void)
 
 void tm_schedulerCoop(void) { hal_timerSchedLoad(); }
 
-hal_stack_word_t *tm_schedulerRR(hal_stack_word_t *stack_pointer)
+static void *tm_schedulerRR(void *stack_pointer)
 {
 	mod_thread_item_t *thread;
 

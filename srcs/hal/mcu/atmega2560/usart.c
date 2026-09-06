@@ -12,7 +12,7 @@
  *
  */
 
-#include "usart.h"
+#include "interfaces/drv_usart.h"
 
 #include <avr/interrupt.h>
 

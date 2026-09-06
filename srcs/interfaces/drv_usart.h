@@ -7,13 +7,12 @@
  */
 
 /**
- * @file usart.h
- * @brief usart header declarations.
- *
+ * @file drv_usart.h
+ * @brief Generic USART driver interface declarations.
  */
 
-#ifndef ATMEGA2560_USART_H
-#define ATMEGA2560_USART_H
+#ifndef INTERFACES_DRV_USART_H
+#define INTERFACES_DRV_USART_H
 
 #include <stdint.h>
 
@@ -28,4 +27,4 @@ hal_driver_state_t hal_usartTestBufferRx(void);
 hal_driver_state_t hal_usartTestBufferTx(void);
 hal_driver_state_t hal_usartWriteString(tm_string_t str);
 
-#endif // ATMEGA2560_USART_H
+#endif // INTERFACES_DRV_USART_H

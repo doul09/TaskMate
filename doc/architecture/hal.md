@@ -19,10 +19,11 @@ hardware target. Its responsibilities are currently divided as follows:
 - `hal/board/arduinoMega`: the board startup hook;
 - `hal/drivers`: the AMC2004 LCD and ZS042 RTC device implementations.
 
-Headers in `hal/public/` select a concrete implementation using the target symbols emitted by the Make
-fragments and fail compilation when no implementation exists. autoCode generates the combined target
-definition and startup-header lists. At runtime, boot calls architecture, MCU, and board hooks, builds the
-GPIO mapping, and starts generated drivers by their configured run level.
+Generic driver contracts live in `interfaces/drv_*.h`; their implementations remain selected by the
+target source tree and Make fragments. The headers remaining in `hal/public/` select concrete
+architecture or MCU mechanisms and fail compilation when no implementation exists. autoCode generates
+the combined target definition and startup-header lists. At runtime, boot calls architecture, MCU, and
+board hooks, builds the GPIO mapping, and starts generated drivers by their configured run level.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -30,14 +31,14 @@ GPIO mapping, and starts generated drivers by their configured run level.
   target-specific files rather than scattered through tasks or services.
 - Public selection headers provide one include path per HAL capability and reject missing
   implementations at compile time.
-- All six registered drivers expose one control entry point limited to the common run-level, life
-  cycle, status, bit, and last-error contract; most operational I/O APIs reject calls while their
-  driver is not running.
+- All six registered drivers implement the neutral contracts from `interfaces/` and expose one control
+  entry point limited to the common run-level, life cycle, status, bit, and last-error contract; most
+  operational I/O APIs reject calls while their driver is not running.
 - Static generated driver registration and callback wiring keep firmware allocation deterministic.
 
 ### Remaining weaknesses
-- `hal/public` exposes concrete implementation headers rather than stable neutral contracts;
-  capability requirements remain encoded as preprocessor branches and naming conventions.
+- Driver capability requirements remain implicit in the selected source set and `init.rc` names; a
+  missing implementation is detected by compilation or linking rather than by a capability manifest.
 - Architecture, MCU, and board startup hooks are empty. Boot special-cases run-level-zero USART and
   the scheduler timer, ignores life cycle returns, reports success unconditionally, and cannot unwind
   a partial hardware startup.

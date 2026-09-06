@@ -14,7 +14,7 @@
 
 #include "boot.h"
 
-#include "hal/public/usart.h"
+#include "interfaces/drv_usart.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
 #include "system/sysCall/sysCall.h"

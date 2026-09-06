@@ -12,7 +12,7 @@
  *
  */
 
-#include "timerSched.h"
+#include "interfaces/drv_timerSched.h"
 
 #include <avr/interrupt.h>
 #include <avr/io.h>

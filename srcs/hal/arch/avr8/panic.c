@@ -16,7 +16,7 @@
 
 #include "hal/arch/avr8/interrupt.h"
 #include "hal/public/tmlibc.h"
-#include "hal/public/usart.h"
+#include "interfaces/drv_usart.h"
 
 void panic(tm_string_t msg)
 {

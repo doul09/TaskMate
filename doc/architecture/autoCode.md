@@ -21,8 +21,9 @@ configuration file containing the paths to its input lists and selected GPIO fil
 Each destination is copied to a `.tmp` file, regenerated, compared with the existing file, and replaced
 only when its content changed. A target-scoped stamp makes generation a prerequisite of dependency
 collection, compilation, and linking. The generated data fixes module counts, stacks, function tables,
-module run-level fields, generic driver address metadata populated by the current `-i2c`
-option, error codes, and logical GPIO identifiers at build time. 
+module run-level fields, generic driver address metadata populated by the current `-i2c` option,
+error codes, logical GPIO identifiers, and the `interfaces/drv_<name>.h` includes for configured drivers
+at build time.
 
 ## Well-built code and implementation weaknesses
 ### Strengths

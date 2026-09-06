@@ -12,7 +12,8 @@ implements **how the hardware fulfils those expectations**.
 This separation keeps the architecture clear, prevents dependency inversions, and improves portability
 when supporting new platforms.
 
-The following rules define how the `interfaces/` layer must be used.
+Generic driver interface files use the `drv_<driver>.h` filename form. The following rules define how
+the `interfaces/` layer must be used.
 
 ## Rule 1 — Interface independence
 

@@ -12,6 +12,7 @@ guards were applied consistently, and the register-bit macros used by AVR driver
 `interfaces/` contains no HAL, sysCore, sysCall, service, or task includes. It currently provides:
 
 - common GPIO modes/pulls and the target-generated logical signal enum;
+- generic LCD, RTC, I2C, scheduler-timer, software-counter-timer, and USART driver contracts;
 - the generated error enum and shared `FLOW`/`WARN`/`FAIL`/`PANIC` level type;
 - shared string-storage types and build-time libc/debug options;
 - general bit/string helper macros and a local null definition;
@@ -27,8 +28,8 @@ a home for a small amount of generated kernel configuration.
 ### Strengths
 - `interfaces/` remains a deliberately transversal, dependency-neutral layer with no HAL, sysCore,
   sysCall, service, task, or target-implementation includes.
-- Shared GPIO, error, string-storage, run-level, and driver-control definitions let system and HAL
-  code agree without duplicating representations.
+- Shared GPIO, error, string-storage, run-level, and generic driver definitions let system and HAL
+  code agree without duplicating representations or exposing a concrete target header.
 - Generated error, GPIO, and module-count values keep selected-target metadata consistent with
   runtime tables.
 - Contracts use compact data with no runtime allocation or dispatch cost of their own.
@@ -41,5 +42,5 @@ a home for a small amount of generated kernel configuration.
 - Driver states, module types, and run levels remain compact integer values. Generated thread
   status values are still emitted as raw integer literals and the shared control-data union cannot
   encode which field is valid for a command.
-- Contracts remain incomplete for timers, serial transport, scheduling context, ISR safety,
-  optional HAL capabilities, and structured error handling.
+- Generic driver contracts expose the current HAL entry points but do not yet encode target capability
+  discovery, ISR-safety guarantees, or structured asynchronous error handling.

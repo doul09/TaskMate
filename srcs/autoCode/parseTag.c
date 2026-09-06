@@ -315,7 +315,7 @@ static void writeModulesList(const parse_tag_t *parse)
 
 	for( int i = 0; i < mod->modules_count; i++ )
 	{
-		fprintf(parse->file, "#include \"hal/public/%s.h\"\n", mod->modules[i].name);
+		fprintf(parse->file, "#include \"interfaces/drv_%s.h\"\n", mod->modules[i].name);
 	}
 	have_tag_count[HAVE_MOD_LIST]++;
 }

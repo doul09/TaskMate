@@ -12,7 +12,7 @@
  *
  */
 
-#include "i2c.h"
+#include "interfaces/drv_i2c.h"
 
 #include <avr/io.h>
 #include <util/twi.h>
