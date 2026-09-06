@@ -19,11 +19,33 @@
 #include "fileUtility.h"
 
 /* -----------------------------------------------
+ * Private types
+ * ---------------------------------------------*/
+
+typedef struct
+{
+	char *source_name;
+	char *temporary_name;
+} file_tmp_item_t;
+
+/* -----------------------------------------------
  * Private variables
  * ---------------------------------------------*/
 
 static int file_updated = 0;
 static int file_unchanged = 0;
+static file_tmp_item_t *file_tmp_list = NULL;
+static size_t file_tmp_source_count = 0;
+static bool file_tmp_cleanup_registered = false;
+
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
+static void fileCmpReplace(file_t *file_old, file_t *file_new);
+static void fileTmpCleanup(void);
+static char *fileTmpRegister(const char *file_src_name, const char *caller, int line);
+static char *fileTmpName(const char *file_src_name, const char *caller, int line);
 
 /* =============================================================================
  * Implementation - Functions
@@ -37,7 +59,29 @@ void filePrintModified(void)
 	AUTOCODE_MSG_INFO("*******************************************************");
 }
 
-void fileCmpReplace(file_t *file_old, file_t *file_new)
+void fileCmpReplaceAll(void)
+{
+	for( size_t i = 0; i < file_tmp_source_count; i++ )
+	{
+		file_t file_src;
+		fileInit(&file_src);
+		file_src.name = file_tmp_list[i].source_name;
+		fileOpen(&file_src, "r", FILE_READONLY, __FILE__, __LINE__);
+
+		file_t file_tmp;
+		fileInit(&file_tmp);
+		file_tmp.name = file_tmp_list[i].temporary_name;
+		fileOpen(&file_tmp, "r", FILE_READONLY, __FILE__, __LINE__);
+
+		fileCmpReplace(&file_src, &file_tmp);
+		fileClose(&file_src, __FILE__, __LINE__);
+		fileClose(&file_tmp, __FILE__, __LINE__);
+	}
+
+	fileTmpCleanup();
+}
+
+static void fileCmpReplace(file_t *file_old, file_t *file_new)
 {
 	char old[BYTE_INDEX];
 	char new[BYTE_INDEX];
@@ -148,15 +192,7 @@ void fileOpen(file_t *file, const char *mode, const int special_mode, const char
 
 void fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller, const int line)
 {
-	const size_t name_size = strlen(file_src_name) + sizeof(".tmp");
-	file_tmp->name = malloc(name_size);
-	if( file_tmp->name == NULL )
-	{
-		AUTOCODE_MSG_ERROR("from [%s:%i] malloc <%s>", caller, line, file_src_name);
-		exit(1);
-	}
-	file_tmp->name_allocated = true;
-	snprintf(file_tmp->name, name_size, "%s.tmp", file_src_name);
+	file_tmp->name = fileTmpRegister(file_src_name, caller, line);
 
 	file_tmp->stream = fopen(file_tmp->name, "w+");
 	if( file_tmp->stream == NULL )
@@ -165,4 +201,69 @@ void fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller
 		exit(1);
 	}
 	file_tmp->stream_opened = true;
+}
+
+static void fileTmpCleanup(void)
+{
+	for( size_t i = 0; i < file_tmp_source_count; i++ )
+	{
+		remove(file_tmp_list[i].temporary_name);
+		free(file_tmp_list[i].temporary_name);
+		free(file_tmp_list[i].source_name);
+	}
+
+	free(file_tmp_list);
+	file_tmp_list = NULL;
+	file_tmp_source_count = 0;
+}
+
+static char *fileTmpRegister(const char *file_src_name, const char *caller, const int line)
+{
+	if( file_tmp_cleanup_registered == false )
+	{
+		if( atexit(fileTmpCleanup) != 0 )
+		{
+			AUTOCODE_MSG_ERROR("from [%s:%i] registering temporary file cleanup", caller, line);
+			exit(1);
+		}
+		file_tmp_cleanup_registered = true;
+	}
+
+	const size_t source_name_size = strlen(file_src_name) + 1;
+	char *source_name = malloc(source_name_size);
+	if( source_name == NULL )
+	{
+		AUTOCODE_MSG_ERROR("from [%s:%i] malloc <%s>", caller, line, file_src_name);
+		exit(1);
+	}
+	memcpy(source_name, file_src_name, source_name_size);
+	char *temporary_name = fileTmpName(file_src_name, caller, line);
+
+	file_tmp_item_t *list = realloc(file_tmp_list, (file_tmp_source_count + 1) * sizeof(*list));
+	if( list == NULL )
+	{
+		free(temporary_name);
+		free(source_name);
+		AUTOCODE_MSG_ERROR("from [%s:%i] realloc temporary file list", caller, line);
+		exit(1);
+	}
+
+	file_tmp_list = list;
+	file_tmp_list[file_tmp_source_count].source_name = source_name;
+	file_tmp_list[file_tmp_source_count].temporary_name = temporary_name;
+	file_tmp_source_count++;
+	return temporary_name;
+}
+
+static char *fileTmpName(const char *file_src_name, const char *caller, const int line)
+{
+	const size_t name_size = strlen(file_src_name) + sizeof(".tmp");
+	char *file_tmp_name = malloc(name_size);
+	if( file_tmp_name == NULL )
+	{
+		AUTOCODE_MSG_ERROR("from [%s:%i] malloc <%s>", caller, line, file_src_name);
+		exit(1);
+	}
+	snprintf(file_tmp_name, name_size, "%s.tmp", file_src_name);
+	return file_tmp_name;
 }

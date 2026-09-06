@@ -219,9 +219,6 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 		AUTOCODE_MSG_ERROR("missing end tag [/tag] [%s:%i]", file_src.name, file_line_number);
 		exit(1);
 	}
-
-	fileCmpReplace(&file_src, &file_tmp);
-
 	fileClose(&file_src, __FILE__, __LINE__);
 	fileClose(&file_tmp, __FILE__, __LINE__);
 }
