@@ -70,7 +70,7 @@ static void *tm_schedulerRR(void *stack_pointer)
 	if( thread->canary_low != TM_MOD_CANARY ) { panic(TM_STR("canary low 2")); }
 	if( thread->canary_high != TM_MOD_CANARY ) { panic(TM_STR("canary high 2")); }
 
-	TM_CLEARBIT(thread->status, TM_MOD_THREAD_YIELDED);
+	TM_CLEARBIT(thread->status, THREAD_BIT_YIELDED);
 	return thread->stack_pointer;
 }
 
