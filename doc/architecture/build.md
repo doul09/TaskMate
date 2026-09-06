@@ -2,11 +2,13 @@
 
 ## Historical developments
 TaskMate evolved from one Makefile into BSD `bmake` orchestration, focused `mk/*.mk` fragments, and
-target-owned HAL fragments. autoCode, target validation, dependency checks, and memory reporting
-became first-class build phases.
+target-owned HAL fragments. autoCode and target validation became first-class build phases.
 
-The separated source tree now resolves `HWT -> BOARD -> MCU -> ARCH`; build variables and header
-boundary checks follow dedicated project rules.
+After tag `v0.28`, the source split made `HWT -> BOARD -> MCU -> ARCH` explicit. Commit `7ae12ca`
+moved configuration and validated targets; `v0.29` (`9fc9513`) consolidated build rules.
+
+Header allow-list parsing, warnings, and role-based variable names were then tightened around the
+current AVR build pipeline.
 
 ## Current implementation
 The default `test1` target selects Arduino Mega, ATmega2560, and AVR8 fragments. Together they

@@ -2,10 +2,12 @@
 
 ## Historical developments
 `sysCall` became the task-visible boundary for kernel state, logical GPIO, and hardware operations.
-Cooperative yield and USART RX later removed direct HAL access from services.
+After tag `v0.28`, dedicated GPIO calls followed the sysCore/HAL tree split.
 
-The implementation is now split by responsibility and includes run-level startup coordination,
-thread initialization, RTC date access, and a system panic entry point.
+Commit `a04cf1c` tightened the early boundary, while cooperative yield and `5109e98` removed direct
+SCLI HAL access. Commit `26359ac` split the API by HAL, modules, GPIO, and error responsibilities.
+
+Commits `830116e` and `9ad9cf2` added initialization and RTC-startup APIs used by staged startup.
 
 ## Current implementation
 Four focused groups provide the boundary:

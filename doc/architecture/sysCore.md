@@ -1,11 +1,13 @@
 # 🧠 Architecture Note — sysCore
 
 ## Historical developments
-`sysCore` owns static module data, scheduling policy, GPIO state, and software time.
-MCU mechanisms moved to HAL, and context switching moved progressively into AVR assembly.
+`sysCore` grew from a single-file prototype into module data, scheduler, GPIO, and software-time
+ownership. MCU mechanisms moved to HAL, while context switching progressed into AVR assembly.
 
-Boot code was removed: `TaskMate.c` owns pre-scheduler setup, while staged module startup runs
-in the system service through syscalls.
+After tag `v0.28`, `TaskMate.c` became the top-level entry point; `8697df7` hardened canary checks.
+Commits `c843372` and `35f329d` removed boot code in favour of top-level and service startup.
+
+Commit `db59169` made the scheduler admit only threads at or below the active run level.
 
 ## Current implementation
 The module database contains generated driver records and four fixed thread control blocks, stacks,

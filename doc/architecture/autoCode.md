@@ -1,12 +1,14 @@
 # 👨‍💻 Architecture Note — autoCode
 
 ## Historical developments
-`autoCode` replaced manual allocation and include glue with build-time generation. It later gained
-typed `init.rc` parsing, target selection, error catalogues, GPIO signals, tagged replacements, and
-stricter diagnostics.
+`autoCode` replaced manual allocation and include glue around `v0.10`. It gained `init.rc` parsing
+in `v0.20`, then learned the architecture/MCU/board split in `v0.21`.
 
-The system/user/HAL reorganisation changed its inputs but retained the same role: selected target
-files are the source of truth for static firmware composition.
+Revisions `v0.24` to `v0.26` added options, tagged replacement, temporary files, and diagnostics.
+After tag `v0.28`, the system/user/HAL reorganisation changed inputs without changing its role.
+
+Commit `ff1b7bd` refactored command parsing, and `c8d3d21` repaired error-catalogue tags. The
+selected target remains the source of truth for static firmware composition.
 
 ## Current implementation
 `bmake` compiles `srcs/autoCode/` as a host tool and gives it target-scoped input lists. It:

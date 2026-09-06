@@ -1,10 +1,11 @@
 # 🧵 Architecture Note — tasks
 
 ## Historical developments
-User tasks evolved from direct test routines into autoCode-managed modules with fixed records and
-stacks. User code and target wiring were separated into dedicated source trees.
+User tasks began as direct test routines before autoCode made them fixed-record modules with stacks.
+After tag `v0.28`, task code and target wiring moved into dedicated source trees.
 
-Tasks now participate in staged startup by declaring initialization through sysCall at entry.
+Commit `830116e` added the initialization acknowledgement used at task entry. Commit `db59169` then
+made user tasks wait for the active user run level before the scheduler admits them.
 
 ## Current implementation
 The `test1` target registers two user-level tasks. autoCode creates their fixed 256-byte AVR stacks,

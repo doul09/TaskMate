@@ -1,10 +1,12 @@
 # 💡 Architecture Note — gpio
 
 ## Historical developments
-GPIO evolved from direct MCU pin handling to separate logical signals and physical wiring. Target
-configuration now owns the mapping, while user code consumes generated signal identifiers.
+GPIO began as direct MCU pin handling, then `v0.22` and `v0.26` separated logical signals from pins.
+This moved application code from port/pin choices to named signal semantics.
 
-The ATmega2560 implementation also consolidated register manipulation around shared bit helpers.
+After tag `v0.28`, target configuration took ownership of wiring and autoCode generated signal IDs.
+Commit `b201809` completed the HAL/GPIO refactor; ATmega2560 bit operations then converged on shared
+helpers.
 
 ## Current implementation
 The selected target's `signals.gpio` generates the logical signal enum. Before scheduling starts,

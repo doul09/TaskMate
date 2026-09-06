@@ -1,10 +1,13 @@
 # 🧩 Architecture Note — services
 
 ## Historical developments
-Services introduced reusable system threads above the kernel. The message service was removed, while
-the system and serial CLI services moved behind syscalls and adopted cooperative yield.
+Services introduced reusable system threads above the kernel, initially including a message service
+and serial CLI. The message service was later removed as the system service took its role.
 
-Startup sequencing now runs inside the core-level system service instead of sysCore boot code.
+After tag `v0.28`, services moved under `srcs/system/services`. Commit `5109e98` put SCLI USART RX
+behind sysCall, and later cooperative yield shortened deliberate polling waits.
+
+Commits `c843372` and `35f329d` moved boot work to `TaskMate.c`, then staged startup to `system`.
 
 ## Current implementation
 autoCode registers a core-level `system` thread and a service-level `scli` thread with fixed stacks.

@@ -1,11 +1,13 @@
 # 🔧 Architecture Note — hal
 
 ## Historical developments
-TaskMate moved from AVR-centric code to distinct architecture, MCU, board, and external-driver
-layers. Context switching, panic, target wiring, and driver contracts were progressively assigned to
-explicit owners.
+TaskMate began as AVR-centric code, then `v0.21` separated architecture, MCU, and board ownership.
+This progressively removed hardware detail from sysCore and clarified target-specific boundaries.
 
-Generic driver contracts later moved to `interfaces/`; HAL retains selection and implementation.
+After tag `v0.28`, the repository introduced reusable external drivers and moved target GPIO wiring.
+Commit `b201809` completed the HAL/GPIO refactor; tag `v0.29` recorded the Make and HAL baseline.
+
+Generic driver contracts later moved to `interfaces/`; HAL retained selection and implementation.
 
 ## Current implementation
 The only implemented stack is `avr8 / atmega2560 / arduinoMega`, selected by `test1`:

@@ -2,9 +2,12 @@
 
 ## Historical developments
 `tm_libc` was introduced to bound code size and behaviour on constrained targets. It gained compact
-formatting, RAM/ROM-aware strings, logging, and cooperative yield for formatter contention.
+formatting, RAM/ROM-aware strings, and logging through target-specific output backends.
 
-The layer remains deliberately transversal after the system/user/HAL source split.
+After tag `v0.28`, it became a transversal layer in the separated tree. Commit `ec88d98` corrected
+formatter behaviour; later revisions added a cooperative-yield attempt for contention.
+
+Tag `v0.29` marks the baseline before the current syscall and startup refactors.
 
 ## Current implementation
 Build options select either TaskMate implementations or partial standard-library aliases. TaskMate

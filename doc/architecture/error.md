@@ -1,11 +1,13 @@
 # 🚨 Architecture Note — error
 
 ## Historical developments
-TaskMate replaced scattered error strings with module-owned `*.err` declarations. autoCode now
-validates and aggregates them into one symbolic catalogue consumed across HAL and system code.
+TaskMate replaced local ad-hoc error strings with module-owned `*.err` declarations between `v0.23`
+and `v0.26`. autoCode then aggregated them into one symbolic catalogue for HAL and system code.
 
-The source-tree split moved declarations with their owners while keeping their generated contract in
-`interfaces/` and their runtime catalogue in `sysCall`.
+After tag `v0.28`, declarations moved with their owners while their generated contract stayed in
+`interfaces/`. Commits `7ee2725` and `08771cb` established the current four-level definition.
+
+Commit `c8d3d21` repaired the error-catalogue tag and preserved generation as the source of truth.
 
 ## Current implementation
 Each declaration contains a symbolic name, quoted message, and one of four levels:

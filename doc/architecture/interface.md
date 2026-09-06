@@ -1,10 +1,13 @@
 # 🔌 Architecture Note — interface
 
 ## Historical developments
-`interfaces/` became the dependency-neutral home for portable contracts shared by system and HAL.
-The system/user/HAL split moved common GPIO, error, string, module, and run-level definitions there.
+`interfaces/` emerged as TaskMate separated portable contracts from hardware implementations. It
+collected common GPIO and pin definitions before becoming the dependency-neutral common root.
 
-Generic driver headers and normalized TaskMate names later removed concrete driver-header coupling.
+After tag `v0.28`, the tree split moved generated GPIO, module, run-level, string, and error
+contracts there. Commits `66661d2` and `f6a6fa1` renamed headers and moved driver APIs here.
+
+Commit `e804075` replaced thread-status defines with typed bits and tightened the representation.
 
 ## Current implementation
 The layer has no HAL, sysCore, sysCall, service, task, or target-implementation includes. It owns:
