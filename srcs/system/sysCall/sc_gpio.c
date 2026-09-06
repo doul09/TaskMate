@@ -11,9 +11,17 @@
  * @brief sc gpio implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "sc_gpio.h"
 
 #include "system/sysCore/gpio.h"
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
 
 void sc_gpio_signalSet(gpio_signal_t signal, bool val) { gpio_signalSet(signal, val); }
 bool sc_gpio_signalGet(gpio_signal_t signal) { return gpio_signalGet(signal); }

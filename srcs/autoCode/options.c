@@ -12,10 +12,18 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "options.h"
 
 #include "fileUtility.h"
 #include "tokenizer.h"
+
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
 
 static void setErrorsFile(const char *value, options_list_t *opt);
 static void setInitrcFile(const char *value, options_list_t *opt);
@@ -23,6 +31,10 @@ static void setParseTagFile(const char *value, options_list_t *opt);
 static void setHalInitFile(const char *value, options_list_t *opt);
 static void setHalDefineFile(const char *value, options_list_t *opt);
 static void setGpioSignalsFile(const char *value, options_list_t *opt);
+
+/* -----------------------------------------------
+ * Option dispatch table
+ * ---------------------------------------------*/
 
 #define HAVE_OPTIONS(X)                                \
 	X(HAVE_ERRORS, "--errors", setErrorsFile)          \
@@ -57,6 +69,10 @@ static const char *have_to_string[HAVE_COUNT] = {
 };
 
 static int have_options_count[HAVE_COUNT];
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
 
 static void setFileName(char *destination, const size_t destination_size, const char *value)
 {

@@ -11,12 +11,20 @@
  * @brief thread command implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "thread.h"
 
 #include "interfaces/tm_define.h"
 #include "system/sysCall/sc_modules.h"
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
+
+/* -----------------------------------------------
+ * Private types
+ * ---------------------------------------------*/
 
 typedef bool (*thread_cmd_func_t)(uint8_t argc, char *argv[]);
 
@@ -26,11 +34,19 @@ typedef struct
 	thread_cmd_func_t func;
 } thread_cmd_t;
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static bool threadStart(uint8_t argc, char *argv[]);
 static bool threadStop(uint8_t argc, char *argv[]);
 static bool threadList(uint8_t argc, char *argv[]);
 static bool threadHelp(uint8_t argc, char *argv[]);
 static bool threadRunLevelParse(const char *text, uint8_t *run_level);
+
+/* -----------------------------------------------
+ * Command table
+ * ---------------------------------------------*/
 
 static const thread_cmd_t thread_cmd[] = {
 	{"start", threadStart},
@@ -39,6 +55,14 @@ static const thread_cmd_t thread_cmd[] = {
 	{"help", threadHelp},
 	{0, 0},
 };
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Command dispatch
+ * ---------------------------------------------*/
 
 bool thread(uint8_t argc, char *argv[])
 {
@@ -60,6 +84,10 @@ bool thread(uint8_t argc, char *argv[])
 	threadHelp(0, NULL);
 	return false;
 }
+
+/* -----------------------------------------------
+ * Command handlers
+ * ---------------------------------------------*/
 
 static bool threadHelp(uint8_t argc, char *argv[])
 {
@@ -140,6 +168,10 @@ static bool threadStop(uint8_t argc, char *argv[])
 	tm_syslog(TM_STR("[thread] name not found %s\n"), &thread_name);
 	return false;
 }
+
+/* -----------------------------------------------
+ * Run-level parsing
+ * ---------------------------------------------*/
 
 static bool threadRunLevelParse(const char *text, uint8_t *run_level)
 {

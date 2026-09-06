@@ -12,20 +12,31 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "tm_snprintf.h"
 
 #include "hal/public/tmlibc.h"
 #include "interfaces/tm_define.h"
 #include "system/sysCall/sc_modules.h"
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static void baseConvert(uint16_t value, uint8_t base);
 static void tm_putChar(char ch);
+
+/* -----------------------------------------------
+ * Formatter state
+ * ---------------------------------------------*/
 
 #define SNPRINTF_BUFF_TEMP_SIZE 32
 
 static uint8_t tm_snprintf_lock = 0;
 
-// Buffer data structure
 typedef struct
 {
 	char *ptr;
@@ -36,7 +47,10 @@ typedef struct
 
 static tm_snprintf_buffer_t tm_snprintf_buffer;
 
-// Reverse-order base converter
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
 static void baseConvert(uint16_t value, uint8_t base)
 {
 	const char digits[] = "0123456789abcdef";

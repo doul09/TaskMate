@@ -11,6 +11,10 @@
  * @brief Driver and HAL syscall implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "sc_hal.h"
 
 #include "hal/public/atomic.h"
@@ -24,14 +28,26 @@
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
 
+/* -----------------------------------------------
+ * Constants
+ * ---------------------------------------------*/
+
 #define I2C_SCAN_ADDRESS_COUNT_MAX 10u
 #define RTC_SECONDS_PER_MINUTE 60UL
 #define RTC_MINUTES_PER_HOUR 60UL
 #define RTC_HOURS_PER_DAY 24UL
 
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
 static uint8_t i2c_scan_addresses[I2C_SCAN_ADDRESS_COUNT_MAX];
 static uint8_t i2c_scan_address_count;
 static hal_rtc_time_t rtc_startup_time;
+
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
 
 static mod_driver_item_t *sc_driverGetPointer(const char *name);
 static bool sc_driverControl(const char *name, hal_driver_control_t command);
@@ -41,6 +57,14 @@ static err_codes_t sc_driverOperationError(
 
 static bool sc_i2cAddressFound(uint8_t address);
 static void sc_i2cDriverSetOff(mod_driver_item_t *driver);
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Driver metadata and lifecycle
+ * ---------------------------------------------*/
 
 uint16_t sc_driverGetCount(void) { return TM_MOD_DRIVER_COUNT; }
 
@@ -81,6 +105,10 @@ bool sc_driverInit(const char *name) { return sc_driverControl(name, DRV_CTRL_IN
 bool sc_driverStart(const char *name) { return sc_driverControl(name, DRV_CTRL_START); }
 bool sc_driverStop(const char *name) { return sc_driverControl(name, DRV_CTRL_STOP); }
 
+/* -----------------------------------------------
+ * LCD operations
+ * ---------------------------------------------*/
+
 err_codes_t sc_lcdClear(void)
 {
 	return sc_driverOperationError(hal_lcdClear(), hal_lcdControl);
@@ -93,6 +121,10 @@ err_codes_t sc_lcdWriteString(tm_string_t str, uint8_t row, uint8_t col)
 
 	return sc_driverOperationError(hal_lcdWriteString(str), hal_lcdControl);
 }
+
+/* -----------------------------------------------
+ * RTC operations
+ * ---------------------------------------------*/
 
 err_codes_t sc_rtcRead(hal_rtc_time_t *time)
 {
@@ -113,6 +145,10 @@ err_codes_t sc_rtcSaveStartupTime(void)
 	if( error == ERR_NO_ERROR ) { rtc_startup_time = time; }
 	return error;
 }
+
+/* -----------------------------------------------
+ * I2C discovery
+ * ---------------------------------------------*/
 
 err_codes_t sc_i2cScan(void)
 {
@@ -161,6 +197,10 @@ err_codes_t sc_i2cScan(void)
 	return ERR_NO_ERROR;
 }
 
+/* -----------------------------------------------
+ * USART operations
+ * ---------------------------------------------*/
+
 err_codes_t sc_usartRead(uint8_t *data)
 {
 	if( data == 0 ) { return ERR_NULL_POINTER; }
@@ -177,6 +217,10 @@ err_codes_t sc_usartRead(uint8_t *data)
 	hal_atomicEnd(state);
 	return control_data.error;
 }
+
+/* -----------------------------------------------
+ * Private helpers
+ * ---------------------------------------------*/
 
 static err_codes_t sc_driverOperationError(
 	hal_driver_state_t state,

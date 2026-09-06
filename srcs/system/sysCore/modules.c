@@ -11,6 +11,10 @@
  * @brief modules implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "modules.h"
 
 #include "hal/public/context.h"
@@ -18,12 +22,24 @@
 #include "system/sysCore/modules_list.h"
 #include "tm_libc/tm_string.h"
 
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
 static struct
 {
 	mod_driver_item_t drivers[TM_MOD_DRIVER_COUNT];
 	mod_thread_item_t threads[TM_MOD_THREAD_COUNT];
 	uint8_t thread_current;
 } mod_data_base;
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Module database access
+ * ---------------------------------------------*/
 
 void mod_threadSetCurrent(uint8_t n) { mod_data_base.thread_current = n; }
 uint8_t mod_threadGetCurrent(void) { return mod_data_base.thread_current; }
@@ -40,6 +56,10 @@ uint16_t mod_threadGetSTC(void)
 
 mod_driver_item_t *mod_driverGetPointer(uint8_t id) { return &mod_data_base.drivers[id]; }
 mod_thread_item_t *mod_threadGetPointer(uint8_t id) { return &mod_data_base.threads[id]; }
+
+/* -----------------------------------------------
+ * Static module allocation
+ * ---------------------------------------------*/
 
 // NOLINTBEGIN
 // NOLINT(readability-magic-numbers)

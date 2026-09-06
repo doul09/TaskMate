@@ -11,6 +11,10 @@
  * @brief system management implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "system.h"
 
 #include "interfaces/tm_info.h"
@@ -19,6 +23,10 @@
 #include "tm_libc/tm_stdio.h"
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
 
 void system(void)
 {

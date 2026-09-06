@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "interfaces/drv_rtc.h"
 
 #include "interfaces/drv_i2c.h"
@@ -22,14 +26,34 @@
 // NOLINTBEGIN
 // NOLINT(readability-magic-numbers)
 
+/* -----------------------------------------------
+ * Constants
+ * ---------------------------------------------*/
+
 #define ZS042_I2C_ADDR 0x68
+
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
 
 static uint8_t buf[7];
 static hal_driver_status_t rtc_status;
 static err_codes_t rtc_last_error = ERR_NO_ERROR;
 
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Time conversion
+ * ---------------------------------------------*/
+
 static uint8_t bcdToBin(uint8_t bcd) { return (uint8_t)((bcd >> 4) * 10u) + (bcd & 0x0Fu); }
 static uint8_t binToBcd(uint8_t val) { return (uint8_t)((val / 10u) << 4) | (val % 10u); }
+
+/* -----------------------------------------------
+ * Driver lifecycle
+ * ---------------------------------------------*/
 
 static hal_driver_state_t rtcSetError(err_codes_t error)
 {
@@ -101,6 +125,10 @@ static hal_driver_state_t hal_rtcStop(void)
 	TM_CLEARBIT(rtc_status, DRV_BIT_START);
 	return hal_rtcGetStatus();
 }
+
+/* -----------------------------------------------
+ * RTC operations
+ * ---------------------------------------------*/
 
 hal_driver_state_t hal_rtcRead(hal_rtc_time_t *time)
 {
@@ -178,6 +206,10 @@ hal_driver_state_t hal_rtcWrite(const hal_rtc_time_t *time)
 
 	return DRV_STATE_RUNNING;
 }
+
+/* -----------------------------------------------
+ * Driver control
+ * ---------------------------------------------*/
 
 hal_driver_state_t hal_rtcControl(hal_driver_control_t command, hal_driver_control_data_t *data)
 {

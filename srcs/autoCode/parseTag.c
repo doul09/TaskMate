@@ -12,12 +12,20 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "parseTag.h"
 
 #include <stdbool.h>
 
 #include "fileUtility.h"
 #include "tokenizer.h"
+
+/* -----------------------------------------------
+ * Private types
+ * ---------------------------------------------*/
 
 typedef struct
 {
@@ -26,6 +34,10 @@ typedef struct
 	const error_catalog_t *errors;
 	const options_list_t *auto_options;
 } parse_tag_t;
+
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
 
 static void writeModulesCount(const parse_tag_t *parse);
 static void writeDriversAlloc(const parse_tag_t *parse);
@@ -37,6 +49,10 @@ static void writeModulesList(const parse_tag_t *parse);
 static void writeHalDefine(const parse_tag_t *parse);
 static void writeHalInit(const parse_tag_t *parse);
 static void writeGpioSignals(const parse_tag_t *parse);
+
+/* -----------------------------------------------
+ * Tag dispatch table
+ * ---------------------------------------------*/
 
 #define HAVE_TAG(X)                                           \
 	X(HAVE_THREADS_ALLOC, "threads_alloc", writeThreadsAlloc) \
@@ -74,6 +90,14 @@ static const char *have_to_string[HAVE_COUNT] = {
 };
 
 static int have_tag_count[HAVE_COUNT];
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Tag parsing and validation
+ * ---------------------------------------------*/
 
 static const char *string_from_have(const int id)
 {
@@ -220,6 +244,10 @@ void parseTagHave(void)
 		}
 	}
 }
+
+/* -----------------------------------------------
+ * Code generation
+ * ---------------------------------------------*/
 
 static void writeGpioSignals(const parse_tag_t *parse)
 {

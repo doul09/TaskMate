@@ -11,6 +11,10 @@
  * @brief Module and system syscall implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "sc_modules.h"
 
 #include "hal/public/atomic.h"
@@ -21,7 +25,19 @@
 #include "system/sysCore/tm_scheduler.h"
 #include "tm_libc/tm_string.h"
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static mod_thread_item_t *sc_threadGetPointer(const char *name);
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Software time counters
+ * ---------------------------------------------*/
 
 void sc_threadSetSTC(uint16_t count)
 {
@@ -38,6 +54,10 @@ uint16_t sc_threadGetSTC(void)
 	return timer;
 }
 
+/* -----------------------------------------------
+ * Thread metadata
+ * ---------------------------------------------*/
+
 uint16_t sc_threadGetCount(void) { return TM_MOD_THREAD_COUNT; }
 
 bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
@@ -52,6 +72,10 @@ bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
 
 	return *name != 0;
 }
+
+/* -----------------------------------------------
+ * Thread lifecycle
+ * ---------------------------------------------*/
 
 bool sc_threadStart(const char *name, uint8_t initial_run_level)
 {
@@ -86,6 +110,10 @@ bool sc_threadStop(const char *name)
 	return true;
 }
 
+/* -----------------------------------------------
+ * Cooperative scheduling
+ * ---------------------------------------------*/
+
 void sc_coopYield(void)
 {
 	hal_atomic_state_t state = hal_atomicStart();
@@ -95,6 +123,10 @@ void sc_coopYield(void)
 	hal_atomicEnd(state);
 	while( TM_GETBIT(thread->status, THREAD_BIT_YIELDED) );
 }
+
+/* -----------------------------------------------
+ * Private helpers
+ * ---------------------------------------------*/
 
 static mod_thread_item_t *sc_threadGetPointer(const char *name)
 {

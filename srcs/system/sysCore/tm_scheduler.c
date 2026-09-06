@@ -12,6 +12,10 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "tm_scheduler.h"
 
 #include <stdint.h>
@@ -28,8 +32,20 @@
 #include "system/sysCore/modules_list.h"
 #include "tm_libc/tm_string.h"
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static hal_timerSchedCallback_func_t tm_schedulerRR;
 static mod_thread_item_t *tm_schedulerSelectNext(uint8_t current);
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Scheduler lifecycle
+ * ---------------------------------------------*/
 
 void tm_schedulerInit(void)
 {
@@ -49,7 +65,15 @@ void tm_schedulerStart(void)
 	hal_returnFromInterrupt();
 }
 
+/* -----------------------------------------------
+ * Cooperative trigger
+ * ---------------------------------------------*/
+
 void tm_schedulerCoop(void) { hal_timerSchedLoad(); }
+
+/* -----------------------------------------------
+ * Round-robin policy
+ * ---------------------------------------------*/
 
 static void *tm_schedulerRR(void *stack_pointer)
 {

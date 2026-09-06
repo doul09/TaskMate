@@ -11,6 +11,10 @@
  * @brief I2C command implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "i2c.h"
 
 #include "interfaces/tm_define.h"
@@ -18,6 +22,10 @@
 #include "system/sysCall/sc_hal.h"
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
+
+/* -----------------------------------------------
+ * Private types
+ * ---------------------------------------------*/
 
 typedef bool (*i2c_cmd_func_t)(uint8_t argc, char *argv[]);
 
@@ -27,14 +35,30 @@ typedef struct
 	i2c_cmd_func_t func;
 } i2c_cmd_t;
 
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
+
 static bool i2cScan(uint8_t argc, char *argv[]);
 static bool i2cHelp(uint8_t argc, char *argv[]);
+
+/* -----------------------------------------------
+ * Command table
+ * ---------------------------------------------*/
 
 static const i2c_cmd_t i2c_cmd[] = {
 	{"scan", i2cScan},
 	{"help", i2cHelp},
 	{0, 0},
 };
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Command dispatch
+ * ---------------------------------------------*/
 
 bool i2c(uint8_t argc, char *argv[])
 {
@@ -55,6 +79,10 @@ bool i2c(uint8_t argc, char *argv[])
 	i2cHelp(0, NULL);
 	return false;
 }
+
+/* -----------------------------------------------
+ * Command handlers
+ * ---------------------------------------------*/
 
 static bool i2cScan(uint8_t argc, char *argv[])
 {

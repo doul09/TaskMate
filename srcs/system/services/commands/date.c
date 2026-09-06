@@ -11,6 +11,10 @@
  * @brief Date command implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "date.h"
 
 #include "interfaces/drv_rtc.h"
@@ -20,6 +24,10 @@
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
 
+/* -----------------------------------------------
+ * Private types
+ * ---------------------------------------------*/
+
 typedef bool (*date_cmd_func_t)(uint8_t argc, char *argv[]);
 
 typedef struct
@@ -27,6 +35,10 @@ typedef struct
 	const char *name;
 	date_cmd_func_t func;
 } date_cmd_t;
+
+/* -----------------------------------------------
+ * Private function prototypes
+ * ---------------------------------------------*/
 
 static bool dateShow(uint8_t argc, char *argv[]);
 static bool dateSetTime(uint8_t argc, char *argv[]);
@@ -42,12 +54,24 @@ static bool dateParseField(
 static bool dateParseTime(const char *text, hal_rtc_time_t *time);
 static bool dateParseDate(const char *text, hal_rtc_time_t *time);
 
+/* -----------------------------------------------
+ * Command table
+ * ---------------------------------------------*/
+
 static const date_cmd_t date_cmd[] = {
 	{"time", dateSetTime},
 	{"date", dateSetDate},
 	{"help", dateHelp},
 	{0, 0},
 };
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Command dispatch
+ * ---------------------------------------------*/
 
 bool dateCommand(uint8_t argc, char *argv[])
 {
@@ -65,6 +89,10 @@ bool dateCommand(uint8_t argc, char *argv[])
 	dateHelp(0, NULL);
 	return false;
 }
+
+/* -----------------------------------------------
+ * Command handlers
+ * ---------------------------------------------*/
 
 static bool dateShow(uint8_t argc, char *argv[])
 {
@@ -132,6 +160,10 @@ static bool dateHelp(uint8_t argc, char *argv[])
 	return true;
 }
 
+/* -----------------------------------------------
+ * RTC access and reporting
+ * ---------------------------------------------*/
+
 static bool dateRead(hal_rtc_time_t *time)
 {
 	err_codes_t error = sc_rtcRead(time);
@@ -165,6 +197,10 @@ static void datePrintError(err_codes_t error)
 	if( message != 0 ) { tm_syslog(TM_STR("[date] RTC error: %s\n"), message); }
 	else { tm_syslog(TM_STR("[date] RTC error\n")); }
 }
+
+/* -----------------------------------------------
+ * Input parsing
+ * ---------------------------------------------*/
 
 static bool dateParseField(
 	const char **cursor, char separator, uint8_t digit_count_min, uint8_t digit_count_max,

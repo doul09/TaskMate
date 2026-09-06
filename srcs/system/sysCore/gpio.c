@@ -11,12 +11,24 @@
  * @brief gpio implementation.
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "gpio.h"
 
 #include "hal/public/gpio.h"
 #include "system/sysCore/hal_init.h"
 
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
 static hal_signal_t signal_table[GPIO_SIGNAL_COUNT];
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
 
 void gpio_signalsInit(void)
 {

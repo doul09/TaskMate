@@ -12,7 +12,19 @@
  *
  */
 
+/* =============================================================================
+ * Declarations - Include
+ * ===========================================================================*/
+
 #include "initrcCmdDispatch.h"
+
+/* =============================================================================
+ * Implementation - Functions
+ * ===========================================================================*/
+
+/* -----------------------------------------------
+ * Command handlers
+ * ---------------------------------------------*/
 
 static initrc_dispatch_result_t funcRun(const char *data, module_item_t *mod)
 {
@@ -65,6 +77,10 @@ static initrc_dispatch_result_t funcI2cAddress(const char *data, module_item_t *
 
 static const initrc_cmd_t initrc_cmds[] = {
 	{"-run", funcRun}, {"-type", funcType}, {"-i2c", funcI2cAddress}, {NULL, NULL}};
+
+/* -----------------------------------------------
+ * Command dispatch
+ * ---------------------------------------------*/
 
 initrc_dispatch_result_t initrcCmdDispatch(const char *cmd, const char *data, module_item_t *mod)
 {
