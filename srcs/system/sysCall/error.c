@@ -24,7 +24,7 @@
  * Generated error catalogue
  * ---------------------------------------------*/
 
-// [autoCode_tag] error_catalogue
+// [autoCode_tag] error_catalog
 // clang-format off
 /*
  * do not edit code between tag
