@@ -19,9 +19,14 @@
 #include <stdint.h>
 
 #include "hal/public/panic.h"
+#include "interfaces/drv_usart.h"
+#include "interfaces/tm_modules.h"
 #include "interfaces/tm_info.h"
 #include "interfaces/tm_macros.h"
 #include "system/sysCore/boot.h"
+#include "system/sysCore/modules.h"
+#include "system/sysCore/gpio.h"
+#include "system/sysCore/hal_init.h"
 #include "system/sysCore/tm_scheduler.h"
 #include "system/sysCore/tm_softwareTimeCounter.h"
 #include "tm_libc/tm_syslog.h"
@@ -39,20 +44,40 @@ TM_STORE_FILE_NAME(file_name);
 int main(void)
 {
 	// System startup
+	hal_usartControl(DRV_CTRL_INIT, 0);
+	hal_usartControl(DRV_CTRL_START, 0);
+
+	tm_syslog(TM_STR("\n\n[boot] System startup ...\n"));
+
+	// Initialise static system allocations
+	tm_syslog(TM_STR("[boot] system static allocation\n"));
+
+	mod_driversAlloc();
+	mod_threadsAlloc();
+
+	// Initialise HAL hardware
+	tm_syslog(TM_STR("[boot] hal hardware init\n"));
+
+	hal_archInit();
+	hal_mcuInit();
+	hal_boardInit();
+	gpio_signalsInit();	
+	
+	// drivers
 	boot();
 
 	tm_syslog(
-		TM_STR("[info] %s v%i.%i build : %i\n"), &file_name, TM_VER_MAJOR, TM_VER_MINOR, TM_BUILD);
+		TM_STR("[boot] %s v%i.%i build : %i\n"), &file_name, TM_VER_MAJOR, TM_VER_MINOR, TM_BUILD);
 
 	// Start scheduler
-	tm_syslog(TM_STR("[info] start round-robin scheduler\n"));
+	tm_syslog(TM_STR("[boot] start round-robin scheduler\n"));
 
 	tm_softwareTimeCounterInit();
 
 	tm_schedulerInit();
 	tm_schedulerStart();
 
-	panic(TM_STR("\nsystem launch fail"));
+	panic(TM_STR("\n[boot] system launch fail"));
 
 	return 0; // You should never get here
 }

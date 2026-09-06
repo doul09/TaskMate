@@ -47,6 +47,8 @@ void system(void)
 		msg, sizeof(msg), TM_STR("TaskMate %i.%i %i"), TM_VER_MAJOR, TM_VER_MINOR, TM_BUILD);
 	sc_lcdClear();
 	sc_lcdWriteString(TM_STR_RAM(msg), 0, 0);
+	
+	sc_threadSetInitialized();
 
 	while( 1 )
 	{
