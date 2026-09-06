@@ -46,7 +46,7 @@ protect critical headers, while `scripts/header_allow.awk` scans the source tree
 - Source and `*.rc` discovery use unsorted `find` output, so compile/link and module ordering can
   depend on filesystem enumeration even though error-file discovery is sorted.
 - Build metadata includes dates, Git state, and a revision count, while tool versions are not
-  pinned. `.BEGIN` also evaluates the ignored `srcs/interfaces/TaskMate_info.h` on every invocation,
+  pinned. `.BEGIN` also evaluates the ignored `srcs/interfaces/tm_info.h` on every invocation,
   although a temporary-file comparison now avoids replacing it when its content is unchanged.
 - The build remains tied to BSD `bmake`, Unix utilities, AVR tools, and machine-specific
   USB/programmer paths; no second hardware stack currently exercises the intended portability.

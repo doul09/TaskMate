@@ -35,7 +35,7 @@ FILE_CLOCRAW = ${PATH_BUILDS}/cloc_raw
 FILE_CLOCDATA = ${PATH_BUILDS}/cloc_data
 FILE_MEMRAW = ${PATH_BUILD_TARGET}/mem_raw
 FILE_MEMDATA = ${PATH_BUILD_TARGET}/mem_data
-FILE_TM_INFO = ${PATH_SRCS}/interfaces/TaskMate_info.h
+FILE_TM_INFO = ${PATH_SRCS}/interfaces/tm_info.h
 
 # Source directories
 PATHS_SOURCES += ${PATH_SRCS}/system

@@ -18,10 +18,10 @@
 #include <avr/io.h>
 #include <util/atomic.h>
 
-#include "interfaces/define.h"
-#include "interfaces/macros.h"
-#include "interfaces/modules_define.h"
-#include "interfaces/runLevel_define.h"
+#include "interfaces/tm_define.h"
+#include "interfaces/tm_macros.h"
+#include "interfaces/tm_modules.h"
+#include "interfaces/tm_runLevel.h"
 
 const uint16_t hal_timerSTC_OVERFLOW_COUNT =
 	625; // Interrupt every 10ms (10.10^-3 x 16.10^6 )/256 = 625

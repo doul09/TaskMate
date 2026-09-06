@@ -18,7 +18,7 @@
 #include <stdint.h>
 
 #include "hal/arch/avr8/arch_define.h"
-#include "interfaces/modules_define.h"
+#include "interfaces/tm_modules.h"
 
 typedef hal_stack_word_t *hal_timerSchedCallback_func_t(hal_stack_word_t *stack_pointer);
 typedef hal_timerSchedCallback_func_t *hal_timerSchedCallback_ptr_t;

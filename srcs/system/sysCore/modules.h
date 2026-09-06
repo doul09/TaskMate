@@ -17,8 +17,8 @@
 #include <stdint.h>
 
 #include "hal/public/define.h" // Get hal_stack_word_t from the selected architecture
-#include "interfaces/modules_define.h"
-#include "interfaces/tm_string_storage.h"
+#include "interfaces/tm_modules.h"
+#include "interfaces/tm_string.h"
 
 /*
  * Module structures

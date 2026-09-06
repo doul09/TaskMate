@@ -20,7 +20,7 @@ FILE_AUTOCODE_LOG_DATED = ${FILE_AUTOCODE_LOG}_${VAL_DATE_TIME}
 FILES_PARSE_TAG =  \
 	${PATH_SRCS}/system/sysCall/error.c \
 	${PATH_SRCS}/interfaces/error_catalog.h \
-	${PATH_SRCS}/interfaces/modules_define.h \
+	${PATH_SRCS}/interfaces/tm_modules.h \
 	${PATH_SRCS}/system/sysCore/modules.c \
 	${PATH_SRCS}/system/sysCore/modules_list.h \
 	${PATH_SRCS}/system/sysCore/hal_init.h \

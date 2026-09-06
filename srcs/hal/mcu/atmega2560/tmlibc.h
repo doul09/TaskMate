@@ -20,8 +20,8 @@
 #include <avr/pgmspace.h>
 #include <stdint.h>
 
-#include "interfaces/macros.h"
-#include "interfaces/tm_string_storage.h"
+#include "interfaces/tm_macros.h"
+#include "interfaces/tm_string.h"
 
 // Macro for file-scope string storage
 #define TM_STR_ROM_NEW(name, txt) \

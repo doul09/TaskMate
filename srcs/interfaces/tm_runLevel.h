@@ -7,12 +7,12 @@
  */
 
 /**
- * @file runLevel_define.h
+ * @file tm_runLevel.h
  * @brief run level define header declarations.
  */
 
-#ifndef INTERFACES_RUNLEVEL_DEFINE_H
-#define INTERFACES_RUNLEVEL_DEFINE_H
+#ifndef INTERFACES_TM_RUNLEVEL_H
+#define INTERFACES_TM_RUNLEVEL_H
 
 // Run-level definitions
 #define RL_RUN_NONE 0
@@ -26,4 +26,4 @@
 
 #define RL_GET_RUN_LEVEL(status) ((status) & RL_LEVEL_MASK)
 
-#endif // INTERFACES_RUNLEVEL_DEFINE_H
+#endif // INTERFACES_TM_RUNLEVEL_H

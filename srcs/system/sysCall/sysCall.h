@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 #include "interfaces/error_catalog.h"
-#include "interfaces/tm_string_storage.h"
+#include "interfaces/tm_string.h"
 
 void sc_threadSetSTC(uint16_t count);
 uint16_t sc_threadGetSTC(void);

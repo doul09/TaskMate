@@ -15,8 +15,8 @@
 #include "boot.h"
 
 #include "hal/public/usart.h"
-#include "interfaces/modules_define.h"
-#include "interfaces/runLevel_define.h"
+#include "interfaces/tm_modules.h"
+#include "interfaces/tm_runLevel.h"
 #include "system/sysCall/sysCall.h"
 #include "system/sysCore/gpio.h"
 #include "system/sysCore/hal_init.h"

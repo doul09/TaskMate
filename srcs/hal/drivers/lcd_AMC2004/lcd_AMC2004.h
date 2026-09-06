@@ -17,8 +17,8 @@
 
 #include <stdint.h>
 
-#include "interfaces/modules_define.h"
-#include "interfaces/tm_string_storage.h"
+#include "interfaces/tm_modules.h"
+#include "interfaces/tm_string.h"
 
 hal_driver_state_t hal_lcdControl(hal_driver_control_t command, hal_driver_control_data_t *data);
 hal_driver_state_t hal_lcdClear(void);
