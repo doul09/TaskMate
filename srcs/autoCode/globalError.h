@@ -15,8 +15,16 @@
 #ifndef AUTOCODE_GLOBALERROR_H
 #define AUTOCODE_GLOBALERROR_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include "autoCode.h"
 #include "interfaces/error_level.h"
+
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
 
 #define ERROR_COUNT_MAX 256
 
@@ -32,6 +40,10 @@ typedef struct
 	error_item_t catalog[ERROR_COUNT_MAX];
 	int error_count;
 } error_catalog_t;
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 void globalError(const char *src_name, error_catalog_t *errors);
 

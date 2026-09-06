@@ -15,9 +15,12 @@
 #ifndef INTERFACES_TM_STRING_H
 #define INTERFACES_TM_STRING_H
 
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 #define TM_STRING_SIZE_MAX 255
 
-// tm_string implementation
 typedef enum
 {
 	TM_MEM_RAM,

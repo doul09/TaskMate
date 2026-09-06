@@ -15,6 +15,10 @@
 #ifndef TM_LIBC_TM_SYSLOG_H
 #define TM_LIBC_TM_SYSLOG_H
 
+/* ============================================================================
+ * Target selection
+ * ========================================================================== */
+
 // clang-format off
 
 #include "tm_string.h"

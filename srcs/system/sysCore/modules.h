@@ -14,15 +14,19 @@
 #ifndef SYSCORE_MODULES_H
 #define SYSCORE_MODULES_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdint.h>
 
 #include "hal/public/define.h" // Get hal_stack_word_t from the selected architecture
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_string.h"
 
-/*
- * Module structures
- */
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
 
 #define TM_MOD_CANARY 0xa5a5
 
@@ -54,9 +58,9 @@ typedef struct
 
 } mod_driver_item_t;
 
-/*
- * Module functions
- */
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 void mod_threadSetCurrent(uint8_t n);
 uint8_t mod_threadGetCurrent(void);

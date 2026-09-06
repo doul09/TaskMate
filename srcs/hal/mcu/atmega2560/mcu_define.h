@@ -15,15 +15,29 @@
 #ifndef ATMEGA2560_MCU_DEFINE_H
 #define ATMEGA2560_MCU_DEFINE_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdint.h>
 
 #include "interfaces/gpio_common.h"
 
-// Frequencies
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
+/* -----------------------------------------------
+ * Peripheral constants
+ * ---------------------------------------------*/
+
 #define USART_BAUD_RATE 9600
 #define I2C_FREQ 100000UL // Standard mode 100 kHz
 
-// ATmega2560 ports
+/* -----------------------------------------------
+ * Ports and pins
+ * ---------------------------------------------*/
+
 typedef enum
 {
 	PORT_A,
@@ -42,7 +56,6 @@ typedef enum
 	PORT_COUNT
 } hal_port_list_t;
 
-// ATmega2560 pin structure
 typedef struct
 {
 	hal_port_list_t port;

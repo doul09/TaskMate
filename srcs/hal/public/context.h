@@ -15,6 +15,10 @@
 #ifndef HAL_PUBLIC_CONTEXT_H
 #define HAL_PUBLIC_CONTEXT_H
 
+/* ============================================================================
+ * Target selection
+ * ========================================================================== */
+
 #if !defined(HAL_SYSTEM_CRITICAL_ALLOWED)
 	#error "NOT ALLOWED INCLUDE : context.h"
 #endif

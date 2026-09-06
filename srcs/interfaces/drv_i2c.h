@@ -14,9 +14,17 @@
 #ifndef INTERFACES_DRV_I2C_H
 #define INTERFACES_DRV_I2C_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdint.h>
 
 #include "interfaces/tm_modules.h"
+
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
 
 typedef enum
 {
@@ -29,6 +37,10 @@ typedef enum
 	HAL_I2C_NACK,
 	HAL_I2C_ACK
 } hal_i2c_ack_t;
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 hal_driver_state_t hal_i2cControl(hal_driver_control_t command, hal_driver_control_data_t *data);
 hal_driver_state_t hal_i2cScan(uint8_t *address);

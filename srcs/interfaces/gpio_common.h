@@ -14,6 +14,10 @@
 #ifndef INTERFACES_GPIO_COMMON_H
 #define INTERFACES_GPIO_COMMON_H
 
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 typedef enum
 {
 	GPIO_PIN_MODE_INPUT,

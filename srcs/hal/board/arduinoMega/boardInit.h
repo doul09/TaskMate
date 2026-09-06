@@ -15,6 +15,10 @@
 #ifndef ARDUINOMEGA_BOARDINIT_H
 #define ARDUINOMEGA_BOARDINIT_H
 
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
+
 void hal_boardInit(void);
 
 #endif // ARDUINOMEGA_BOARDINIT_H

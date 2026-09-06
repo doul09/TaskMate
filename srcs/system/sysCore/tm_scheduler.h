@@ -15,6 +15,10 @@
 #ifndef SYSCORE_TM_SCHEDULER_H
 #define SYSCORE_TM_SCHEDULER_H
 
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
+
 void tm_schedulerInit(void);
 void tm_schedulerStart(void);
 void tm_schedulerCoop(void);

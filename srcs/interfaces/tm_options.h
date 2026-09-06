@@ -15,10 +15,12 @@
 #ifndef INTERFACES_TM_OPTIONS_H
 #define INTERFACES_TM_OPTIONS_H
 
-// Debug options
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 #define VERBOSE_LEVEL 0
 
-// libc selection
 #define TM_LIBC_TASKMATE 1
 #define TM_LIBC_CSTD 0
 

@@ -14,10 +14,22 @@
 #ifndef INTERFACES_TM_MODULES_H
 #define INTERFACES_TM_MODULES_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "interfaces/error_catalog.h"
+
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
+/* -----------------------------------------------
+ * Generated module counts
+ * ---------------------------------------------*/
 
 // [autoCode_tag] modules_count
 // clang-format off
@@ -32,7 +44,10 @@
 // clang-format on
 // [/tag]
 
-// Definitions for autoCode
+/* -----------------------------------------------
+ * Module constants
+ * ---------------------------------------------*/
+
 #define TM_MOD_COUNT_MAX 256
 
 #define TM_MOD_DRIVER_ID 0
@@ -45,10 +60,12 @@
 #define TM_MOD_I2C_ADDRESS_MAX 0x7Eu
 #define TM_MOD_DRIVER_ADDRESS_NONE 0xFFu
 
-// System
 #define TM_MOD_THREAD_STACK_SIZE 256
 
-// driver control
+/* -----------------------------------------------
+ * Driver types
+ * ---------------------------------------------*/
+
 typedef enum
 {
 	DRV_CTRL_INIT,
@@ -63,7 +80,6 @@ typedef enum
 	DRV_CTRL_GETLASTERROR
 } hal_driver_control_t;
 
-// Driver status bits
 typedef uint8_t hal_driver_status_t;
 
 // bits [2:0] contain the run level
@@ -75,7 +91,6 @@ typedef enum
 	DRV_BIT_DEAD
 } hal_driver_status_bit_t;
 
-// driver status
 typedef enum
 {
 	DRV_STATE_OFF,
@@ -93,7 +108,10 @@ typedef union
 	err_codes_t error;
 } hal_driver_control_data_t;
 
-// Thread status bits
+/* -----------------------------------------------
+ * Thread status
+ * ---------------------------------------------*/
+
 // Bits [2:0] contain the run level
 typedef enum
 {

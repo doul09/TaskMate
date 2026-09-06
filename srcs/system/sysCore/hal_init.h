@@ -18,6 +18,10 @@
 	#error "NOT ALLOWED INCLUDE : hal_init.h"
 #endif
 
+/* ============================================================================
+ * Generated includes
+ * ========================================================================== */
+
 // [autoCode_tag] hal_init
 // clang-format off
 /*

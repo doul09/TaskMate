@@ -15,6 +15,10 @@
 #ifndef HAL_PUBLIC_PANIC_H
 #define HAL_PUBLIC_PANIC_H
 
+/* ============================================================================
+ * Target selection
+ * ========================================================================== */
+
 #if defined(ARCH_avr8)
 	#include "hal/arch/avr8/panic.h"
 	#define HAL_PANIC

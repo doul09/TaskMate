@@ -14,9 +14,17 @@
 #ifndef INTERFACES_DRV_RTC_H
 #define INTERFACES_DRV_RTC_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdint.h>
 
 #include "interfaces/tm_modules.h"
+
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
 
 typedef struct
 {
@@ -28,6 +36,10 @@ typedef struct
 	uint8_t month; // 1-12
 	uint8_t year; // 0-99
 } hal_rtc_time_t;
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 hal_driver_state_t hal_rtcControl(hal_driver_control_t command, hal_driver_control_data_t *data);
 hal_driver_state_t hal_rtcRead(hal_rtc_time_t *time);

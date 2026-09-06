@@ -15,7 +15,15 @@
 #ifndef AUTOCODE_FILEUTILITY_H
 #define AUTOCODE_FILEUTILITY_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include "autoCode.h"
+
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
 
 #define FILE_TOKEN_SIZE 256
 
@@ -30,6 +38,10 @@ typedef struct
 	bool name_allocated; // allow free()
 	char token[FILE_TOKEN_SIZE];
 } file_t;
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 void filePrintModified(void);
 void fileCmpReplace(file_t *file_old, file_t *file_new);

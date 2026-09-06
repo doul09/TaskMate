@@ -15,6 +15,10 @@
 #ifndef SYSCORE_TM_SOFTWARETIMECOUNTER_H
 #define SYSCORE_TM_SOFTWARETIMECOUNTER_H
 
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
+
 void tm_softwareTimeCounterInit(void);
 
 #endif // SYSCORE_TM_SOFTWARETIMECOUNTER_H

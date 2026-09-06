@@ -15,6 +15,10 @@
 #ifndef HAL_PUBLIC_ATOMIC_H
 #define HAL_PUBLIC_ATOMIC_H
 
+/* ============================================================================
+ * Target selection
+ * ========================================================================== */
+
 #if defined(ARCH_avr8)
 	#include "hal/arch/avr8/atomic.h"
 	#define HAL_ATOMIC

@@ -15,13 +15,29 @@
 #ifndef TM_LIBC_TM_SNPRINTF_H
 #define TM_LIBC_TM_SNPRINTF_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdarg.h>
 #include <stdint.h>
 
 #include "tm_string.h"
 
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
+
+/* -----------------------------------------------
+ * Stream formatting
+ * ---------------------------------------------*/
+
 int tm_printf(tm_string_t format, ...);
 int tm_vprintf(tm_string_t format, va_list args);
+
+/* -----------------------------------------------
+ * Bounded buffer formatting
+ * ---------------------------------------------*/
 
 int tm_snprintf(char *ptr, uint8_t size, tm_string_t format, ...);
 int tm_vsnprintf(char *ptr, uint8_t size, tm_string_t format, va_list args);

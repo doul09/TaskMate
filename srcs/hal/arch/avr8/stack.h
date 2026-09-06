@@ -15,10 +15,18 @@
 #ifndef AVR8_STACK_H
 #define AVR8_STACK_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <avr/io.h> // Get SP
 #include <stdint.h>
 
 #include "hal/arch/avr8/arch_define.h"
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 static inline __attribute__((always_inline)) void hal_setStackPointer(const hal_stack_word_t *sp)
 {
