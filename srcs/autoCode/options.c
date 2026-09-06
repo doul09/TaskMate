@@ -14,6 +14,7 @@
 
 #include "options.h"
 
+#include "fileUtility.h"
 #include "tokenizer.h"
 
 static void setErrorsFile(const char *value, options_list_t *opt);
