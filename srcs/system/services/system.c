@@ -14,7 +14,8 @@
 #include "system.h"
 
 #include "interfaces/tm_info.h"
-#include "system/sysCall/sysCall.h"
+#include "system/sysCall/sc_hal.h"
+#include "system/sysCall/sc_modules.h"
 #include "tm_libc/tm_stdio.h"
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
@@ -37,8 +38,7 @@ void system(void)
 	tm_snprintf(
 		msg, sizeof(msg), TM_STR("TaskMate %i.%i %i"), TM_VER_MAJOR, TM_VER_MINOR, TM_BUILD);
 	sc_lcdClear();
-	sc_lcdSetCursor(0, 0);
-	sc_lcdWriteString(TM_STR_RAM(msg));
+	sc_lcdWriteString(TM_STR_RAM(msg), 0, 0);
 
 	while( 1 )
 	{
@@ -54,8 +54,7 @@ void system(void)
 					t.hours,
 					t.minutes,
 					t.seconds);
-		sc_lcdSetCursor(1, 0);
-		sc_lcdWriteString(TM_STR_RAM(msg));
+		sc_lcdWriteString(TM_STR_RAM(msg), 1, 0);
 
 		sc_threadSetSTC(50);
 		while( sc_threadGetSTC() > 0 ) { sc_coopYield(); };

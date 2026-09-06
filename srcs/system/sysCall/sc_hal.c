@@ -7,24 +7,20 @@
  */
 
 /**
- * @file sysCall.c
- * @brief sys call implementation.
- *
+ * @file sc_hal.c
+ * @brief Driver and HAL syscall implementation.
  */
 
-#include "sysCall.h"
+#include "sc_hal.h"
 
 #include "hal/public/atomic.h"
 #include "interfaces/drv_i2c.h"
 #include "interfaces/drv_lcd.h"
 #include "interfaces/drv_rtc.h"
-#include "interfaces/drv_timerSched.h"
 #include "interfaces/drv_usart.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
-#include "interfaces/tm_runLevel.h"
 #include "system/sysCore/modules.h"
-#include "system/sysCore/tm_scheduler.h"
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
 
@@ -33,7 +29,6 @@
 static uint8_t i2c_scan_addresses[I2C_SCAN_ADDRESS_COUNT_MAX];
 static uint8_t i2c_scan_address_count;
 
-static mod_thread_item_t *sc_threadGetPointer(const char *name);
 static mod_driver_item_t *sc_driverGetPointer(const char *name);
 static bool sc_driverControl(const char *name, hal_driver_control_t command);
 static err_codes_t sc_driverOperationError(
@@ -41,69 +36,6 @@ static err_codes_t sc_driverOperationError(
 	hal_driver_state_t (*control)(hal_driver_control_t, hal_driver_control_data_t *));
 static bool sc_i2cAddressFound(uint8_t address);
 static void sc_i2cDriverSetOff(mod_driver_item_t *driver);
-
-void sc_threadSetSTC(uint16_t count)
-{
-	hal_atomic_state_t state = hal_atomicStart();
-	mod_threadSetSTC(count);
-	hal_atomicEnd(state);
-}
-
-uint16_t sc_threadGetSTC(void)
-{
-	hal_atomic_state_t state = hal_atomicStart();
-	uint16_t timer = mod_threadGetSTC();
-	hal_atomicEnd(state);
-	return timer;
-}
-
-uint16_t sc_threadGetCount(void) { return TM_MOD_THREAD_COUNT; }
-
-bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
-{
-	if( (id >= TM_MOD_THREAD_COUNT) || (name == 0) || (run_level == 0) ) { return false; }
-
-	hal_atomic_state_t state = hal_atomicStart();
-	mod_thread_item_t *thread = mod_threadGetPointer((uint8_t)id);
-	*name = thread->name;
-	*run_level = RL_GET_RUN_LEVEL(thread->status);
-	hal_atomicEnd(state);
-
-	return *name != 0;
-}
-
-bool sc_threadStart(const char *name, uint8_t initial_run_level)
-{
-	mod_thread_item_t *thread = sc_threadGetPointer(name);
-	if( thread == 0 ) { return false; }
-
-	hal_atomic_state_t state = hal_atomicStart();
-
-	if( thread->saved_run_level == RL_RUN_NONE ) { thread->saved_run_level = initial_run_level; }
-	else
-	{
-		thread->status &= (uint8_t)~RL_LEVEL_MASK;
-		thread->status |= thread->saved_run_level;
-	}
-
-	hal_atomicEnd(state);
-	return true;
-}
-
-bool sc_threadStop(const char *name)
-{
-	mod_thread_item_t *thread = sc_threadGetPointer(name);
-	if( thread == 0 ) { return false; }
-
-	hal_atomic_state_t state = hal_atomicStart();
-	uint8_t current_run_level = RL_GET_RUN_LEVEL(thread->status);
-
-	thread->saved_run_level = current_run_level;
-	thread->status &= (uint8_t)~RL_LEVEL_MASK;
-
-	hal_atomicEnd(state);
-	return true;
-}
 
 uint16_t sc_driverGetCount(void) { return TM_MOD_DRIVER_COUNT; }
 
@@ -151,13 +83,11 @@ err_codes_t sc_lcdClear(void)
 	return sc_driverOperationError(hal_lcdClear(), hal_lcdControl);
 }
 
-err_codes_t sc_lcdSetCursor(uint8_t row, uint8_t col)
+err_codes_t sc_lcdWriteString(tm_string_t str, uint8_t row, uint8_t col)
 {
-	return sc_driverOperationError(hal_lcdSetCursor(row, col), hal_lcdControl);
-}
+	err_codes_t error = sc_driverOperationError(hal_lcdSetCursor(row, col), hal_lcdControl);
+	if( error != ERR_NO_ERROR ) { return error; }
 
-err_codes_t sc_lcdWriteString(tm_string_t str)
-{
 	return sc_driverOperationError(hal_lcdWriteString(str), hal_lcdControl);
 }
 
@@ -231,16 +161,6 @@ err_codes_t sc_usartRead(uint8_t *data)
 	return control_data.error;
 }
 
-void sc_coopYield(void)
-{
-	hal_atomic_state_t state = hal_atomicStart();
-	mod_thread_item_t *thread = mod_threadGetPointer(mod_threadGetCurrent());
-	TM_SETBIT(thread->status, TM_MOD_THREAD_YIELDED);
-	tm_schedulerCoop();
-	hal_atomicEnd(state);
-	while( TM_GETBIT(thread->status, TM_MOD_THREAD_YIELDED) );
-}
-
 static err_codes_t sc_driverOperationError(
 	hal_driver_state_t state,
 	hal_driver_state_t (*control)(hal_driver_control_t, hal_driver_control_data_t *))
@@ -250,23 +170,6 @@ static err_codes_t sc_driverOperationError(
 	hal_driver_control_data_t control_data;
 	control(DRV_CTRL_GETLASTERROR, &control_data);
 	return control_data.error;
-}
-
-static mod_thread_item_t *sc_threadGetPointer(const char *name)
-{
-	if( name == 0 ) { return 0; }
-
-	for( uint8_t i = 0; i < TM_MOD_THREAD_COUNT; i++ )
-	{
-		mod_thread_item_t *thread = mod_threadGetPointer(i);
-		if( (thread->name != 0) &&
-			tm_strncmp(*thread->name, TM_STR_RAM(name), TM_MOD_NAME_SIZE_MAX) == 0 )
-		{
-			return thread;
-		}
-	}
-
-	return 0;
 }
 
 static mod_driver_item_t *sc_driverGetPointer(const char *name)

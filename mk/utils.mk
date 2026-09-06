@@ -17,10 +17,13 @@ clean:
 	@printf "\n%sRemove files%s\n\n" \
 		"${COLOUR_CLEAN}" "${COLOUR_RESET}"
 	@printf "${COLOUR_CLEAN_SOFT}"
-	@printf "{FILES_OBJ} {FILES_DEP} {PATH_BUILD_TARGET}/TaskMate*\n"
+	@printf "${PATH_BUILD_TARGET}/**/*.o ${PATH_BUILD_TARGET}/**/*.d ${PATH_BUILD_TARGET}/TaskMate*\n"
 	@printf "{FILE_AUTOCODE_TARGET} {PATH_BUILD_TARGET}/.autoCode_stamp* {PATH_BUILD_TARGET}/autoCode_*\n"
 	@printf "${COLOUR_RESET}"	
-	@rm -f ${FILES_OBJ} ${FILES_DEP} ${PATH_BUILD_TARGET}/TaskMate*
+	@if [ -d "${PATH_BUILD_TARGET}" ]; then \
+		find "${PATH_BUILD_TARGET}" -type f \( -name "*.o" -o -name "*.d" \) -delete; \
+	fi
+	@rm -f ${PATH_BUILD_TARGET}/TaskMate*
 	@rm -f ${FILE_AUTOCODE_TARGET} ${PATH_BUILD_TARGET}/.autoCode_stamp* ${PATH_BUILD_TARGET}/autoCode_*
 .PHONY: clean
 

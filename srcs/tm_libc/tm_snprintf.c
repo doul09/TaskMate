@@ -16,7 +16,7 @@
 
 #include "hal/public/tmlibc.h"
 #include "interfaces/tm_define.h"
-#include "system/sysCall/sysCall.h"
+#include "system/sysCall/sc_modules.h"
 
 static void baseConvert(uint16_t value, uint8_t base);
 static void tm_putChar(char ch);
