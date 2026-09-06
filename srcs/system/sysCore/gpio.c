@@ -32,4 +32,3 @@ void gpio_signalSet(gpio_signal_t signal, bool val)
 	hal_gpioPinWrite(signal_table[signal].pin, val);
 }
 bool gpio_signalGet(gpio_signal_t signal) { return hal_gpioPinRead(signal_table[signal].pin); }
-void gpio_signalToggle(gpio_signal_t signal) { gpio_signalSet(signal, !gpio_signalGet(signal)); }

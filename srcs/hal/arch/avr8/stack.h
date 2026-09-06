@@ -24,9 +24,4 @@ static inline __attribute__((always_inline)) void hal_setStackPointer(const hal_
 {
 	SP = (uintptr_t)sp;
 }
-static inline __attribute__((always_inline)) hal_stack_word_t *hal_getStackPointer(void)
-{
-	return (hal_stack_word_t *)SP;
-}
-
 #endif // AVR8_STACK_H
