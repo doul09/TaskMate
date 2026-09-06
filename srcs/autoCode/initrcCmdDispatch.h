@@ -15,7 +15,15 @@
 #ifndef AUTOCODE_INITRCCMDDISPATCH_H
 #define AUTOCODE_INITRCCMDDISPATCH_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include "autoCode.h"
+
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
 
 typedef enum
 {
@@ -30,6 +38,10 @@ typedef struct
 	initrc_dispatch_result_t (*func)(const char *data, module_item_t *mod);
 
 } initrc_cmd_t;
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 initrc_dispatch_result_t initrcCmdDispatch(const char *cmd, const char *data, module_item_t *mod);
 

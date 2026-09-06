@@ -15,7 +15,15 @@
 #ifndef AUTOCODE_AUTOCODE_H
 #define AUTOCODE_AUTOCODE_H
 
+/* ============================================================================
+ * Constants
+ * ========================================================================== */
+
 #define BYTE_INDEX 256
+
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -27,7 +35,14 @@
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
 
-// Message macro
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
+/* -----------------------------------------------
+ * Message macros
+ * ---------------------------------------------*/
+
 #define AUTOCODE_MSG_ERROR(format, ...)                                                          \
 	do {                                                                                         \
 		fprintf(stderr, "[%s:%d] error : " format "\n", __FILE_NAME__, __LINE__, ##__VA_ARGS__); \
@@ -37,7 +52,10 @@
 #define AUTOCODE_MSG_INFO(format, ...) \
 	fprintf(stdout, "[%s] info : " format "\n", __FILE_NAME__, ##__VA_ARGS__)
 
-// Module structures
+/* -----------------------------------------------
+ * Module database types
+ * ---------------------------------------------*/
+
 typedef struct
 {
 	char name[TM_MOD_NAME_SIZE_MAX];

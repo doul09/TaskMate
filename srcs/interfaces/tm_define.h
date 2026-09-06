@@ -16,6 +16,10 @@
 #define INTERFACES_TM_DEFINE_H
 
 // General system definitions
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 #define NULL ((void *)0)
 
 #endif // INTERFACES_TM_DEFINE_H

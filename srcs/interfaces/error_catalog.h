@@ -14,6 +14,10 @@
 #ifndef INTERFACES_ERROR_CATALOG_H
 #define INTERFACES_ERROR_CATALOG_H
 
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 // [autoCode_tag] error_enum
 // clang-format off
 /*

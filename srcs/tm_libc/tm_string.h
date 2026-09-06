@@ -15,6 +15,10 @@
 #ifndef TM_LIBC_TM_STRING_H
 #define TM_LIBC_TM_STRING_H
 
+/* ============================================================================
+ * Target selection
+ * ========================================================================== */
+
 // clang-format off
 
 #include "interfaces/tm_options.h" // get libc selection

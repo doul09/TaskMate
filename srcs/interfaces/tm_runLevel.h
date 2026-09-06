@@ -14,7 +14,10 @@
 #ifndef INTERFACES_TM_RUNLEVEL_H
 #define INTERFACES_TM_RUNLEVEL_H
 
-// Run-level definitions
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 #define RL_RUN_NONE 0
 #define RL_RUN_CORE 1
 #define RL_RUN_DRIVER 2

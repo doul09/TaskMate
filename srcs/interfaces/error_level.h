@@ -14,6 +14,10 @@
 #ifndef INTERFACES_ERROR_LEVEL_H
 #define INTERFACES_ERROR_LEVEL_H
 
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 typedef enum
 {
 	ERR_LEVEL_FLOW, // Normal flow interruption; handled by the thread.

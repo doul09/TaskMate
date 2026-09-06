@@ -14,11 +14,23 @@
 #ifndef INTERFACES_DRV_TIMERSCHED_H
 #define INTERFACES_DRV_TIMERSCHED_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include "interfaces/tm_modules.h"
+
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
 
 /* The scheduler context is opaque outside the architecture-specific implementation. */
 typedef void *hal_timerSchedCallback_func_t(void *context);
 typedef hal_timerSchedCallback_func_t *hal_timerSchedCallback_ptr_t;
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 hal_driver_state_t hal_timerSchedControl(hal_driver_control_t command,
 									 hal_driver_control_data_t *data);

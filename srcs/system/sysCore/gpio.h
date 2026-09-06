@@ -14,10 +14,18 @@
 #ifndef SYSCORE_GPIO_H
 #define SYSCORE_GPIO_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "interfaces/gpio_signals.h"
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 void gpio_signalsInit(void);
 void gpio_signalSet(gpio_signal_t signal, bool val);

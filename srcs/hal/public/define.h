@@ -14,6 +14,10 @@
 #ifndef HAL_PUBLIC_DEFINE_H
 #define HAL_PUBLIC_DEFINE_H
 
+/* ============================================================================
+ * Generated includes
+ * ========================================================================== */
+
 // [autoCode_tag] hal_define
 // clang-format off
 /*

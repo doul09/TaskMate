@@ -18,6 +18,10 @@
 	#error "NOT ALLOWED INCLUDE : modules_list.h"
 #endif
 
+/* ============================================================================
+ * Generated includes
+ * ========================================================================== */
+
 // [autoCode_tag] modules_list
 // clang-format off
 /*

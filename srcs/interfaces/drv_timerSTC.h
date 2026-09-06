@@ -14,9 +14,21 @@
 #ifndef INTERFACES_DRV_TIMERSTC_H
 #define INTERFACES_DRV_TIMERSTC_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include "interfaces/tm_modules.h"
 
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 typedef void (*hal_timerSTCCallback_t)(void);
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 hal_driver_state_t hal_timerSTCControl(hal_driver_control_t command,
 									   hal_driver_control_data_t *data);

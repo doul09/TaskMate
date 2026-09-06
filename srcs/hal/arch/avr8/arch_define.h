@@ -15,16 +15,29 @@
 #ifndef AVR8_ARCH_DEFINE_H
 #define AVR8_ARCH_DEFINE_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include <stdint.h>
 
-// AVR architecture definition
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
+/* -----------------------------------------------
+ * Architecture constants
+ * ---------------------------------------------*/
+
 #define AVR8_REGISTER_COUNT 32 // from R0 to R31
 
-// Stack-related sizes
+/* -----------------------------------------------
+ * Architecture types
+ * ---------------------------------------------*/
+
 typedef uint8_t hal_stack_word_t;
 typedef uint8_t hal_atomic_state_t;
 
-// AVR8 port structure
 typedef struct
 {
 	volatile uint8_t *ddr;

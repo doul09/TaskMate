@@ -15,9 +15,16 @@
 #ifndef AUTOCODE_OPTIONS_H
 #define AUTOCODE_OPTIONS_H
 
+/* ============================================================================
+ * Includes
+ * ========================================================================== */
+
 #include "autoCode.h"
 
-// autoCode option structure
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 typedef struct
 {
 	char file_errors_list[BYTE_INDEX];
@@ -28,6 +35,10 @@ typedef struct
 	char file_gpio_signals[BYTE_INDEX];
 	
 } options_list_t;
+
+/* ============================================================================
+ * Public API
+ * ========================================================================== */
 
 void options(const char *file_name, options_list_t *opt);
 

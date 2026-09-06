@@ -15,6 +15,10 @@
 #ifndef HAL_PUBLIC_GPIO_H
 #define HAL_PUBLIC_GPIO_H
 
+/* ============================================================================
+ * Target selection
+ * ========================================================================== */
+
 #if defined(MCU_atmega2560)
 	#include "hal/mcu/atmega2560/gpio.h"
 	#define HAL_GPIO

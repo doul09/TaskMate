@@ -15,6 +15,10 @@
 #ifndef HAL_PUBLIC_INTERRUPT_H
 #define HAL_PUBLIC_INTERRUPT_H
 
+/* ============================================================================
+ * Target selection
+ * ========================================================================== */
+
 #if !defined(HAL_SYSTEM_CRITICAL_ALLOWED)
 	#error "NOT ALLOWED INCLUDE : interrupt.h"
 #endif

@@ -15,6 +15,10 @@
 #ifndef INTERFACES_GPIO_SIGNALS_H
 #define INTERFACES_GPIO_SIGNALS_H
 
+/* ============================================================================
+ * Public definitions
+ * ========================================================================== */
+
 // [autoCode_tag] gpio_signals
 // clang-format off
 /*
