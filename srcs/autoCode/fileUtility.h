@@ -44,7 +44,7 @@ typedef struct
  * ========================================================================== */
 
 void filePrintModified(void);
-void fileCmpReplace(file_t *file_old, file_t *file_new);
+void fileCmpReplaceAll(void);
 void fileClose(file_t *file, const char *caller, int line);
 void fileInit(file_t *file);
 void fileOpen( file_t *file, const char *mode, int special_mode, const char *caller, int line);

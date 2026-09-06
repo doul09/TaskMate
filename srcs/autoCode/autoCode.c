@@ -119,6 +119,7 @@ int main(int argc, const char *argv[])
 	fileClose(&ftag, __FILE__, __LINE__);
 	tokenizerFree(&tok);
 	parseTagHave();
+	fileCmpReplaceAll();
 
 	// Print module information
 	printModules(&data_base);
