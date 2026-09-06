@@ -9,7 +9,7 @@ identifier names were normalised. Formatter fixes accompanied stricter compiler 
 when the formatter was already in use.
 
 ## Current implementation
-`interfaces/options.h` selects either the TaskMate implementation or standard libc aliases at compile
+`interfaces/tm_options.h` selects either the TaskMate implementation or standard libc aliases at compile
 time. In TaskMate mode:
 
 - `tm_string_t` records whether text is in RAM or ROM, and AVR macros place constant strings in

@@ -7,13 +7,13 @@
  */
 
 /**
- * @file macros.h
+ * @file tm_macros.h
  * @brief macros header declarations.
  *
  */
 
-#ifndef INTERFACES_MACROS_H
-#define INTERFACES_MACROS_H
+#ifndef INTERFACES_TM_MACROS_H
+#define INTERFACES_TM_MACROS_H
 
 #include <stdint.h>
 
@@ -73,4 +73,4 @@
 // Generate a unique name
 #define TM_UNIQUE_NAME(prefix) TM_CONCAT(prefix, __LINE__)
 
-#endif // INTERFACES_MACROS_H
+#endif // INTERFACES_TM_MACROS_H

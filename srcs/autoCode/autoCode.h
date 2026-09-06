@@ -24,8 +24,8 @@
 
 // Get TaskMate definitions
 #define TM_SYSTEM_CRITICAL_ALLOWED
-#include "interfaces/modules_define.h"
-#include "interfaces/runLevel_define.h"
+#include "interfaces/tm_modules.h"
+#include "interfaces/tm_runLevel.h"
 
 // Message macro
 #define AUTOCODE_MSG_ERROR(format, ...)                                                          \

@@ -15,8 +15,8 @@
 #include <stdint.h>
 
 #include "hal/public/panic.h"
-#include "interfaces/TaskMate_info.h"
-#include "interfaces/macros.h"
+#include "interfaces/tm_info.h"
+#include "interfaces/tm_macros.h"
 #include "system/sysCore/boot.h"
 #include "system/sysCore/tm_scheduler.h"
 #include "system/sysCore/tm_softwareTimeCounter.h"

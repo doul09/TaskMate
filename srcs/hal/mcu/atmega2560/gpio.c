@@ -18,7 +18,7 @@
 #include <stdbool.h>
 
 #include "hal/arch/avr8/arch_define.h"
-#include "interfaces/macros.h"
+#include "interfaces/tm_macros.h"
 
 static const hal_port_t mcu_ports[PORT_COUNT] = {
 	[PORT_A] = (hal_port_t){(volatile uint8_t *)_SFR_MEM_ADDR(DDRA),

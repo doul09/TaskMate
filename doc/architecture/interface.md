@@ -6,7 +6,7 @@ The dedicated `interfaces/` layer appeared as TaskMate matured toward portabilit
 After v0.28, the larger system/user/HAL separation made `interfaces/` the common dependency root for the
 new tree. GPIO signal IDs and module/run-level counts became generated there, directory-based header
 guards were applied consistently, and the register-bit macros used by AVR drivers were moved into
-`interfaces/macros.h` and subsequently hardened and renamed.
+`interfaces/tm_macros.h` and subsequently hardened and renamed.
 
 ## Current implementation
 `interfaces/` contains no HAL, sysCore, sysCall, service, or task includes. It currently provides:
@@ -34,9 +34,9 @@ a home for a small amount of generated kernel configuration.
 - Contracts use compact data with no runtime allocation or dispatch cost of their own.
 
 ### Remaining weaknesses
-- `modules_define.h` combines the public driver protocol, thread-status layout, generator limits,
+- `tm_modules.h` combines the public driver protocol, thread-status layout, generator limits,
   stack sizing, and generated kernel counts, coupling separate consumers to one broad contract.
-- `macros.h` uses GNU `__typeof__` and register-oriented size dispatch, while `define.h` provides
+- `tm_macros.h` uses GNU `__typeof__` and register-oriented size dispatch, while `tm_define.h` provides
   its own `NULL`; these choices reduce compiler neutrality and overlap standard C facilities.
 - Driver states, module types, and run levels remain compact integer values. Generated thread
   status values are still emitted as raw integer literals and the shared control-data union cannot

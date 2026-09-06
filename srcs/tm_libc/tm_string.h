@@ -17,8 +17,8 @@
 
 // clang-format off
 
-#include "interfaces/options.h" // get libc selection
-#include "interfaces/tm_string_storage.h"
+#include "interfaces/tm_options.h" // get libc selection
+#include "interfaces/tm_string.h"
 
 
 #if TM_LIBC_CSTD

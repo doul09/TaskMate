@@ -13,7 +13,7 @@
 
 #include "i2c.h"
 
-#include "interfaces/define.h"
+#include "interfaces/tm_define.h"
 #include "system/sysCall/error.h"
 #include "system/sysCall/sysCall.h"
 #include "tm_libc/tm_string.h"

@@ -15,7 +15,7 @@
 #ifndef HAL_AVR8_PANIC_H
 #define HAL_AVR8_PANIC_H
 
-#include "interfaces/tm_string_storage.h"
+#include "interfaces/tm_string.h"
 
 void panic(tm_string_t msg) __attribute__((noreturn, cold));
 

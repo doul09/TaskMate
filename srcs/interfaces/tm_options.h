@@ -7,13 +7,13 @@
  */
 
 /**
- * @file options.h
+ * @file tm_options.h
  * @brief options header declarations.
  *
  */
 
-#ifndef INTERFACES_OPTIONS_H
-#define INTERFACES_OPTIONS_H
+#ifndef INTERFACES_TM_OPTIONS_H
+#define INTERFACES_TM_OPTIONS_H
 
 // Debug options
 #define VERBOSE_LEVEL 0
@@ -26,4 +26,4 @@
 _Static_assert(0, "Select exactly one libc, external or internal");
 #endif
 
-#endif // INTERFACES_OPTIONS_H
+#endif // INTERFACES_TM_OPTIONS_H

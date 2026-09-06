@@ -7,15 +7,15 @@
  */
 
 /**
- * @file define.h
+ * @file tm_define.h
  * @brief define header declarations.
  *
  */
 
-#ifndef INTERFACES_DEFINE_H
-#define INTERFACES_DEFINE_H
+#ifndef INTERFACES_TM_DEFINE_H
+#define INTERFACES_TM_DEFINE_H
 
 // General system definitions
 #define NULL ((void *)0)
 
-#endif // INTERFACES_DEFINE_H
+#endif // INTERFACES_TM_DEFINE_H

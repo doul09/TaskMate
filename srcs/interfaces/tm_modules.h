@@ -7,12 +7,12 @@
  */
 
 /**
- * @file modules_define.h
+ * @file tm_modules.h
  * @brief modules define header declarations.
  */
 
-#ifndef INTERFACES_MODULES_DEFINE_H
-#define INTERFACES_MODULES_DEFINE_H
+#ifndef INTERFACES_TM_MODULES_H
+#define INTERFACES_TM_MODULES_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -100,4 +100,4 @@ typedef union
 #define TM_MOD_THREAD_DEAD 5
 #define TM_MOD_THREAD_YIELDED 6
 
-#endif // INTERFACES_MODULES_DEFINE_H
+#endif // INTERFACES_TM_MODULES_H

@@ -13,9 +13,9 @@
 
 #include "driver.h"
 
-#include "interfaces/define.h"
-#include "interfaces/macros.h"
-#include "interfaces/modules_define.h"
+#include "interfaces/tm_define.h"
+#include "interfaces/tm_macros.h"
+#include "interfaces/tm_modules.h"
 #include "system/sysCall/sysCall.h"
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"

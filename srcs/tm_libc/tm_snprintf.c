@@ -15,7 +15,7 @@
 #include "tm_snprintf.h"
 
 #include "hal/public/tmlibc.h"
-#include "interfaces/define.h"
+#include "interfaces/tm_define.h"
 #include "system/sysCall/sysCall.h"
 
 static void baseConvert(uint16_t value, uint8_t base);

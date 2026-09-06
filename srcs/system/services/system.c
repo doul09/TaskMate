@@ -15,7 +15,7 @@
 
 #include "hal/public/lcd.h"
 #include "hal/public/rtc.h"
-#include "interfaces/TaskMate_info.h"
+#include "interfaces/tm_info.h"
 #include "system/sysCall/sysCall.h"
 #include "tm_libc/tm_stdio.h"
 #include "tm_libc/tm_string.h"

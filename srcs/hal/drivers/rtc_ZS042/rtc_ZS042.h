@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 
-#include "interfaces/modules_define.h"
+#include "interfaces/tm_modules.h"
 
 typedef struct
 {

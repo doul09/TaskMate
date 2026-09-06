@@ -18,9 +18,9 @@
 
 #include "hal/public/i2c.h"
 #include "hal/public/tmlibc.h"
-#include "interfaces/macros.h"
-#include "interfaces/modules_define.h"
-#include "interfaces/runLevel_define.h"
+#include "interfaces/tm_macros.h"
+#include "interfaces/tm_modules.h"
+#include "interfaces/tm_runLevel.h"
 
 // NOLINTBEGIN
 // NOLINT(readability-magic-numbers)

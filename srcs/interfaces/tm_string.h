@@ -7,13 +7,13 @@
  */
 
 /**
- * @file tm_string_storage.h
+ * @file tm_string.h
  * @brief tm string storage header declarations.
  *
  */
 
-#ifndef INTERFACES_TM_STRING_STORAGE_H
-#define INTERFACES_TM_STRING_STORAGE_H
+#ifndef INTERFACES_TM_STRING_H
+#define INTERFACES_TM_STRING_H
 
 #define TM_STRING_SIZE_MAX 255
 
@@ -30,4 +30,4 @@ typedef struct
 	const tm_string_storage_t storage;
 } tm_string_t;
 
-#endif // INTERFACES_TM_STRING_STORAGE_H
+#endif // INTERFACES_TM_STRING_H
