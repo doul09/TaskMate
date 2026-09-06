@@ -63,6 +63,7 @@ void boot(void)
 				(*(mod->control))(DRV_CTRL_START, 0);
 				tm_syslog(TM_STR("start ... ok\n"), mod->name);
 				if( mod->control == hal_i2cControl ) { sc_i2cScan(); }
+				if( mod->control == hal_rtcControl ) { sc_rtcSaveStartupTime(); }
 			}
 		}
 	}
