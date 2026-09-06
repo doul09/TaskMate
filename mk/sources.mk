@@ -17,6 +17,8 @@ OPT_FIND_EXCLUDE = ! -path '*/.*'
 # Source files and objects
 FILES_SRC != find ${PATHS_SOURCES} ${OPT_FIND_EXCLUDE} -type f -name "*.c"
 FILES_SRC_H != find ${PATHS_SOURCES} ${OPT_FIND_EXCLUDE} -type f -name "*.h"
+FILES_DRIVER_INTERFACES != find ${PATH_SRCS}/interfaces ${OPT_FIND_EXCLUDE} -type f \
+	-name "drv_*.h" | sort
 
 FILES_OBJ = ${FILES_SRC:%.c=${PATH_BUILD_TARGET}/%.o}
 

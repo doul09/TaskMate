@@ -7,13 +7,12 @@
  */
 
 /**
- * @file i2c.h
- * @brief i2c header declarations.
- *
+ * @file drv_i2c.h
+ * @brief Generic I2C driver interface declarations.
  */
 
-#ifndef ATMEGA2560_I2C_H
-#define ATMEGA2560_I2C_H
+#ifndef INTERFACES_DRV_I2C_H
+#define INTERFACES_DRV_I2C_H
 
 #include <stdint.h>
 
@@ -38,4 +37,4 @@ hal_driver_state_t hal_i2cCommStop(void);
 hal_driver_state_t hal_i2cWrite(uint8_t data);
 hal_driver_state_t hal_i2cRead(uint8_t *data, hal_i2c_ack_t ack);
 
-#endif // ATMEGA2560_I2C_H
+#endif // INTERFACES_DRV_I2C_H

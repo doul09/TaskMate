@@ -7,15 +7,12 @@
  */
 
 /**
- * @file timerSTC.h
- * @brief timer stc header declarations.
- *
+ * @file drv_timerSTC.h
+ * @brief Generic software time-counter timer driver interface declarations.
  */
 
-#ifndef ATMEGA2560_TIMERSTC_H
-#define ATMEGA2560_TIMERSTC_H
-
-#include <stdint.h>
+#ifndef INTERFACES_DRV_TIMERSTC_H
+#define INTERFACES_DRV_TIMERSTC_H
 
 #include "interfaces/tm_modules.h"
 
@@ -25,4 +22,4 @@ hal_driver_state_t hal_timerSTCControl(hal_driver_control_t command,
 									   hal_driver_control_data_t *data);
 hal_driver_state_t hal_timerSTCSetCallback(hal_timerSTCCallback_t func_ptr);
 
-#endif // ATMEGA2560_TIMERSTC_H
+#endif // INTERFACES_DRV_TIMERSTC_H

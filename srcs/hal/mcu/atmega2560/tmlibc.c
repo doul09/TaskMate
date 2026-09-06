@@ -14,7 +14,7 @@
 
 #include "tmlibc.h"
 
-#include "usart.h"
+#include "interfaces/drv_usart.h"
 
 void hal_stdio_putChar(char ch)
 {

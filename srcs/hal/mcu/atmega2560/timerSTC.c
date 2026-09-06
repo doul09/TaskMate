@@ -12,7 +12,7 @@
  *
  */
 
-#include "timerSTC.h"
+#include "interfaces/drv_timerSTC.h"
 
 #include <avr/interrupt.h>
 #include <avr/io.h>

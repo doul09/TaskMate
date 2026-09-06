@@ -7,25 +7,22 @@
  */
 
 /**
- * @file timerSched.h
- * @brief timer sched header declarations.
- *
+ * @file drv_timerSched.h
+ * @brief Generic scheduler timer driver interface declarations.
  */
 
-#ifndef ATMEGA2560_TIMERSCHED_H
-#define ATMEGA2560_TIMERSCHED_H
+#ifndef INTERFACES_DRV_TIMERSCHED_H
+#define INTERFACES_DRV_TIMERSCHED_H
 
-#include <stdint.h>
-
-#include "hal/arch/avr8/arch_define.h"
 #include "interfaces/tm_modules.h"
 
-typedef hal_stack_word_t *hal_timerSchedCallback_func_t(hal_stack_word_t *stack_pointer);
+/* The scheduler context is opaque outside the architecture-specific implementation. */
+typedef void *hal_timerSchedCallback_func_t(void *context);
 typedef hal_timerSchedCallback_func_t *hal_timerSchedCallback_ptr_t;
 
 hal_driver_state_t hal_timerSchedControl(hal_driver_control_t command,
-										 hal_driver_control_data_t *data);
+									 hal_driver_control_data_t *data);
 hal_driver_state_t hal_timerSchedSetCallback(hal_timerSchedCallback_ptr_t func_ptr);
 hal_driver_state_t hal_timerSchedLoad(void);
 
-#endif // ATMEGA2560_TIMERSCHED_H
+#endif // INTERFACES_DRV_TIMERSCHED_H

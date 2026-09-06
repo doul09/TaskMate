@@ -12,12 +12,12 @@
  *
  */
 
-#include "lcd_AMC2004.h"
+#include "interfaces/drv_lcd.h"
 
 #include <util/delay.h>
 
-#include "hal/public/i2c.h"
 #include "hal/public/tmlibc.h"
+#include "interfaces/drv_i2c.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"

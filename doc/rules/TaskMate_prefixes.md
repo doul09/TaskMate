@@ -27,6 +27,7 @@
 **Portable control operations and state definitions shared by drivers**
 
 - Names the constants declared by the neutral driver interface
+- The corresponding generic interface headers use the `drv_<driver>.h` filename form
 - Keeps the driver control protocol distinct from TaskMate core constants
 - Uses `DRV_CTRL_` for every operation accepted by a driver control function
 

@@ -13,7 +13,8 @@ direct HAL access from the SCLI sources.
 The syscall layer currently has three small API groups:
 
 - `sysCall.c` wraps the current thread's 16-bit software counter in an AVR atomic section, implements
-  cooperative yield, exposes thread and driver life cycle operations, and mediates USART RX/I2C scan;
+  cooperative yield, exposes thread and driver life cycle operations, and mediates LCD, RTC, USART,
+  and I2C operations;
 - `sc_gpio.c` delegates logical set/get/toggle operations to the sysCore GPIO table;
 - `error.c` owns the generated error catalogue and provides message lookup.
 
@@ -21,7 +22,9 @@ The syscall layer currently has three small API groups:
 near its compare point, restores the interrupt state, and waits until the round-robin scheduler clears
 the yielded bit when that thread is selected again. 
 
-`sc_usartRead()` validates its output pointer and translates a successful HAL read to `ERR_NO_ERROR`.
+The LCD and RTC syscalls preserve the service -> sysCall -> HAL boundary and translate the driver's
+last error into `err_codes_t`. `sc_usartRead()` validates its output pointer and translates a successful
+HAL read to `ERR_NO_ERROR`.
 When the driver rejects the read, the syscall returns its exact last error. The read and error snapshot
 share one short AVR atomic section so the RX ISR cannot replace the error between those operations.
 
@@ -39,8 +42,8 @@ life-cycle and dead bits of dead drivers found during the scan so they return to
 - The cooperative-yield mechanism reuses the existing scheduler interrupt and adds no dynamic state.
 
 ### Remaining weaknesses
-- The build-time header policy does not forbid general HAL public headers from service sources, so
-  it does not catch the current RTC/LCD boundary violation.
+- LCD and RTC operations expose only the subset currently used by the system service, and that service
+  ignores their returned error codes.
 - `sc_threadStart()` accepts unvalidated run levels and, when no saved level exists, records the
   supplied level without applying it to status. Repeated `sc_threadStop()` overwrites the saved
   level with `RL_RUN_NONE`.

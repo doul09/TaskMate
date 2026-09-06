@@ -15,9 +15,11 @@
 #include "sysCall.h"
 
 #include "hal/public/atomic.h"
-#include "hal/public/i2c.h"
-#include "hal/public/timerSched.h"
-#include "hal/public/usart.h"
+#include "interfaces/drv_i2c.h"
+#include "interfaces/drv_lcd.h"
+#include "interfaces/drv_rtc.h"
+#include "interfaces/drv_timerSched.h"
+#include "interfaces/drv_usart.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
@@ -34,6 +36,9 @@ static uint8_t i2c_scan_address_count;
 static mod_thread_item_t *sc_threadGetPointer(const char *name);
 static mod_driver_item_t *sc_driverGetPointer(const char *name);
 static bool sc_driverControl(const char *name, hal_driver_control_t command);
+static err_codes_t sc_driverOperationError(
+	hal_driver_state_t state,
+	hal_driver_state_t (*control)(hal_driver_control_t, hal_driver_control_data_t *));
 static bool sc_i2cAddressFound(uint8_t address);
 static void sc_i2cDriverSetOff(mod_driver_item_t *driver);
 
@@ -141,6 +146,27 @@ bool sc_driverStart(const char *name) { return sc_driverControl(name, DRV_CTRL_S
 
 bool sc_driverStop(const char *name) { return sc_driverControl(name, DRV_CTRL_STOP); }
 
+err_codes_t sc_lcdClear(void)
+{
+	return sc_driverOperationError(hal_lcdClear(), hal_lcdControl);
+}
+
+err_codes_t sc_lcdSetCursor(uint8_t row, uint8_t col)
+{
+	return sc_driverOperationError(hal_lcdSetCursor(row, col), hal_lcdControl);
+}
+
+err_codes_t sc_lcdWriteString(tm_string_t str)
+{
+	return sc_driverOperationError(hal_lcdWriteString(str), hal_lcdControl);
+}
+
+err_codes_t sc_rtcRead(hal_rtc_time_t *time)
+{
+	if( time == 0 ) { return ERR_NULL_POINTER; }
+	return sc_driverOperationError(hal_rtcRead(time), hal_rtcControl);
+}
+
 err_codes_t sc_i2cScan(void)
 {
 	uint8_t address;
@@ -213,6 +239,17 @@ void sc_coopYield(void)
 	tm_schedulerCoop();
 	hal_atomicEnd(state);
 	while( TM_GETBIT(thread->status, TM_MOD_THREAD_YIELDED) );
+}
+
+static err_codes_t sc_driverOperationError(
+	hal_driver_state_t state,
+	hal_driver_state_t (*control)(hal_driver_control_t, hal_driver_control_data_t *))
+{
+	if( state == DRV_STATE_RUNNING ) { return ERR_NO_ERROR; }
+
+	hal_driver_control_data_t control_data;
+	control(DRV_CTRL_GETLASTERROR, &control_data);
+	return control_data.error;
 }
 
 static mod_thread_item_t *sc_threadGetPointer(const char *name)

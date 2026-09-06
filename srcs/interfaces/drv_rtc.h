@@ -7,13 +7,12 @@
  */
 
 /**
- * @file rtc_ZS042.h
- * @brief rtc zs042 header declarations.
- *
+ * @file drv_rtc.h
+ * @brief Generic real-time clock driver interface declarations.
  */
 
-#ifndef RTC_ZS042_RTC_ZS042_H
-#define RTC_ZS042_RTC_ZS042_H
+#ifndef INTERFACES_DRV_RTC_H
+#define INTERFACES_DRV_RTC_H
 
 #include <stdint.h>
 
@@ -34,4 +33,4 @@ hal_driver_state_t hal_rtcControl(hal_driver_control_t command, hal_driver_contr
 hal_driver_state_t hal_rtcRead(hal_rtc_time_t *time);
 hal_driver_state_t hal_rtcWrite(const hal_rtc_time_t *time);
 
-#endif // RTC_ZS042_RTC_ZS042_H
+#endif // INTERFACES_DRV_RTC_H

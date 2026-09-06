@@ -7,13 +7,12 @@
  */
 
 /**
- * @file lcd_AMC2004.h
- * @brief lcd amc2004 header declarations.
- *
+ * @file drv_lcd.h
+ * @brief Generic LCD driver interface declarations.
  */
 
-#ifndef LCD_AMC2004_LCD_AMC2004_H
-#define LCD_AMC2004_LCD_AMC2004_H
+#ifndef INTERFACES_DRV_LCD_H
+#define INTERFACES_DRV_LCD_H
 
 #include <stdint.h>
 
@@ -25,4 +24,4 @@ hal_driver_state_t hal_lcdClear(void);
 hal_driver_state_t hal_lcdSetCursor(uint8_t row, uint8_t col);
 hal_driver_state_t hal_lcdWriteString(tm_string_t str);
 
-#endif // LCD_AMC2004_LCD_AMC2004_H
+#endif // INTERFACES_DRV_LCD_H
