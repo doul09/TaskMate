@@ -18,6 +18,8 @@
 
 #include "error.h"
 
+#include "hal/public/panic.h"
+
 #include "tm_libc/tm_string.h"
 
 /* -----------------------------------------------
@@ -94,3 +96,5 @@ const tm_string_t *err_getMessage(uint8_t num)
 	if( num < ERROR_COUNT ) { return error_catalog[num].name; }
 	return 0;
 }
+
+void sc_panic(tm_string_t message) { panic(message); }

@@ -28,6 +28,13 @@
  * ========================================================================== */
 
 /* -----------------------------------------------
+ * Run level
+ * ---------------------------------------------*/
+
+uint8_t sc_runLevelGet(void);
+bool sc_runLevelSet(uint8_t run_level);
+
+/* -----------------------------------------------
  * Software time counter
  * ---------------------------------------------*/
 
@@ -43,6 +50,7 @@ bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
 void sc_threadSetInitialized(void);
 bool sc_threadStart(const char *name, uint8_t initial_run_level);
 bool sc_threadStop(const char *name);
+bool sc_threadRunLevelIsReady(uint8_t run_level);
 
 /* -----------------------------------------------
  * Cooperative scheduling

@@ -108,8 +108,8 @@ void mod_threadsAlloc(void)
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread0_name, "system");
 	mod->name = &thread0_name;
-	mod->status = 19;
-	mod->saved_run_level = 3;
+	mod->status = 17;
+	mod->saved_run_level = 1;
 	mod->main = system;
 
 	mod = mod_threadGetPointer(3);

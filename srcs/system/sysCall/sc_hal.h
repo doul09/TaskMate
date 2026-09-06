@@ -39,6 +39,8 @@ bool sc_driverGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level,
 bool sc_driverInit(const char *name);
 bool sc_driverStart(const char *name);
 bool sc_driverStop(const char *name);
+void sc_driverRunLevelStart(uint8_t run_level);
+bool sc_driverRunLevelIsReady(uint8_t run_level);
 
 /* -----------------------------------------------
  * LCD operations

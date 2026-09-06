@@ -23,7 +23,6 @@
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_info.h"
 #include "interfaces/tm_macros.h"
-#include "system/sysCore/boot.h"
 #include "system/sysCore/modules.h"
 #include "system/sysCore/gpio.h"
 #include "system/sysCore/hal_init.h"
@@ -63,9 +62,6 @@ int main(void)
 	hal_boardInit();
 	gpio_signalsInit();	
 	
-	// drivers
-	boot();
-
 	tm_syslog(
 		TM_STR("[boot] %s v%i.%i build : %i\n"), &file_name, TM_VER_MAJOR, TM_VER_MINOR, TM_BUILD);
 
