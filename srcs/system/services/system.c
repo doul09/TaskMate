@@ -40,6 +40,7 @@
  * ---------------------------------------------*/
 
 static void systemStart(void);
+static void systemRunLevelStart(uint8_t run_level);
 static bool systemRunLevelIsReady(uint8_t run_level);
 
 /* =============================================================================
@@ -96,25 +97,47 @@ void system(void)
 
 static void systemStart(void)
 {
-	for( uint8_t run_level = RL_RUN_CORE; run_level < RL_LEVEL_COUNT; run_level++ )
+	uint8_t run_level = sc_runLevelGet();
+	uint8_t incomplete_round_count = 0;
+
+	if( run_level != RL_RUN_CORE ) { sc_panic(TM_STR("invalid initial run level")); }
+	systemRunLevelStart(run_level);
+
+	while( 1 )
 	{
-		tm_syslog(TM_STR("[system] start run level %i\n"), run_level);
-		sc_driverRunLevelStart(run_level);
-		sc_threadRunLevelStart(run_level);
+		/* As thread zero, returning here means one complete round-robin turn elapsed. */
+		sc_coopYield();
 
-		if( run_level == RL_RUN_CORE ) { (void)sc_i2cScan(); }
-		if( run_level == RL_RUN_DRIVER ) { (void)sc_rtcSaveStartupTime(); }
-
-		for( uint8_t round = 0; round < SYSTEM_RUN_LEVEL_RR_ROUND_COUNT; round++ )
+		if( systemRunLevelIsReady(run_level) )
 		{
-			sc_coopYield();
+			if( run_level == RL_RUN_USER ) { return; }
+
+			run_level++;
+			if( !sc_runLevelSet(run_level) )
+			{
+				sc_panic(TM_STR("run level transition failed"));
+			}
+			systemRunLevelStart(run_level);
+			incomplete_round_count = 0;
 		}
-
-		if( !systemRunLevelIsReady(run_level) )
+		else
 		{
-			sc_panic(TM_STR("run level initialization failed"));
+			incomplete_round_count++;
+			if( incomplete_round_count >= SYSTEM_RUN_LEVEL_RR_ROUND_COUNT )
+			{
+				sc_panic(TM_STR("run level initialization failed"));
+			}
 		}
 	}
+}
+
+static void systemRunLevelStart(uint8_t run_level)
+{
+	tm_syslog(TM_STR("[system] start run level %i\n"), run_level);
+	sc_driverRunLevelStart(run_level);
+
+	if( run_level == RL_RUN_CORE ) { (void)sc_i2cScan(); }
+	if( run_level == RL_RUN_DRIVER ) { (void)sc_rtcSaveStartupTime(); }
 }
 
 static bool systemRunLevelIsReady(uint8_t run_level)

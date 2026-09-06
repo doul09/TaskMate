@@ -16,11 +16,20 @@
 #define SYSCORE_TM_SCHEDULER_H
 
 /* ============================================================================
+ * Includes
+ * ========================================================================== */
+
+#include <stdbool.h>
+#include <stdint.h>
+
+/* ============================================================================
  * Public API
  * ========================================================================== */
 
 void tm_schedulerInit(void);
 void tm_schedulerStart(void);
 void tm_schedulerCoop(void);
+bool tm_schedulerRunLevelSet(uint8_t run_level);
+uint8_t tm_schedulerRunLevelGet(void);
 
 #endif // SYSCORE_TM_SCHEDULER_H

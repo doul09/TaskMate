@@ -397,9 +397,7 @@ static void writeThreadsAlloc(const parse_tag_t *parse)
 				thread_index,
 				mod->modules[i].name);
 		fprintf(parse->file, "\tmod->name = &thread%i_name;\n", thread_index);
-		int initial_status = mod->modules[i].status;
-		if( in_system == false ) { initial_status &= ~RL_LEVEL_MASK; }
-		fprintf(parse->file, "\tmod->status = %i;\n", initial_status);
+		fprintf(parse->file, "\tmod->status = %i;\n", mod->modules[i].status);
 		fprintf(
 			parse->file, "\tmod->saved_run_level = %i;\n", mod->modules[i].status & RL_LEVEL_MASK);
 		fprintf(parse->file, "\tmod->main = %s;\n", mod->modules[i].name);

@@ -33,6 +33,12 @@
 #include "tm_libc/tm_string.h"
 
 /* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
+static volatile uint8_t scheduler_run_level = RL_RUN_CORE;
+
+/* -----------------------------------------------
  * Private function prototypes
  * ---------------------------------------------*/
 
@@ -49,6 +55,7 @@ static mod_thread_item_t *tm_schedulerSelectNext(uint8_t current);
 
 void tm_schedulerInit(void)
 {
+	scheduler_run_level = RL_RUN_CORE;
 	hal_timerSchedControl(DRV_CTRL_INIT, 0);
 	hal_timerSchedSetCallback(tm_schedulerRR);
 }
@@ -64,6 +71,24 @@ void tm_schedulerStart(void)
 	hal_setGlobalInterrupt();
 	hal_returnFromInterrupt();
 }
+
+/* -----------------------------------------------
+ * Run level
+ * ---------------------------------------------*/
+
+bool tm_schedulerRunLevelSet(uint8_t run_level)
+{
+	if( (run_level < RL_RUN_CORE) || (run_level >= RL_LEVEL_COUNT) ||
+		(run_level < scheduler_run_level) )
+	{
+		return false;
+	}
+
+	scheduler_run_level = run_level;
+	return true;
+}
+
+uint8_t tm_schedulerRunLevelGet(void) { return scheduler_run_level; }
 
 /* -----------------------------------------------
  * Cooperative trigger
@@ -100,12 +125,16 @@ static void *tm_schedulerRR(void *stack_pointer)
 
 static mod_thread_item_t *tm_schedulerSelectNext(uint8_t current)
 {
+	uint8_t active_run_level = scheduler_run_level;
+
 	for( uint8_t count = 0; count < TM_MOD_THREAD_COUNT; count++ )
 	{
 		if( ++current == TM_MOD_THREAD_COUNT ) { current = 0; }
 
 		mod_thread_item_t *thread = mod_threadGetPointer(current);
-		if( RL_GET_RUN_LEVEL(thread->status) != RL_RUN_NONE )
+		uint8_t thread_run_level = RL_GET_RUN_LEVEL(thread->status);
+		if( (thread_run_level != RL_RUN_NONE) &&
+			(thread_run_level <= active_run_level) )
 		{
 			mod_threadSetCurrent(current);
 			return thread;
