@@ -40,6 +40,7 @@ uint16_t sc_threadGetSTC(void);
 
 uint16_t sc_threadGetCount(void);
 bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level);
+void sc_threadSetInitialized(void);
 bool sc_threadStart(const char *name, uint8_t initial_run_level);
 bool sc_threadStop(const char *name);
 
