@@ -16,7 +16,6 @@
 #define AUTOCODE_OPTIONS_H
 
 #include "autoCode.h"
-#include "fileUtility.h"
 
 // autoCode option structure
 typedef struct

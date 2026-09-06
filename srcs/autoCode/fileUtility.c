@@ -14,8 +14,6 @@
 
 #include "fileUtility.h"
 
-#include <ctype.h>
-
 static int file_updated = 0;
 static int file_unchanged = 0;
 
