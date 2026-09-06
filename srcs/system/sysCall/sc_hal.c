@@ -41,10 +41,6 @@ static err_codes_t sc_driverOperationError(
 static bool sc_i2cAddressFound(uint8_t address);
 static void sc_i2cDriverSetOff(mod_driver_item_t *driver);
 
-static bool sc_rtcIsLeapYear(uint8_t year);
-static uint8_t sc_rtcDaysInMonth(uint8_t month, uint8_t year);
-static bool sc_rtcTimeToSeconds(const hal_rtc_time_t *time, uint32_t *seconds);
-
 uint16_t sc_driverGetCount(void) { return TM_MOD_DRIVER_COUNT; }
 
 bool sc_driverGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level,
@@ -80,10 +76,8 @@ bool sc_driverGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level,
 	return *name != 0;
 }
 
-bool sc_driverInit(const char *name) { return sc_driverControl(name, DRV_CTRL_INIT); }
-
+bool sc_driverInit(const char *name) { return sc_driverControl(name, DRV_CTRL_INIT); 
 bool sc_driverStart(const char *name) { return sc_driverControl(name, DRV_CTRL_START); }
-
 bool sc_driverStop(const char *name) { return sc_driverControl(name, DRV_CTRL_STOP); }
 
 err_codes_t sc_lcdClear(void)
@@ -117,31 +111,6 @@ err_codes_t sc_rtcSaveStartupTime(void)
 	err_codes_t error = sc_rtcRead(&time);
 	if( error == ERR_NO_ERROR ) { rtc_startup_time = time; }
 	return error;
-}
-
-err_codes_t sc_rtcGetUptime(uint32_t *uptime_seconds)
-{
-	if( uptime_seconds == 0 ) { return ERR_NULL_POINTER; }
-
-	uint32_t startup_seconds;
-	if( !sc_rtcTimeToSeconds(&rtc_startup_time, &startup_seconds) )
-	{
-		return ERR_HAL_DRIVER_INVALID_STATE;
-	}
-
-	hal_rtc_time_t current_time;
-	err_codes_t error = sc_rtcRead(&current_time);
-	if( error != ERR_NO_ERROR ) { return error; }
-
-	uint32_t current_seconds;
-	if( !sc_rtcTimeToSeconds(&current_time, &current_seconds) )
-	{
-		return ERR_HAL_RTC_TIME_OUT_OF_RANGE;
-	}
-	if( current_seconds < startup_seconds ) { return ERR_HAL_DRIVER_INVALID_STATE; }
-
-	*uptime_seconds = current_seconds - startup_seconds;
-	return ERR_NO_ERROR;
 }
 
 err_codes_t sc_i2cScan(void)
@@ -268,55 +237,4 @@ static void sc_i2cDriverSetOff(mod_driver_item_t *driver)
 	driver->control(DRV_CTRL_CLEARBIT, &control_data);
 }
 
-static bool sc_rtcIsLeapYear(uint8_t year) { return (year % 4u) == 0; }
 
-static uint8_t sc_rtcDaysInMonth(uint8_t month, uint8_t year)
-{
-	if( (month == 2u) && sc_rtcIsLeapYear(year) ) { return 29u; }
-
-	switch( month )
-	{
-		case 1u:
-		case 3u:
-		case 5u:
-		case 7u:
-		case 8u:
-		case 10u:
-		case 12u:
-			return 31u;
-		case 4u:
-		case 6u:
-		case 9u:
-		case 11u:
-			return 30u;
-		case 2u:
-			return 28u;
-		default:
-			return 0;
-	}
-}
-
-static bool sc_rtcTimeToSeconds(const hal_rtc_time_t *time, uint32_t *seconds)
-{
-	if( (time == 0) || (seconds == 0) || (time->seconds > 59u) || (time->minutes > 59u) ||
-		(time->hours > 23u) || (time->weekday < 1u) || (time->weekday > 7u) )
-	{
-		return false;
-	}
-
-	uint8_t days_in_month = sc_rtcDaysInMonth(time->month, time->year);
-	if( (time->day < 1u) || (time->day > days_in_month) ) { return false; }
-
-	uint32_t days = ((uint32_t)time->year * 365UL) + (((uint32_t)time->year + 3UL) / 4UL);
-	for( uint8_t month = 1u; month < time->month; month++ )
-	{
-		days += sc_rtcDaysInMonth(month, time->year);
-	}
-	days += (uint32_t)time->day - 1UL;
-
-	*seconds = (((days * RTC_HOURS_PER_DAY) + time->hours) * RTC_MINUTES_PER_HOUR +
-					 time->minutes) *
-					RTC_SECONDS_PER_MINUTE +
-				 time->seconds;
-	return true;
-}

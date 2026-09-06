@@ -1,3 +1,4 @@
+	add rtc commands in scli and sysCall
 	split sysCall in two files sc_hal and sc_modules
 	remove hal/public headers -> interfaces for build time file selection instead of #if
 	autoCode tokenizer go dynamic

@@ -41,10 +41,6 @@ static bool dateParseField(
 	uint16_t *value);
 static bool dateParseTime(const char *text, hal_rtc_time_t *time);
 static bool dateParseDate(const char *text, hal_rtc_time_t *time);
-static bool dateIsLeapYear(uint8_t year);
-static uint8_t dateDaysInMonth(uint8_t month, uint8_t year);
-static bool dateDayNumber(const hal_rtc_time_t *time, uint32_t *day_number);
-static void dateUpdateWeekday(hal_rtc_time_t *time, uint32_t previous_day_number);
 
 static const date_cmd_t date_cmd[] = {
 	{"time", dateSetTime},
@@ -226,9 +222,6 @@ static bool dateParseDate(const char *text, hal_rtc_time_t *time)
 {
 	if( (text == 0) || (time == 0) ) { return false; }
 
-	uint32_t previous_day_number;
-	if( !dateDayNumber(time, &previous_day_number) ) { return false; }
-
 	const char *cursor = text;
 	uint16_t day;
 	uint16_t month;
@@ -245,71 +238,9 @@ static bool dateParseDate(const char *text, hal_rtc_time_t *time)
 	}
 
 	uint8_t rtc_year = (uint8_t)(year - 2000u);
-	if( (day < 1u) || (day > dateDaysInMonth((uint8_t)month, rtc_year)) ) { return false; }
 
 	time->day = (uint8_t)day;
 	time->month = (uint8_t)month;
 	time->year = rtc_year;
-	dateUpdateWeekday(time, previous_day_number);
 	return true;
-}
-
-static bool dateIsLeapYear(uint8_t year) { return (year % 4u) == 0; }
-
-static uint8_t dateDaysInMonth(uint8_t month, uint8_t year)
-{
-	if( (month == 2u) && dateIsLeapYear(year) ) { return 29u; }
-
-	switch( month )
-	{
-		case 1u:
-		case 3u:
-		case 5u:
-		case 7u:
-		case 8u:
-		case 10u:
-		case 12u:
-			return 31u;
-		case 4u:
-		case 6u:
-		case 9u:
-		case 11u:
-			return 30u;
-		case 2u:
-			return 28u;
-		default:
-			return 0;
-	}
-}
-
-static bool dateDayNumber(const hal_rtc_time_t *time, uint32_t *day_number)
-{
-	if( (time == 0) || (day_number == 0) || (time->weekday < 1u) || (time->weekday > 7u) )
-	{
-		return false;
-	}
-
-	uint8_t days_in_month = dateDaysInMonth(time->month, time->year);
-	if( (time->day < 1u) || (time->day > days_in_month) ) { return false; }
-
-	uint32_t days = ((uint32_t)time->year * 365UL) + (((uint32_t)time->year + 3UL) / 4UL);
-	for( uint8_t month = 1u; month < time->month; month++ )
-	{
-		days += dateDaysInMonth(month, time->year);
-	}
-	*day_number = days + (uint32_t)time->day - 1UL;
-	return true;
-}
-
-static void dateUpdateWeekday(hal_rtc_time_t *time, uint32_t previous_day_number)
-{
-	uint32_t new_day_number;
-	if( !dateDayNumber(time, &new_day_number) ) { return; }
-
-	int32_t day_delta = (int32_t)new_day_number - (int32_t)previous_day_number;
-	int8_t weekday_delta = (int8_t)(day_delta % 7L);
-	int8_t weekday = (int8_t)time->weekday + weekday_delta;
-	if( weekday < 1 ) { weekday += 7; }
-	if( weekday > 7 ) { weekday -= 7; }
-	time->weekday = (uint8_t)weekday;
 }
