@@ -41,6 +41,7 @@ typedef struct
  * ---------------------------------------------*/
 
 static bool dateShow(uint8_t argc, char *argv[]);
+static bool dateShowStartup(uint8_t argc, char *argv[]);
 static bool dateSetTime(uint8_t argc, char *argv[]);
 static bool dateSetDate(uint8_t argc, char *argv[]);
 static bool dateHelp(uint8_t argc, char *argv[]);
@@ -59,6 +60,7 @@ static bool dateParseDate(const char *text, hal_rtc_time_t *time);
  * ---------------------------------------------*/
 
 static const date_cmd_t date_cmd[] = {
+	{"startup", dateShowStartup},
 	{"time", dateSetTime},
 	{"date", dateSetDate},
 	{"help", dateHelp},
@@ -101,6 +103,28 @@ static bool dateShow(uint8_t argc, char *argv[])
 
 	hal_rtc_time_t time;
 	if( !dateRead(&time) ) { return false; }
+	datePrint(&time);
+	return true;
+}
+
+static bool dateShowStartup(uint8_t argc, char *argv[])
+{
+	(void)argv;
+
+	if( argc != 2u )
+	{
+		dateHelp(0, NULL);
+		return false;
+	}
+
+	hal_rtc_time_t time;
+	err_codes_t error = sc_rtcGetStartupTime(&time);
+	if( error != ERR_NO_ERROR )
+	{
+		datePrintError(error);
+		return false;
+	}
+
 	datePrint(&time);
 	return true;
 }
@@ -154,6 +178,7 @@ static bool dateHelp(uint8_t argc, char *argv[])
 
 	tm_syslog(TM_STR("[date] usage:\n"));
 	tm_syslog(TM_STR("\tdate\n"));
+	tm_syslog(TM_STR("\tdate startup\n"));
 	tm_syslog(TM_STR("\tdate time hh:mm:ss\n"));
 	tm_syslog(TM_STR("\tdate date day/month/year\n"));
 	tm_syslog(TM_STR("\tdate help\n"));
