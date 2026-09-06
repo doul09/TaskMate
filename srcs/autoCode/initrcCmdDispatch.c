@@ -33,14 +33,14 @@ static initrc_dispatch_result_t funcType(const char *data, module_item_t *mod)
 	else if( strcmp(data, "service") == 0 )
 	{
 		mod->type = TM_MOD_THREAD_ID;
-		mod->subtype = TM_MOD_THREAD_TYPE_SYS;
-		mod->status |= (1 << TM_MOD_THREAD_TYPE_SYS);
+		mod->subtype = THREAD_BIT_TYPE_SYS;
+		mod->status |= (1 << THREAD_BIT_TYPE_SYS);
 	}
 	else if( strcmp(data, "user") == 0 )
 	{
 		mod->type = TM_MOD_THREAD_ID;
-		mod->subtype = TM_MOD_THREAD_TYPE_USER;
-		mod->status |= (1 << TM_MOD_THREAD_TYPE_USER);
+		mod->subtype = THREAD_BIT_TYPE_USER;
+		mod->status |= (1 << THREAD_BIT_TYPE_USER);
 	}
 	else { return INITRC_DISPATCH_UNKNOWN_DATA; }
 
