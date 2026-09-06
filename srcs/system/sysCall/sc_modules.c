@@ -118,6 +118,46 @@ bool sc_threadStop(const char *name)
 	return true;
 }
 
+void sc_threadRunLevelStart(uint8_t run_level)
+{
+	if( (run_level == RL_RUN_NONE) || (run_level >= RL_LEVEL_COUNT) ) { return; }
+
+	hal_atomic_state_t state = hal_atomicStart();
+	for( uint8_t i = 0; i < TM_MOD_THREAD_COUNT; i++ )
+	{
+		mod_thread_item_t *thread = mod_threadGetPointer(i);
+		if( thread->saved_run_level == run_level )
+		{
+			thread->status &= (uint8_t)~RL_LEVEL_MASK;
+			thread->status |= run_level;
+		}
+	}
+	hal_atomicEnd(state);
+}
+
+bool sc_threadRunLevelIsReady(uint8_t run_level)
+{
+	if( (run_level == RL_RUN_NONE) || (run_level >= RL_LEVEL_COUNT) ) { return false; }
+
+	bool ready = true;
+	hal_atomic_state_t state = hal_atomicStart();
+	for( uint8_t i = 0; i < TM_MOD_THREAD_COUNT; i++ )
+	{
+		mod_thread_item_t *thread = mod_threadGetPointer(i);
+		if( (thread->saved_run_level == run_level) &&
+			((RL_GET_RUN_LEVEL(thread->status) != run_level) ||
+			 (TM_GETBIT(thread->status, THREAD_BIT_INITIALIZED) == 0) ||
+			 (TM_GETBIT(thread->status, THREAD_BIT_DEAD) != 0)) )
+		{
+			ready = false;
+			break;
+		}
+	}
+	hal_atomicEnd(state);
+
+	return ready;
+}
+
 /* -----------------------------------------------
  * Cooperative scheduling
  * ---------------------------------------------*/

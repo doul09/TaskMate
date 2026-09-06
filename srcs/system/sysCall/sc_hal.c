@@ -24,6 +24,7 @@
 #include "interfaces/drv_usart.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
+#include "interfaces/tm_runLevel.h"
 #include "system/sysCore/modules.h"
 #include "tm_libc/tm_string.h"
 #include "tm_libc/tm_syslog.h"
@@ -104,6 +105,44 @@ bool sc_driverGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level,
 bool sc_driverInit(const char *name) { return sc_driverControl(name, DRV_CTRL_INIT); }
 bool sc_driverStart(const char *name) { return sc_driverControl(name, DRV_CTRL_START); }
 bool sc_driverStop(const char *name) { return sc_driverControl(name, DRV_CTRL_STOP); }
+
+void sc_driverRunLevelStart(uint8_t run_level)
+{
+	if( (run_level == RL_RUN_NONE) || (run_level >= RL_LEVEL_COUNT) ) { return; }
+
+	for( uint8_t i = 0; i < TM_MOD_DRIVER_COUNT; i++ )
+	{
+		mod_driver_item_t *driver = mod_driverGetPointer(i);
+		hal_driver_control_data_t control_data;
+
+		if( (driver->control(DRV_CTRL_RLGET, &control_data) != DRV_STATE_ERROR) &&
+			(control_data.run_level == run_level) )
+		{
+			driver->control(DRV_CTRL_INIT, 0);
+			driver->control(DRV_CTRL_START, 0);
+		}
+	}
+}
+
+bool sc_driverRunLevelIsReady(uint8_t run_level)
+{
+	if( run_level >= RL_LEVEL_COUNT ) { return false; }
+
+	for( uint8_t i = 0; i < TM_MOD_DRIVER_COUNT; i++ )
+	{
+		mod_driver_item_t *driver = mod_driverGetPointer(i);
+		hal_driver_control_data_t control_data;
+
+		if( driver->control(DRV_CTRL_RLGET, &control_data) == DRV_STATE_ERROR ) { return false; }
+		if( (control_data.run_level == run_level) &&
+			(driver->control(DRV_CTRL_GETSTATUS, 0) != DRV_STATE_RUNNING) )
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
 
 /* -----------------------------------------------
  * LCD operations

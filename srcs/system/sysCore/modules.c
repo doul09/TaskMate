@@ -88,7 +88,7 @@ void mod_threadsAlloc(void)
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread1_name, "task1");
 	mod->name = &thread1_name;
-	mod->status = 12;
+	mod->status = 8;
 	mod->saved_run_level = 4;
 	mod->main = task1;
 
@@ -98,7 +98,7 @@ void mod_threadsAlloc(void)
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread2_name, "task2");
 	mod->name = &thread2_name;
-	mod->status = 12;
+	mod->status = 8;
 	mod->saved_run_level = 4;
 	mod->main = task2;
 
@@ -108,8 +108,8 @@ void mod_threadsAlloc(void)
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread0_name, "system");
 	mod->name = &thread0_name;
-	mod->status = 19;
-	mod->saved_run_level = 3;
+	mod->status = 17;
+	mod->saved_run_level = 1;
 	mod->main = system;
 
 	mod = mod_threadGetPointer(3);
@@ -118,7 +118,7 @@ void mod_threadsAlloc(void)
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread3_name, "scli");
 	mod->name = &thread3_name;
-	mod->status = 19;
+	mod->status = 16;
 	mod->saved_run_level = 3;
 	mod->main = scli;
 

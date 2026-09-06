@@ -43,6 +43,8 @@ bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
 void sc_threadSetInitialized(void);
 bool sc_threadStart(const char *name, uint8_t initial_run_level);
 bool sc_threadStop(const char *name);
+void sc_threadRunLevelStart(uint8_t run_level);
+bool sc_threadRunLevelIsReady(uint8_t run_level);
 
 /* -----------------------------------------------
  * Cooperative scheduling
