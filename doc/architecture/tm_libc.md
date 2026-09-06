@@ -1,44 +1,28 @@
 # 📚 Architecture Note — tm_libc
 
 ## Historical developments
-`tm_libc` emerged to avoid full libc dependency on constrained targets and to control code size/behaviour. Over revisions, it gained formatted output support (`tm_snprintf`, `tm_vsnprintf`) and system logging helpers integrated with target-specific output backends.
+`tm_libc` was introduced to bound code size and behaviour on constrained targets. It gained compact
+formatting, RAM/ROM-aware strings, logging, and cooperative yield for formatter contention.
 
-After v0.28, `tm_libc` moved into the separated source tree and its include paths, Doxygen headers, and
-identifier names were normalised. Formatter fixes accompanied stricter compiler warnings. In August
-2026, formatting gained a cooperative-yield attempt around its shared lock so another thread could run
-when the formatter was already in use.
+The layer remains deliberately transversal after the system/user/HAL source split.
 
 ## Current implementation
-`interfaces/tm_options.h` selects either the TaskMate implementation or standard libc aliases at compile
-time. In TaskMate mode:
+Build options select either TaskMate implementations or partial standard-library aliases. TaskMate
+mode provides bounded copy and comparison plus compact print functions supporting characters,
+strings, integers, hexadecimal, binary, percent, and one-digit zero padding.
 
-- `tm_string_t` records whether text is in RAM or ROM, and AVR macros place constant strings in
-  `PROGMEM`;
-- `tm_strncpy()` performs the project's small bounded copy;
-- `tm_snprintf()`, `tm_vsnprintf()`, `tm_printf()`, and `tm_vprintf()` share one static formatter state and
-  support `%c`, `%s`, `%i`, `%x`, `%b`, `%%`, and one-digit zero padding;
-- `tm_syslog()` forwards variadic arguments to the formatter.
-
-The selected `hal/public/tmlibc.h` supplies character reads for RAM/ROM strings and character output.
-On ATmega2560, output is buffered through USART and flushed when full or when a newline is written. The
-implementation is intentionally much smaller than a conforming C stdio/string library.
+Text descriptors distinguish RAM from AVR program memory. Formatting and logging share fixed static
+state. The public HAL backend reads stored text and buffers USART output until full or newline.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
-- ROM-aware strings avoid copying diagnostic text into scarce AVR RAM.
-- `tm_strncmp()` compares RAM/ROM descriptors without temporary copies, and `tm_strncpy()` handles
-  null text, zero capacity, bounded copy, and termination when capacity is available.
-- The supported formatting subset and its temporary storage are fixed; there is no heap allocation.
-- Invalid padding exits through the common clean-up path instead of leaving the formatter lock set.
+- Program-memory strings reduce scarce AVR RAM use.
+- Bounded string operations handle null text, capacity, and termination explicitly.
+- Formatting uses a fixed feature set and temporary storage with no heap.
+- Invalid padding leaves through the common formatter cleanup path.
 
 ### Remaining weaknesses
-- Formatting still uses one global buffer and a non-atomic byte lock. Contention yields only once
-  and does not recheck ownership, so preemption, nesting, or ISR use can corrupt shared state.
-- The buffer-capacity test can write before a non-null buffer of size 0, 1, or 2, underuses larger
-  buffers, and returns stored length rather than standard `snprintf` would-have-written length.
-- Numeric formatting reads 16-bit unsigned values despite `%i` and default variadic promotions. It
-  lacks signed values, wider types, precision, multi-digit width, and bounded format/string indexes.
-- The `TM_LIBC_CSTD` branch does not provide a complete compatible surface, notably for
-  descriptor-based string calls and `tm_syslog`; only the TaskMate branch is exercised by the build.
-- Logging has no levels, sink policy, delivery/back pressure result, or bounded-time guarantee, and
-  its current HAL output may synchronously flush USART data.
+- Formatting uses shared state and a non-atomic lock; one yield does not guarantee ownership.
+- Small buffer capacities can be mishandled, and return length differs from standard `snprintf`.
+- Numeric variadic handling is narrow and lacks signed, wide, precision, and robust bounds support.
+- The standard-libc branch is incomplete, while logging lacks level, sink, and timing policy.
