@@ -5,9 +5,10 @@ target is `avr8 / atmega2560 / Arduino Mega`; preserve portability, deterministi
 behaviour, readability, and explicit architectural boundaries.
 
 Before a substantial change, read the relevant documents in `doc/architecture/`
-and `doc/rules/`, especially `style.md`, `interfaces.md`,
-`arch_boundary_enforcement.md`, `portability.md`, `autoCode.md`, and
-`TaskMate_prefixes.md`.
+and the applicable rules in `doc/rules/`, especially `style.md`, `interfaces.md`,
+and `TaskMate_prefixes.md`. Build-time boundary enforcement is documented in
+`doc/arch_boundary_enforcement.md`; portability and autoCode design are documented
+in `doc/architecture/`.
 
 ## Embedded constraints
 
