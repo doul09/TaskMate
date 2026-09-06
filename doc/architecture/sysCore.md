@@ -1,48 +1,33 @@
 # 🧠 Architecture Note — sysCore
 
 ## Historical developments
-`sysCore` grew from a single-file prototype into the kernel heart: module database, run-level structures, scheduler, and software time counters. A major refactor moved MCU-specific code out of core into HAL, while keeping core ownership of policy (thread switching, module life cycle metadata).
+`sysCore` grew from a single-file prototype into module data, scheduler, GPIO, and software-time
+ownership. MCU mechanisms moved to HAL, while context switching progressed into AVR assembly.
 
-After v0.28, `TaskMate.c` moved above sysCore and the repository gained explicit system, user, HAL, and
-interface boundaries. Thread/module pointers and include paths were corrected during that transition.
-The AVR context switch was then moved progressively into assembly, stack panic handling moved to the
-architecture layer, and the scheduler gained a cooperative-yield trigger in addition to its periodic
-preemption.
+After tag `v0.28`, `TaskMate.c` became the top-level entry point; `8697df7` hardened canary checks.
+Commits `c843372` and `35f329d` removed boot code in favour of top-level and service startup.
+
+Commit `db59169` made the scheduler admit only threads at or below the active run level.
 
 ## Current implementation
-`boot.c` starts the diagnostic USART and initialises generated driver/thread records,
-calls architecture/MCU/board startup hooks, wires GPIO signals, and starts every generated driver in
-ascending configured run level. It runs the I2C discovery syscall immediately after starting the I2C
-driver, before higher-run-level dependent drivers start. `modules.c` owns a static database
-containing generic driver address metadata and control callbacks, four thread control blocks, fixed
-stacks, saved stack pointers, status bytes, and stack canaries.
+The module database contains generated driver records and four fixed thread control blocks, stacks,
+saved contexts, run levels, status bits, and canaries. GPIO and software counters also remain
+owned by sysCore.
 
-The scheduler installs a callback into the 1 ms HAL timer, starts with thread zero, and performs strict
-round-robin selection across all generated threads. The naked AVR timer ISR saves context, gives the
-saved stack pointer to `tm_schedulerRR()`, installs the returned pointer, and restores context. A separate
-10 ms timer callback decrements every non-zero software counter. Cooperative yield accelerates the next
-scheduler interrupt; it does not remove a thread from the round-robin set. GPIO mapping/state and the
-module database also live in sysCore; run levels are stored directly in module status fields.
+The scheduler starts at the core run level with the system thread. Its 1 ms callback saves the AVR
+context and selects a thread with a non-zero level no greater than the active level. The system
+service advances that level after readiness checks. A separate 10 ms callback decrements software
+counters; cooperative yield advances the next scheduling interrupt.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
-- Thread control blocks, stacks, and driver records are statically allocated. Driver life-cycle
-  state is file-local in HAL, and no runtime heap is used.
-- Context-switch mechanism is delegated to HAL/AVR code while selection policy remains in sysCore.
-- The scheduler now selects only threads with a non-zero run level, clears cooperative-yield state
-  on resume, and panics explicitly when no runnable thread exists.
-- Stack canaries are initialised for every thread and checked on both sides of every context switch.
-- Separate 1 ms scheduling and 10 ms delay counters provide simple, predictable timing primitives.
+- Thread, stack, and driver records are static; firmware startup uses no heap.
+- Context mechanics stay in HAL while selection and active run-level policy stay in sysCore.
+- Run-level admission prevents later-stage services and tasks from running during startup.
+- Stack canaries are checked on both sides of every context switch.
 
 ### Remaining weaknesses
-- Non-zero thread run levels have identical round-robin eligibility; dead/type bits do not affect
-  selection, and there are no priority, readiness, blocking, deadline, idle-thread, or overrun
-  semantics. Stopping every thread ends in panic rather than an idle state.
-- Module pointer and current-thread getters/setters do not validate indexes. `thread_current` is
-  shared with the scheduler ISR but is neither volatile nor governed by a documented access
-  contract.
-- Boot special-cases USART, invokes the higher `sc_i2cScan()` layer from sysCore, ignores every life
-  cycle/scan result, logs success unconditionally, and cannot unwind a partial startup.
-  Scheduler and software-counter timer setup also ignore callback/control failures.
-- Stack canaries detect only boundary corruption at a context switch; there is no stack high-water
-  measurement or per-thread sizing evidence.
+- Eligible threads are equal round-robin peers; dead and initialized bits do not affect selection.
+- There is no priority, blocking, deadline, idle-thread, watchdog, or overrun policy.
+- Module index access lacks bounds checks, and shared current-thread state has no explicit contract.
+- Startup remains split across top-level and service code and cannot unwind partial initialization.

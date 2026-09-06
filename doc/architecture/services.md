@@ -1,43 +1,34 @@
 # 🧩 Architecture Note — services
 
 ## Historical developments
-Services were introduced after early core scheduling work to provide reusable system-level threads
-(initially a message server and serial CLI) without mixing application code and kernel internals. The
-message service was later removed.
+Services introduced reusable system threads above the kernel, initially including a message service
+and serial CLI. The message service was later removed as the system service took its role.
 
-After v0.28, services moved into `srcs/system/services` as part of the explicit system/user split. Their
-headers and generated registration were adapted to the new include layout. More recently, the system
-and CLI loops adopted the cooperative-yield syscall while waiting on software time counters, reducing
-their deliberate spin time between polling cycles.
+After tag `v0.28`, services moved under `srcs/system/services`. Commit `5109e98` put SCLI USART RX
+behind sysCall, and later cooperative yield shortened deliberate polling waits.
+
+Commits `c843372` and `35f329d` moved boot work to `TaskMate.c`, then staged startup to `system`.
 
 ## Current implementation
-`services_init.rc` registers two system threads at `RUN_SERVICE`. autoCode assigns each a fixed thread
-record and stack:
+autoCode registers a core-level `system` thread and a service-level `scli` thread with fixed stacks.
+Each thread declares itself initialized through sysCall when its entry begins.
 
-- `system` reads the RTC and writes positioned LCD strings through syscalls, then cooperatively
-  waits through the software time-counter syscalls;
-- `scli` reads USART RX only through `sc_usartRead()`, assembles at most 63 bytes in a fixed local
-  buffer, tokenizes the chunk, and dispatches the `driver`, `i2c`, and `thread` commands.
+The system service starts drivers one run level at a time, triggers I2C discovery, stores the RTC
+startup date, then waits for driver and thread readiness before enabling the next level. It reads
+the RTC, updates the LCD, and cooperatively waits on its software counter.
 
-The system and SCLI both call `sc_coopYield()` while waiting. Resources are fixed at compile time,
-with no heap allocation or service registry beyond the generated module database.
+SCLI reads USART through sysCall into a fixed buffer and dispatches `date`, `driver`, `i2c`, and
+`thread`. The date command reads or updates RTC fields and can display the captured startup date.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
-- Service threads, stacks, and SCLI buffers have fixed memory costs.
-- SCLI uses fixed line/argument bounds, table-driven dispatch, RAM/ROM-aware comparisons, and
-  explicit thread/driver list and life cycle commands through syscalls.
-- USART RX returns explicit `err_codes_t` values across the syscall boundary. An empty RX buffer is
-  normal polling state; other errors are reported through the error catalogue.
-- Both services and the SCLI command handlers use syscalls rather than calling HAL drivers directly.
+- Service records, stacks, command tables, and buffers have fixed memory costs.
+- Startup follows explicit core, driver, service, and user stages with bounded readiness rounds.
+- Both services and all command handlers preserve the service -> sysCall boundary.
+- RTC command errors are translated through the generated error catalogue.
 
 ### Remaining weaknesses
-- The system service currently ignores RTC/LCD syscall return codes, so display or clock failures are
-  not reported or recovered.
-- `tm_libc` still reaches target-specific string and output primitives through its documented
-  transversal HAL backend. This is not a direct service-to-HAL bridge, but it remains target-coupled.
-- SCLI polls the UART and processes each received chunk immediately instead of accumulating a
-  terminated line. `scli_line_length` is unused, long input is split, and excess arguments are
-  silently truncated.
-- Repeated non-empty USART failures are logged on the same USART output path, so diagnostics may be
-  unavailable when the peripheral itself is unusable.
+- Startup discards I2C-scan, RTC-snapshot, and individual driver start results.
+- Thread readiness is self-declared, with no richer health or dependency state.
+- The display loop still ignores RTC/LCD errors and provides no recovery policy.
+- SCLI processes RX chunks rather than complete lines and silently truncates excess arguments.

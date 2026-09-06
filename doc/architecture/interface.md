@@ -1,46 +1,35 @@
 # 🔌 Architecture Note — interface
 
 ## Historical developments
-The dedicated `interfaces/` layer appeared as TaskMate matured toward portability and explicit dependency rules. Earlier hardware-oriented code was gradually refactored to isolate portable logical contracts (e.g., GPIO logical signals, common pin modes) from concrete HAL implementation details.
+`interfaces/` emerged as TaskMate separated portable contracts from hardware implementations. It
+collected common GPIO and pin definitions before becoming the dependency-neutral common root.
 
-After v0.28, the larger system/user/HAL separation made `interfaces/` the common dependency root for the
-new tree. GPIO signal IDs and module/run-level counts became generated there, directory-based header
-guards were applied consistently, and the register-bit macros used by AVR drivers were moved into
-`interfaces/tm_macros.h` and subsequently hardened and renamed.
+After tag `v0.28`, the tree split moved generated GPIO, module, run-level, string, and error
+contracts there. Commits `66661d2` and `f6a6fa1` renamed headers and moved driver APIs here.
+
+Commit `e804075` replaced thread-status defines with typed bits and tightened the representation.
 
 ## Current implementation
-`interfaces/` contains no HAL, sysCore, sysCall, service, or task includes. It currently provides:
+The layer has no HAL, sysCore, sysCall, service, task, or target-implementation includes. It owns:
 
-- common GPIO modes/pulls and the target-generated logical signal enum;
-- generic LCD, RTC, I2C, scheduler-timer, software-counter-timer, and USART driver contracts;
-- the generated error enum and shared `FLOW`/`WARN`/`FAIL`/`PANIC` level type;
-- shared string-storage types and build-time libc/debug options;
-- general bit/string helper macros and a local null definition;
-- generated module counts, fixed run-level definitions, and shared driver/module limits used by
-  autoCode and selected core files.
+- common GPIO types and generated logical signal identifiers;
+- generic LCD, RTC, I2C, timer, and USART driver contracts;
+- generated error codes and shared error levels;
+- string storage, options, bit helpers, run levels, and generated module limits.
 
-Most headers are type, enum, constant, or macro contracts. The build guarded-header mechanism is
-currently applied to selected HAL context/interrupt/stack headers and generated sysCore headers, not
-to the interface headers themselves. This makes the directory both a portability-contract layer and
-a home for a small amount of generated kernel configuration.
+Thread status now has typed bits for category, initialization, death, and cooperative yield. Driver
+status and control remain a separate neutral protocol. Selected generated headers also hold target
+counts and configured driver includes needed by system and HAL consumers.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
-- `interfaces/` remains a deliberately transversal, dependency-neutral layer with no HAL, sysCore,
-  sysCall, service, task, or target-implementation includes.
-- Shared GPIO, error, string-storage, run-level, and generic driver definitions let system and HAL
-  code agree without duplicating representations or exposing a concrete target header.
-- Generated error, GPIO, and module-count values keep selected-target metadata consistent with
-  runtime tables.
-- Contracts use compact data with no runtime allocation or dispatch cost of their own.
+- The layer remains dependency-neutral and deliberately transversal.
+- System and HAL share compact contracts without exposing concrete target headers.
+- Generated errors, signals, counts, and includes stay aligned with the selected target.
+- Contracts add no runtime allocation or independent dispatch cost.
 
 ### Remaining weaknesses
-- `tm_modules.h` combines the public driver protocol, thread-status layout, generator limits,
-  stack sizing, and generated kernel counts, coupling separate consumers to one broad contract.
-- `tm_macros.h` uses GNU `__typeof__` and register-oriented size dispatch, while `tm_define.h` provides
-  its own `NULL`; these choices reduce compiler neutrality and overlap standard C facilities.
-- Driver states, module types, and run levels remain compact integer values. Generated thread
-  status values are still emitted as raw integer literals and the shared control-data union cannot
-  encode which field is valid for a command.
-- Generic driver contracts expose the current HAL entry points but do not yet encode target capability
-  discovery, ISR-safety guarantees, or structured asynchronous error handling.
+- One broad module header mixes driver protocol, thread status, limits, and generated counts.
+- Bit helpers use GNU extensions, and a local null definition overlaps standard C facilities.
+- Generated thread status is emitted as raw integers despite its typed bit contract.
+- Contracts do not express capabilities, ISR safety, or structured asynchronous errors.
