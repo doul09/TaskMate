@@ -3,18 +3,19 @@
 ## Historical developments
 As TaskMate layered architecture matured, `sysCall` became the mediation layer between kernel/services/tasks and hardware-oriented implementation. It consolidated thread delay/yield APIs, error catalogue access, and GPIO logical operations.
 
-After v0.28, GPIO calls were kept in the dedicated `sc_gpio` façade while the general syscall file was
+After v0.28, GPIO calls were kept in the dedicated `sc_gpio` façade while the syscall layer was
 adapted to the separated sysCore/HAL tree. In August 2026, an explicit cooperative-yield path was added:
 a thread can mark itself yielded and request an early scheduler-timer interrupt instead of waiting only
 for the next periodic preemption. USART RX was subsequently moved behind `sc_usartRead()`, removing
 direct HAL access from the SCLI sources.
 
 ## Current implementation
-The syscall layer currently has three small API groups:
+The syscall layer currently has four focused API groups:
 
-- `sysCall.c` wraps the current thread's 16-bit software counter in an AVR atomic section, implements
-  cooperative yield, exposes thread and driver life cycle operations, and mediates LCD, RTC, USART,
-  and I2C operations;
+- `sc_hal.c` exposes driver life cycle and information operations, and mediates LCD, RTC, USART, and
+  I2C operations;
+- `sc_modules.c` wraps thread information, life cycle, the current thread's 16-bit software counter,
+  and cooperative yield;
 - `sc_gpio.c` delegates logical set/get/toggle operations to the sysCore GPIO table;
 - `error.c` owns the generated error catalogue and provides message lookup.
 
@@ -23,8 +24,9 @@ near its compare point, restores the interrupt state, and waits until the round-
 the yielded bit when that thread is selected again. 
 
 The LCD and RTC syscalls preserve the service -> sysCall -> HAL boundary and translate the driver's
-last error into `err_codes_t`. `sc_usartRead()` validates its output pointer and translates a successful
-HAL read to `ERR_NO_ERROR`.
+last error into `err_codes_t`. `sc_lcdWriteString()` positions the cursor and writes the string as
+one logical operation, returning the first error. `sc_usartRead()` validates its output pointer and
+translates a successful HAL read to `ERR_NO_ERROR`.
 When the driver rejects the read, the syscall returns its exact last error. The read and error snapshot
 share one short AVR atomic section so the RX ISR cannot replace the error between those operations.
 

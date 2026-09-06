@@ -14,8 +14,8 @@ their deliberate spin time between polling cycles.
 `services_init.rc` registers two system threads at `RUN_SERVICE`. autoCode assigns each a fixed thread
 record and stack:
 
-- `system` reads the RTC and writes the LCD through syscalls, then cooperatively waits through the
-  software time-counter syscalls;
+- `system` reads the RTC and writes positioned LCD strings through syscalls, then cooperatively
+  waits through the software time-counter syscalls;
 - `scli` reads USART RX only through `sc_usartRead()`, assembles at most 63 bytes in a fixed local
   buffer, tokenizes the chunk, and dispatches the `driver`, `i2c`, and `thread` commands.
 

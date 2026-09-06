@@ -15,7 +15,7 @@
 #include "task1.h"
 
 #include "system/sysCall/sc_gpio.h"
-#include "system/sysCall/sysCall.h"
+#include "system/sysCall/sc_modules.h"
 #include "tm_libc/tm_stdio.h"
 
 uint8_t task1_msg_channel;

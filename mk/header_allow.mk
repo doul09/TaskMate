@@ -31,7 +31,10 @@ CFLAGS_${PATH_SRCS}/system/sysCore/boot.c = \
 CFLAGS_${PATH_SRCS}/system/sysCore/tm_softwareTimeCounter.c = \
 	-DTM_SYSTEM_CRITICAL_ALLOWED
 
-CFLAGS_${PATH_SRCS}/system/sysCall/sysCall.c = \
+CFLAGS_${PATH_SRCS}/system/sysCall/sc_hal.c = \
+	-DTM_SYSTEM_CRITICAL_ALLOWED
+
+CFLAGS_${PATH_SRCS}/system/sysCall/sc_modules.c = \
 	-DTM_SYSTEM_CRITICAL_ALLOWED
 
 CFLAGS_${PATH_SRCS}/system/services/commands/driver.c = \

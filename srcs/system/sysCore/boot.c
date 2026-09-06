@@ -17,7 +17,7 @@
 #include "interfaces/drv_usart.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
-#include "system/sysCall/sysCall.h"
+#include "system/sysCall/sc_hal.h"
 #include "system/sysCore/gpio.h"
 #include "system/sysCore/hal_init.h"
 #include "system/sysCore/modules.h"
