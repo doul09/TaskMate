@@ -22,6 +22,5 @@
 void gpio_signalsInit(void);
 void gpio_signalSet(gpio_signal_t signal, bool val);
 bool gpio_signalGet(gpio_signal_t signal);
-void gpio_signalToggle(gpio_signal_t signal);
 
 #endif // SYSCORE_GPIO_H

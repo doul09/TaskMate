@@ -92,11 +92,6 @@
 	"out __SREG__, r0 \n\t"  \
 	"pop r0	\n\t"
 
-/*static inline __attribute__((always_inline)) void hal_contextSave(void)
-{
-	asm volatile(AVR8_PUSH_ALL_REGS);
-}*/
-
 static inline __attribute__((always_inline)) void hal_contextRestore(void)
 {
 	asm volatile(AVR8_CONTEXT_RESTORE);

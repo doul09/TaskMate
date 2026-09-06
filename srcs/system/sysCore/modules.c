@@ -13,13 +13,10 @@
 
 #include "modules.h"
 
-#include <stddef.h>
-
 #include "hal/public/context.h"
 #include "interfaces/tm_modules.h"
 #include "system/sysCore/modules_list.h"
 #include "tm_libc/tm_string.h"
-#include "tm_libc/tm_syslog.h"
 
 static struct
 {
@@ -49,27 +46,6 @@ mod_thread_item_t *mod_threadGetPointer(uint8_t id) { return &mod_data_base.thre
 
 void mod_threadsAlloc(void)
 {
-	/*	tm_syslog(TM_STR("[modules.c] offsetof(name)                  = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, name));
-		tm_syslog(TM_STR("[modules.c] offsetof(status)                = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, status));
-		tm_syslog(TM_STR("[modules.c] offsetof(saved_run_level)       = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, saved_run_level));
-		tm_syslog(TM_STR("[modules.c] offsetof(main)                  = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, main));
-		tm_syslog(TM_STR("[modules.c] offsetof(software_time_counter) = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, software_time_counter));
-		tm_syslog(TM_STR("[modules.c] offsetof(stack_pointer)         = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, stack_pointer));
-		tm_syslog(TM_STR("[modules.c] offsetof(canary_low)            = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, canary_low));
-		tm_syslog(TM_STR("[modules.c] offsetof(stack)                 = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, stack));
-		tm_syslog(TM_STR("[modules.c] offsetof(canary_high)           = %i\n"),
-				  (unsigned)offsetof(mod_thread_item_t, canary_high));
-		tm_syslog(TM_STR("[modules.c] sizeof(mod_thread_item_t)       = %i\n"),
-				  (unsigned)sizeof(mod_thread_item_t));*/
-
 	for( uint8_t i = 0; i < TM_MOD_THREAD_COUNT; i++ )
 	{
 		mod_thread_item_t *thread = mod_threadGetPointer(i);

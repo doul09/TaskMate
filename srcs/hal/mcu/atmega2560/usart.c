@@ -185,40 +185,6 @@ hal_driver_state_t hal_usartSendTXBuffer(void)
 	return DRV_STATE_RUNNING;
 }
 
-// test Rx buffer
-hal_driver_state_t hal_usartTestBufferRx(void)
-{
-	hal_driver_state_t state = usartRequireRunning();
-	if( state != DRV_STATE_RUNNING ) { return state; }
-	if( CB_EMPTY(buffer_rx_head, buffer_rx_tail) )
-	{
-		return usartSetError(ERR_HAL_USART_RX_BUFFER_EMPTY);
-	}
-	if( CB_FULL(buffer_rx_head, buffer_rx_tail) )
-	{
-		return usartSetError(ERR_HAL_USART_RX_BUFFER_FULL);
-	}
-
-	return DRV_STATE_RUNNING;
-}
-
-// test Tx buffer
-hal_driver_state_t hal_usartTestBufferTx(void)
-{
-	hal_driver_state_t state = usartRequireRunning();
-	if( state != DRV_STATE_RUNNING ) { return state; }
-	if( CB_EMPTY(buffer_tx_head, buffer_tx_tail) )
-	{
-		return usartSetError(ERR_HAL_USART_TX_BUFFER_EMPTY);
-	}
-	if( CB_FULL(buffer_tx_head, buffer_tx_tail) )
-	{
-		return usartSetError(ERR_HAL_USART_TX_BUFFER_FULL);
-	}
-
-	return DRV_STATE_RUNNING;
-}
-
 // write string to Tx buffer
 hal_driver_state_t hal_usartWriteString(tm_string_t str)
 {
