@@ -54,6 +54,7 @@ err_codes_t sc_lcdWriteString(tm_string_t str, uint8_t row, uint8_t col);
 err_codes_t sc_rtcRead(hal_rtc_time_t *time);
 err_codes_t sc_rtcWrite(const hal_rtc_time_t *time);
 err_codes_t sc_rtcSaveStartupTime(void);
+err_codes_t sc_rtcGetStartupTime(hal_rtc_time_t *time);
 
 /* -----------------------------------------------
  * I2C operations
