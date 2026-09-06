@@ -143,6 +143,13 @@ err_codes_t sc_rtcSaveStartupTime(void)
 	return error;
 }
 
+err_codes_t sc_rtcGetStartupTime(hal_rtc_time_t *time)
+{
+	if( time == 0 ) { return ERR_NULL_POINTER; }
+	*time = rtc_startup_time;
+	return ERR_NO_ERROR;
+}
+
 /* -----------------------------------------------
  * I2C discovery
  * ---------------------------------------------*/
