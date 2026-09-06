@@ -35,7 +35,7 @@ uint8_t task2_msg_channel;
 void task2(void)
 {
 	sc_threadSetInitialized();
-		
+
 	while( 1 )
 	{
 		sc_gpio_signalToggle(GPIO_SIGNAL_TASK2_LED);

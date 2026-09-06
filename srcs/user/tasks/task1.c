@@ -35,7 +35,7 @@ uint8_t task1_msg_channel;
 void task1(void)
 {
 	sc_threadSetInitialized();
-	
+
 	while( 1 )
 	{
 

@@ -19,8 +19,8 @@ logic, system behaviour, and hardware dependencies, ensuring both portability an
 
 > <span style="color:green"> **Project Stats (v0.28 [^1] )**</span>
 >
->  <span style="color:green">725 commits • 150 source files • 9247 lines of code •
-> binary size: 13610 bytes (Flash) • RAM usage: 1779 bytes</span>
+>  <span style="color:green">760 commits • 147 source files • 10890 lines of code •
+> binary size: 16260 bytes (Flash) • RAM usage: 1832 bytes</span>
 
 > ⚠️ <span style="color:red">**Development Status**</span>
 >

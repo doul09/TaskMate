@@ -133,8 +133,7 @@ static mod_thread_item_t *tm_schedulerSelectNext(uint8_t current)
 
 		mod_thread_item_t *thread = mod_threadGetPointer(current);
 		uint8_t thread_run_level = RL_GET_RUN_LEVEL(thread->status);
-		if( (thread_run_level != RL_RUN_NONE) &&
-			(thread_run_level <= active_run_level) )
+		if( (thread_run_level != RL_RUN_NONE) && (thread_run_level <= active_run_level) )
 		{
 			mod_threadSetCurrent(current);
 			return thread;

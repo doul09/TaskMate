@@ -20,12 +20,12 @@
 
 #include "hal/public/panic.h"
 #include "interfaces/drv_usart.h"
-#include "interfaces/tm_modules.h"
 #include "interfaces/tm_info.h"
 #include "interfaces/tm_macros.h"
-#include "system/sysCore/modules.h"
+#include "interfaces/tm_modules.h"
 #include "system/sysCore/gpio.h"
 #include "system/sysCore/hal_init.h"
+#include "system/sysCore/modules.h"
 #include "system/sysCore/tm_scheduler.h"
 #include "system/sysCore/tm_softwareTimeCounter.h"
 #include "tm_libc/tm_syslog.h"
@@ -60,8 +60,8 @@ int main(void)
 	hal_archInit();
 	hal_mcuInit();
 	hal_boardInit();
-	gpio_signalsInit();	
-	
+	gpio_signalsInit();
+
 	tm_syslog(
 		TM_STR("[boot] %s v%i.%i build : %i\n"), &file_name, TM_VER_MAJOR, TM_VER_MINOR, TM_BUILD);
 

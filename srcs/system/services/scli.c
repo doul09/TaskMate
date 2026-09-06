@@ -89,7 +89,7 @@ static const scli_cmd_t scli_commands[] = {
 void scli(void)
 {
 	sc_threadSetInitialized();
-	
+
 	while( 1 )
 	{
 		err_codes_t error = scliRead();

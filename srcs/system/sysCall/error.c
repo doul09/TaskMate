@@ -19,7 +19,6 @@
 #include "error.h"
 
 #include "hal/public/panic.h"
-
 #include "tm_libc/tm_string.h"
 
 /* -----------------------------------------------

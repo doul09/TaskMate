@@ -69,7 +69,7 @@ void system(void)
 		msg, sizeof(msg), TM_STR("TaskMate %i.%i %i"), TM_VER_MAJOR, TM_VER_MINOR, TM_BUILD);
 	sc_lcdClear();
 	sc_lcdWriteString(TM_STR_RAM(msg), 0, 0);
-	
+
 	while( 1 )
 	{
 
@@ -113,10 +113,7 @@ static void systemStart(void)
 			if( run_level == RL_RUN_USER ) { return; }
 
 			run_level++;
-			if( !sc_runLevelSet(run_level) )
-			{
-				sc_panic(TM_STR("run level transition failed"));
-			}
+			if( !sc_runLevelSet(run_level) ) { sc_panic(TM_STR("run level transition failed")); }
 			systemRunLevelStart(run_level);
 			incomplete_round_count = 0;
 		}
@@ -133,7 +130,7 @@ static void systemStart(void)
 
 static void systemRunLevelStart(uint8_t run_level)
 {
-	tm_syslog(TM_STR("[system] start run level %i\n"), run_level);
+	tm_syslog(TM_STR("[system] switch to run level %i\n"), run_level);
 	sc_driverRunLevelStart(run_level);
 
 	if( run_level == RL_RUN_CORE ) { (void)sc_i2cScan(); }
