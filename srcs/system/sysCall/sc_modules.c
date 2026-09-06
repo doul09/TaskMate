@@ -77,6 +77,14 @@ bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
  * Thread life cycle
  * ---------------------------------------------*/
 
+void sc_threadSetInitialized(void)
+{
+	hal_atomic_state_t state = hal_atomicStart();
+	mod_thread_item_t *thread = mod_threadGetPointer(mod_threadGetCurrent());
+	TM_SETBIT(thread->status, THREAD_BIT_INITIALIZED);
+	hal_atomicEnd(state);
+}
+
 bool sc_threadStart(const char *name, uint8_t initial_run_level)
 {
 	mod_thread_item_t *thread = sc_threadGetPointer(name);
