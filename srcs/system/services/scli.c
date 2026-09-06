@@ -17,6 +17,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "system/services/commands/date.h"
 #include "system/services/commands/driver.h"
 #include "system/services/commands/i2c.h"
 #include "system/services/commands/thread.h"
@@ -46,6 +47,7 @@ static uint8_t scliTokenize(char *line, char *argv[]);
 static bool scliCommandDispatch(uint8_t argc, char *argv[]);
 
 static const scli_cmd_t scli_commands[] = {
+	{"date", dateCommand},
 	{"driver", driver},
 	{"i2c", i2c},
 	{"thread", thread},
