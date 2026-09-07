@@ -25,8 +25,6 @@
  * Public definitions
  * ========================================================================== */
 
-#define FILE_TOKEN_SIZE 256
-
 #define FILE_READONLY 1
 #define FILE_CREATE 2
 
@@ -36,7 +34,6 @@ typedef struct
 	bool stream_opened; // allow fclose()
 	char *name;
 	bool name_allocated; // allow free()
-	char token[FILE_TOKEN_SIZE];
 } file_t;
 
 typedef enum
