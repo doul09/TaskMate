@@ -94,6 +94,13 @@ void globalError(const char *src_name, error_catalog_t *errors)
 			if( strcmp(tok.tokens[2], "FLOW") == 0 )
 			{
 				errors->catalog[error_index].level = ERR_LEVEL_FLOW;
+				if( strcmp(tok.tokens[1], "\"\"") != 0 )
+				{
+					AUTOCODE_MSG_ERROR("FLOW error message must be empty [%s:%i]",
+									   file_src.name,
+									   file_src_line_number);
+					exit(1);
+				}
 			}
 			else if( strcmp(tok.tokens[2], "WARN") == 0 )
 			{

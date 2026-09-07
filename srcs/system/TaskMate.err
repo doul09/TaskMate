@@ -1,5 +1,5 @@
 # TaskMate general errors
-ERR_NO_ERROR "No error" FLOW
+ERR_NO_ERROR "" FLOW
 ERR_NULL_POINTER "Pointer is NULL" WARN
 ERR_I2C_SCAN_ADDRESS_BUFFER_FULL "I2C scan address buffer is full" WARN
 ERR_UNKNOWN "Most useless error in the world" FAIL

@@ -472,15 +472,28 @@ static void writeErrorCatalog(const parse_tag_t *parse)
 
 	for( int i = 0; i < parse->errors->error_count; i++ )
 	{
-		fprintf(parse->file, "TM_STR_ROM_NEW(err%i, %s);\n", i, parse->errors->catalog[i].message);
+		if( parse->errors->catalog[i].level != ERR_LEVEL_FLOW )
+		{
+			fprintf(
+				parse->file, "TM_STR_ROM_NEW(err%i, %s);\n", i, parse->errors->catalog[i].message);
+		}
 	}
 
 	fprintf(parse->file, "\nconst err_item_t error_catalog[] = \n{\n");
 
 	for( int i = 0; i < parse->errors->error_count; i++ )
 	{
-		fprintf(
-			parse->file, "\t{&err%i, %s},\n", i, errorLevelName(parse->errors->catalog[i].level));
+		if( parse->errors->catalog[i].level == ERR_LEVEL_FLOW )
+		{
+			fprintf(parse->file, "\t{NULL, ERR_LEVEL_FLOW},\n");
+		}
+		else
+		{
+			fprintf(parse->file,
+					"\t{&err%i, %s},\n",
+					i,
+					errorLevelName(parse->errors->catalog[i].level));
+		}
 	}
 	fprintf(parse->file, "};\n");
 

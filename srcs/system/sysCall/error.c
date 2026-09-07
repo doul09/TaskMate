@@ -18,6 +18,8 @@
 
 #include "error.h"
 
+#include <stddef.h>
+
 #include "hal/public/panic.h"
 #include "tm_libc/tm_string.h"
 
@@ -38,12 +40,7 @@ TM_STR_ROM_NEW(err2, "HAL I2C start condition failed");
 TM_STR_ROM_NEW(err3, "HAL I2C address was not acknowledged");
 TM_STR_ROM_NEW(err4, "HAL I2C write failed");
 TM_STR_ROM_NEW(err5, "HAL I2C read failed");
-TM_STR_ROM_NEW(err6, "HAL I2C scan complete");
-TM_STR_ROM_NEW(err7, "hal USART TX buffer empty");
-TM_STR_ROM_NEW(err8, "hal USART RX buffer empty");
-TM_STR_ROM_NEW(err9, "hal USART TX buffer full");
 TM_STR_ROM_NEW(err10, "hal USART RX buffer full");
-TM_STR_ROM_NEW(err11, "No error");
 TM_STR_ROM_NEW(err12, "Pointer is NULL");
 TM_STR_ROM_NEW(err13, "I2C scan address buffer is full");
 TM_STR_ROM_NEW(err14, "Most useless error in the world");
@@ -64,12 +61,12 @@ const err_item_t error_catalog[] =
 	{&err3, ERR_LEVEL_WARN},
 	{&err4, ERR_LEVEL_FAIL},
 	{&err5, ERR_LEVEL_FAIL},
-	{&err6, ERR_LEVEL_FLOW},
-	{&err7, ERR_LEVEL_FLOW},
-	{&err8, ERR_LEVEL_FLOW},
-	{&err9, ERR_LEVEL_FLOW},
+	{NULL, ERR_LEVEL_FLOW},
+	{NULL, ERR_LEVEL_FLOW},
+	{NULL, ERR_LEVEL_FLOW},
+	{NULL, ERR_LEVEL_FLOW},
 	{&err10, ERR_LEVEL_WARN},
-	{&err11, ERR_LEVEL_FLOW},
+	{NULL, ERR_LEVEL_FLOW},
 	{&err12, ERR_LEVEL_WARN},
 	{&err13, ERR_LEVEL_WARN},
 	{&err14, ERR_LEVEL_FAIL},
