@@ -18,6 +18,9 @@
 
 #include "fileUtility.h"
 
+#include <errno.h>
+#include <limits.h>
+
 /* -----------------------------------------------
  * Private types
  * ---------------------------------------------*/
@@ -101,10 +104,15 @@ static void fileCmpReplace(file_t *file_old, file_t *file_new)
 
 	while( true )
 	{
-		char *old_result = fgets(old, sizeof(old), file_old->stream);
-		char *new_result = fgets(new, sizeof(new), file_new->stream);
+		file_get_line_result_t old_result = fileGetLine(file_old, old, sizeof(old));
+		file_get_line_result_t new_result = fileGetLine(file_new, new, sizeof(new));
 
-		if( (old_result == NULL) || (new_result == NULL) )
+		if( (old_result == FILE_GET_LINE_ERROR) || (new_result == FILE_GET_LINE_ERROR) )
+		{
+			AUTOCODE_MSG_ERROR("reading files <%s> and <%s>", file_old->name, file_new->name);
+			exit(1);
+		}
+		if( (old_result == FILE_GET_LINE_EOF) || (new_result == FILE_GET_LINE_EOF) )
 		{
 			same = (old_result == new_result);
 			break;
@@ -129,6 +137,33 @@ static void fileCmpReplace(file_t *file_old, file_t *file_new)
 		rename(file_new->name, file_old->name);
 		file_updated++;
 	}
+}
+
+file_get_line_result_t fileGetLine(file_t *file, char *line, const size_t line_size)
+{
+	if( (file == NULL) || (file->stream == NULL) || (line == NULL) || (line_size < 2U) ||
+		(line_size > INT_MAX) )
+	{
+		errno = EINVAL;
+		return FILE_GET_LINE_ERROR;
+	}
+
+	if( fgets(line, (int)line_size, file->stream) == NULL )
+	{
+		return feof(file->stream) ? FILE_GET_LINE_EOF : FILE_GET_LINE_ERROR;
+	}
+
+	if( strchr(line, '\n') != NULL ) { return FILE_GET_LINE_SUCCESS; }
+
+	/* Distinguish a valid final line that exactly fills the buffer from a truncated line. */
+	if( feof(file->stream) ) { return FILE_GET_LINE_SUCCESS; }
+
+	const int next_character = fgetc(file->stream);
+	if( (next_character == EOF) && feof(file->stream) ) { return FILE_GET_LINE_SUCCESS; }
+	if( next_character == EOF ) { return FILE_GET_LINE_ERROR; }
+
+	errno = EOVERFLOW;
+	return FILE_GET_LINE_ERROR;
 }
 
 void fileClose(file_t *file, const char *caller, const int line)
