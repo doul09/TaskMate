@@ -152,8 +152,10 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 	int file_line_number = 0;
 	tokenizer_t tok = {0};
 	char line[TOKEN_LINE_SIZE_MAX];
+	file_get_line_result_t line_result;
 
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, file_src.stream) )
+	while( (line_result = fileGetLine(&file_src, tok.line, sizeof(tok.line))) ==
+		   FILE_GET_LINE_SUCCESS )
 	{
 		file_line_number++;
 		snprintf(line, sizeof(line), "%s", tok.line);
@@ -212,6 +214,11 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 
 		if( tag_section == 0 ) { fprintf(file_tmp.stream, "%s", line); }
 	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file_src.name, file_line_number);
+		exit(1);
+	}
 	tokenizerFree(&tok);
 
 	if( tag_section == 1 )
@@ -258,7 +265,9 @@ static void writeGpioSignals(const parse_tag_t *parse)
 
 	tokenizer_t tok = {0};
 	int line = 0;
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, file_signals.stream) )
+	file_get_line_result_t line_result;
+	while( (line_result = fileGetLine(&file_signals, tok.line, sizeof(tok.line))) ==
+		   FILE_GET_LINE_SUCCESS )
 	{
 		tokenizer(&tok);
 		line++;
@@ -272,6 +281,11 @@ static void writeGpioSignals(const parse_tag_t *parse)
 			}
 			fprintf(parse->file, "\t%s,\n", tok.tokens[0]);
 		}
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file_signals.name, line);
+		exit(1);
 	}
 	fprintf(parse->file, "\tGPIO_SIGNAL_COUNT\n");
 	fprintf(parse->file, "} gpio_signal_t;\n");
@@ -289,10 +303,17 @@ static void writeHalInit(const parse_tag_t *parse)
 	fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__);
 
 	tokenizer_t tok = {0};
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, file_list.stream) )
+	file_get_line_result_t line_result;
+	while( (line_result = fileGetLine(&file_list, tok.line, sizeof(tok.line))) ==
+		   FILE_GET_LINE_SUCCESS )
 	{
 		tokenizer(&tok);
 		if( tok.count != 0 ) { fprintf(parse->file, "#include \"%s\"\n", tok.tokens[0]); }
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s>", file_list.name);
+		exit(1);
 	}
 	tokenizerFree(&tok);
 	fileClose(&file_list, __FILE__, __LINE__);
@@ -308,10 +329,17 @@ static void writeHalDefine(const parse_tag_t *parse)
 	fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__);
 
 	tokenizer_t tok = {0};
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, file_list.stream) )
+	file_get_line_result_t line_result;
+	while( (line_result = fileGetLine(&file_list, tok.line, sizeof(tok.line))) ==
+		   FILE_GET_LINE_SUCCESS )
 	{
 		tokenizer(&tok);
 		if( tok.count != 0 ) { fprintf(parse->file, "#include \"%s\"\n", tok.tokens[0]); }
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s>", file_list.name);
+		exit(1);
 	}
 	tokenizerFree(&tok);
 	fileClose(&file_list, __FILE__, __LINE__);

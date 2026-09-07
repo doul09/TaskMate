@@ -39,6 +39,13 @@ typedef struct
 	char token[FILE_TOKEN_SIZE];
 } file_t;
 
+typedef enum
+{
+	FILE_GET_LINE_ERROR = -1,
+	FILE_GET_LINE_EOF = 0,
+	FILE_GET_LINE_SUCCESS = 1
+} file_get_line_result_t;
+
 /* ============================================================================
  * Public API
  * ========================================================================== */
@@ -46,8 +53,9 @@ typedef struct
 void filePrintModified(void);
 void fileCmpReplaceAll(void);
 void fileClose(file_t *file, const char *caller, int line);
+file_get_line_result_t fileGetLine(file_t *file, char *line, size_t line_size);
 void fileInit(file_t *file);
-void fileOpen( file_t *file, const char *mode, int special_mode, const char *caller, int line);
+void fileOpen(file_t *file, const char *mode, int special_mode, const char *caller, int line);
 void fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller, int line);
 
 #endif // AUTOCODE_FILEUTILITY_H

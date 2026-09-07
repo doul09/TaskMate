@@ -79,10 +79,17 @@ int main(int argc, const char *argv[])
 	ferror.name = auto_options.file_errors_list;
 	fileOpen(&ferror, "r", FILE_READONLY, __FILE__, __LINE__);
 
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, ferror.stream) )
+	file_get_line_result_t line_result;
+	while( (line_result = fileGetLine(&ferror, tok.line, sizeof(tok.line))) ==
+		   FILE_GET_LINE_SUCCESS )
 	{
 		tokenizer(&tok);
 		if( tok.count != 0 ) { globalError(tok.tokens[0], &errors_catalog); }
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s>", ferror.name);
+		exit(1);
 	}
 	fileClose(&ferror, __FILE__, __LINE__);
 	tokenizerFree(&tok);
@@ -93,10 +100,16 @@ int main(int argc, const char *argv[])
 	finitrc.name = auto_options.file_initrc_list;
 	fileOpen(&finitrc, "r", FILE_READONLY, __FILE__, __LINE__);
 
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, finitrc.stream) )
+	while( (line_result = fileGetLine(&finitrc, tok.line, sizeof(tok.line))) ==
+		   FILE_GET_LINE_SUCCESS )
 	{
 		tokenizer(&tok);
 		if( tok.count != 0 ) { parseInitrc(&data_base, tok.tokens[0]); }
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s>", finitrc.name);
+		exit(1);
 	}
 	fileClose(&finitrc, __FILE__, __LINE__);
 	tokenizerFree(&tok);
@@ -108,13 +121,18 @@ int main(int argc, const char *argv[])
 	fileOpen(&ftag, "r", FILE_READONLY, __FILE__, __LINE__);
 
 	parseTagInit();
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, ftag.stream) )
+	while( (line_result = fileGetLine(&ftag, tok.line, sizeof(tok.line))) == FILE_GET_LINE_SUCCESS )
 	{
 		tokenizer(&tok);
 		if( tok.count != 0 )
 		{
 			parseTag(&data_base, tok.tokens[0], &errors_catalog, &auto_options);
 		}
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s>", ftag.name);
+		exit(1);
 	}
 	fileClose(&ftag, __FILE__, __LINE__);
 	tokenizerFree(&tok);

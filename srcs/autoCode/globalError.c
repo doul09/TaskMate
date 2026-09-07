@@ -40,8 +40,10 @@ void globalError(const char *src_name, error_catalog_t *errors)
 	int error_index = errors->error_count;
 	tokenizer_t tok = {0};
 	char line[TOKEN_LINE_SIZE_MAX];
+	file_get_line_result_t line_result;
 
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, file_src.stream) )
+	while( (line_result = fileGetLine(&file_src, tok.line, sizeof(tok.line))) ==
+		   FILE_GET_LINE_SUCCESS )
 	{
 		file_src_line_number++;
 		snprintf(line, sizeof(line), "%s", tok.line);
@@ -113,6 +115,11 @@ void globalError(const char *src_name, error_catalog_t *errors)
 
 			errors->error_count = error_index;
 		}
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file_src.name, file_src_line_number);
+		exit(1);
 	}
 
 	tokenizerFree(&tok);

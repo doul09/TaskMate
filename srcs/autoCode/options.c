@@ -159,8 +159,9 @@ void options(const char *file_name, options_list_t *opt)
 
 	int file_line_number = 0;
 	tokenizer_t tok = {0};
+	file_get_line_result_t line_result;
 	AUTOCODE_MSG_INFO("read file %s", file_name);
-	while( fgets(tok.line, TOKEN_LINE_SIZE_MAX, file.stream) )
+	while( (line_result = fileGetLine(&file, tok.line, sizeof(tok.line))) == FILE_GET_LINE_SUCCESS )
 	{
 		file_line_number++;
 		tokenizer(&tok);
@@ -189,6 +190,11 @@ void options(const char *file_name, options_list_t *opt)
 				exit(1);
 			}
 		}
+	}
+	if( line_result == FILE_GET_LINE_ERROR )
+	{
+		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file.name, file_line_number);
+		exit(1);
 	}
 	tokenizerFree(&tok);
 
