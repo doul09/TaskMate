@@ -1,3 +1,6 @@
+	upgrade autoCode line reading from file
+	refactor autoCode temporary file
+	update doc/architecture/*.md
 	implement runlevel for boot 
 	add rtc commands in scli and sysCall
 	split sysCall in two files sc_hal and sc_modules

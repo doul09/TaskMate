@@ -20,7 +20,6 @@
 
 #include "system/sysCall/sc_gpio.h"
 #include "system/sysCall/sc_modules.h"
-#include "tm_libc/tm_stdio.h"
 
 /* -----------------------------------------------
  * Task state

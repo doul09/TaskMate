@@ -1,7 +1,9 @@
 AUDIT :
-- general types have to be replaced with custom typedef, to follow hardware portability or translation unit specifications
+- general types have to be replaced with custom typedef, to follow hardware portability or 
+translation unit specifications
 - check type for strings / data ->  char for text, uint8_t for data
-- hal/mcu/atmega2560/hal_gpio.c port table is 16 bit pointer, we lost AVR direct 8 bit access to SFR registers
+- hal/mcu/atmega2560/hal_gpio.c port table is 16 bit pointer, we lost AVR direct 8 bit access to SFR 
+registers
 - #define <-> typedef enum, list in enum. use avrgcc -fshort-enums option for uint8_t size
 - Doxigen documentation : only in .h for API and general operations
 

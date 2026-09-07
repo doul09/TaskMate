@@ -120,6 +120,6 @@ typedef enum
 	THREAD_BIT_INITIALIZED,
 	THREAD_BIT_DEAD,
 	THREAD_BIT_YIELDED
-} tm_thread_status_bit;
+} tm_thread_status_bit_t;
 
 #endif // INTERFACES_TM_MODULES_H

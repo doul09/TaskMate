@@ -26,4 +26,4 @@ busy-waits while periodic scheduler interrupts continue to preempt it.
 - Period, deadline, priority, stack need, and worst-case execution time are not declared or checked.
 - User level gates activation but gives no distinct scheduling policy afterward.
 - Busy-wait delays consume each scheduled slice instead of yielding cooperatively.
-- Unused message-channel state and `tm_stdio` dependencies remain from removed startup output.
+
