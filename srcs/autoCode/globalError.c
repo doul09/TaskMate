@@ -76,8 +76,10 @@ void globalError(const char *src_name, error_catalog_t *errors)
 			}
 			const size_t name_length = strlen(tok.tokens[0]);
 			const size_t message_length = strlen(tok.tokens[1]);
-			if( (name_length >= sizeof(errors->catalog[error_index].name)) ||
-				(message_length >= sizeof(errors->catalog[error_index].message)) )
+			if( (autoCodeBufferStringFits(tok.tokens[0], sizeof(errors->catalog[error_index].name)) ==
+				 false) ||
+				(autoCodeBufferStringFits(tok.tokens[1], sizeof(errors->catalog[error_index].message)) ==
+				 false) )
 			{
 				AUTOCODE_MSG_ERROR("Error name or message is too long [%s:%i]",
 								   file_src.name,

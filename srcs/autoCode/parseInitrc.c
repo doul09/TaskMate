@@ -93,10 +93,12 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 			}
 
 			// Process name
-			if( strlen(tok.tokens[0]) > TM_MOD_NAME_SIZE_MAX - 1 )
+			if( autoCodeBufferStringFits(tok.tokens[0], sizeof(mod_tmp.name)) == false )
 			{
 				AUTOCODE_MSG_ERROR(
-					"Name too long <%s> is over %i", tok.tokens[0], TM_MOD_NAME_SIZE_MAX);
+					"Name too long <%s> (maximum %zu characters)",
+					tok.tokens[0],
+					sizeof(mod_tmp.name) - 1U);
 				exit(1);
 			}
 

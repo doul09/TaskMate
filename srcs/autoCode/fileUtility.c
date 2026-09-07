@@ -86,8 +86,8 @@ void fileCmpReplaceAll(void)
 
 static void fileCmpReplace(file_t *file_old, file_t *file_new)
 {
-	char old[BYTE_INDEX];
-	char new[BYTE_INDEX];
+	char old[AUTOCODE_BUFFER_SIZE];
+	char new[AUTOCODE_BUFFER_SIZE];
 	bool same = true;
 
 	if( fseek(file_old->stream, 0L, SEEK_SET) != 0 )
@@ -142,7 +142,7 @@ static void fileCmpReplace(file_t *file_old, file_t *file_new)
 file_get_line_result_t fileGetLine(file_t *file, char *line, const size_t line_size)
 {
 	if( (file == NULL) || (file->stream == NULL) || (line == NULL) || (line_size < 2U) ||
-		(line_size > INT_MAX) )
+		(line_size > (size_t)INT_MAX) )
 	{
 		errno = EINVAL;
 		return FILE_GET_LINE_ERROR;
@@ -153,7 +153,21 @@ file_get_line_result_t fileGetLine(file_t *file, char *line, const size_t line_s
 		return feof(file->stream) ? FILE_GET_LINE_EOF : FILE_GET_LINE_ERROR;
 	}
 
-	if( strchr(line, '\n') != NULL ) { return FILE_GET_LINE_SUCCESS; }
+	const size_t line_length = strlen(line);
+	if( line_length == 0U )
+	{
+		errno = EILSEQ;
+		return FILE_GET_LINE_ERROR;
+	}
+
+	const size_t index = line_length - 1U;
+	if( autoCodeBufferIndexIsValid(index, line_size) == false )
+	{
+		errno = EOVERFLOW;
+		return FILE_GET_LINE_ERROR;
+	}
+
+	if( line[index] == '\n' ) { return FILE_GET_LINE_SUCCESS; }
 
 	/* Distinguish a valid final line that exactly fills the buffer from a truncated line. */
 	if( feof(file->stream) ) { return FILE_GET_LINE_SUCCESS; }

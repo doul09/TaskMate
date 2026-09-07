@@ -27,12 +27,12 @@
 
 typedef struct
 {
-	char file_errors_list[BYTE_INDEX];
-	char file_initrc_list[BYTE_INDEX];
-	char file_parsetag_list[BYTE_INDEX];
-	char file_halinit_list[BYTE_INDEX];
-	char file_haldefine_list[BYTE_INDEX];
-	char file_gpio_signals[BYTE_INDEX];
+	char file_errors_list[AUTOCODE_BUFFER_SIZE];
+	char file_initrc_list[AUTOCODE_BUFFER_SIZE];
+	char file_parsetag_list[AUTOCODE_BUFFER_SIZE];
+	char file_halinit_list[AUTOCODE_BUFFER_SIZE];
+	char file_haldefine_list[AUTOCODE_BUFFER_SIZE];
+	char file_gpio_signals[AUTOCODE_BUFFER_SIZE];
 	
 } options_list_t;
 

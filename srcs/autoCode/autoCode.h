@@ -19,7 +19,7 @@
  * Constants
  * ========================================================================== */
 
-#define BYTE_INDEX 256
+#define AUTOCODE_BUFFER_SIZE 256
 
 /* ============================================================================
  * Includes
@@ -38,6 +38,22 @@
 /* ============================================================================
  * Public definitions
  * ========================================================================== */
+
+/* Buffer capacity includes the trailing NUL byte. */
+static inline bool autoCodeBufferIndexIsValid(const size_t index, const size_t buffer_size)
+{
+	if( buffer_size < 2U ) { return false; }
+	if( index > buffer_size - 2U ) { return false; }
+	return true;
+}
+
+static inline bool autoCodeBufferStringFits(const char *string, const size_t buffer_size)
+{
+	const size_t string_length = strlen(string);
+
+	if( string_length == 0U ) { return buffer_size > 0U; }
+	return autoCodeBufferIndexIsValid(string_length - 1U, buffer_size);
+}
 
 /* -----------------------------------------------
  * Message macros
