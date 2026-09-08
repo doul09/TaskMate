@@ -47,9 +47,30 @@
 
 static void setupDatabase(modules_database_t *data_base);
 
+/* -----------------------------------------------
+ * Private variables
+ * ---------------------------------------------*/
+
+static unsigned int error_count = 0U;
+static unsigned int maximum_error_count = 0U;
+
 /* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
+
+void autoCodeExit(void)
+{
+	error_count++;
+	if( error_count > maximum_error_count ) { exit(EXIT_FAILURE); }
+}
+
+unsigned int autoCodeErrorCountGet(void) { return error_count; }
+
+void autoCodeErrorCountSet(const unsigned int configured_maximum_error_count)
+{
+	maximum_error_count = configured_maximum_error_count;
+	if( error_count > maximum_error_count ) { exit(EXIT_FAILURE); }
+}
 
 int main(int argc, const char *argv[])
 {
@@ -60,11 +81,13 @@ int main(int argc, const char *argv[])
 	{
 		AUTOCODE_MSG_ERROR("autoCode bad argc (is %i, not 2)\n\tuse autoCode configuration_file",
 						   argc);
-		exit(1);
+		autoCodeExit();
+		return EXIT_FAILURE;
 	}
 
-	options_list_t auto_options;
+	options_list_t auto_options = {0};
 	options(argv[1], &auto_options);
+	if( autoCodeErrorCountGet() != 0U ) { return EXIT_FAILURE; }
 
 	// Set up database
 	modules_database_t data_base;
@@ -83,13 +106,13 @@ int main(int argc, const char *argv[])
 	while( (line_result = fileGetLine(&ferror, tok.line, sizeof(tok.line))) ==
 		   FILE_GET_LINE_SUCCESS )
 	{
-		tokenizer(&tok);
+		if( tokenizer(&tok) != 0 ) { continue; }
 		if( tok.count != 0 ) { globalError(tok.tokens[0], &errors_catalog); }
 	}
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", ferror.name);
-		exit(1);
+		autoCodeExit();
 	}
 	fileClose(&ferror, __FILE__, __LINE__);
 	tokenizerFree(&tok);
@@ -103,13 +126,13 @@ int main(int argc, const char *argv[])
 	while( (line_result = fileGetLine(&finitrc, tok.line, sizeof(tok.line))) ==
 		   FILE_GET_LINE_SUCCESS )
 	{
-		tokenizer(&tok);
+		if( tokenizer(&tok) != 0 ) { continue; }
 		if( tok.count != 0 ) { parseInitrc(&data_base, tok.tokens[0]); }
 	}
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", finitrc.name);
-		exit(1);
+		autoCodeExit();
 	}
 	fileClose(&finitrc, __FILE__, __LINE__);
 	tokenizerFree(&tok);
@@ -123,7 +146,7 @@ int main(int argc, const char *argv[])
 	parseTagInit();
 	while( (line_result = fileGetLine(&ftag, tok.line, sizeof(tok.line))) == FILE_GET_LINE_SUCCESS )
 	{
-		tokenizer(&tok);
+		if( tokenizer(&tok) != 0 ) { continue; }
 		if( tok.count != 0 )
 		{
 			parseTag(&data_base, tok.tokens[0], &errors_catalog, &auto_options);
@@ -132,17 +155,18 @@ int main(int argc, const char *argv[])
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", ftag.name);
-		exit(1);
+		autoCodeExit();
 	}
 	fileClose(&ftag, __FILE__, __LINE__);
 	tokenizerFree(&tok);
 	parseTagHave();
+	if( autoCodeErrorCountGet() != 0U ) { return EXIT_FAILURE; }
 	fileCmpReplaceAll();
 
 	// Print module information
 	printModules(&data_base);
 	filePrintModified();
-	return 0;
+	return (autoCodeErrorCountGet() == 0U) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 static void setupDatabase(modules_database_t *data_base)

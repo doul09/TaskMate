@@ -47,23 +47,27 @@ void globalError(const char *src_name, error_catalog_t *errors)
 	{
 		file_src_line_number++;
 		snprintf(line, sizeof(line), "%s", tok.line);
-		tokenizer(&tok);
+		if( tokenizer(&tok) != 0 ) { continue; }
 
 		if( (tok.count != 0) && (tok.tokens[0][0] != '#') )
 		{
+			bool error_is_valid = true;
+
 			if( tok.count != 3 )
 			{
 				AUTOCODE_MSG_ERROR("wrong token count != 3 tok.line [%s:%i] <%s>",
 								   file_src.name,
 								   file_src_line_number,
 								   line);
-				exit(1);
+				autoCodeExit();
+				continue;
 			}
 
 			if( error_index >= ERROR_COUNT_MAX )
 			{
 				AUTOCODE_MSG_ERROR("Too many errors >= %i", ERROR_COUNT_MAX);
-				exit(1);
+				autoCodeExit();
+				continue;
 			}
 
 			for( int i = 0; i < error_index; i++ )
@@ -71,20 +75,23 @@ void globalError(const char *src_name, error_catalog_t *errors)
 				if( strcmp(tok.tokens[0], errors->catalog[i].name) == 0 )
 				{
 					AUTOCODE_MSG_ERROR("Duplicate error name <%s>", tok.tokens[0]);
-					exit(1);
+					autoCodeExit();
+					error_is_valid = false;
 				}
 			}
+			if( error_is_valid == false ) { continue; }
 			const size_t name_length = strlen(tok.tokens[0]);
 			const size_t message_length = strlen(tok.tokens[1]);
-			if( (autoCodeBufferStringFits(tok.tokens[0], sizeof(errors->catalog[error_index].name)) ==
-				 false) ||
-				(autoCodeBufferStringFits(tok.tokens[1], sizeof(errors->catalog[error_index].message)) ==
-				 false) )
+			if( (autoCodeBufferStringFits(tok.tokens[0],
+										  sizeof(errors->catalog[error_index].name)) == false) ||
+				(autoCodeBufferStringFits(tok.tokens[1],
+										  sizeof(errors->catalog[error_index].message)) == false) )
 			{
 				AUTOCODE_MSG_ERROR("Error name or message is too long [%s:%i]",
 								   file_src.name,
 								   file_src_line_number);
-				exit(1);
+				autoCodeExit();
+				continue;
 			}
 			memcpy(errors->catalog[error_index].name, tok.tokens[0], name_length + 1U);
 			memcpy(errors->catalog[error_index].message, tok.tokens[1], message_length + 1U);
@@ -99,7 +106,8 @@ void globalError(const char *src_name, error_catalog_t *errors)
 					AUTOCODE_MSG_ERROR("FLOW error message must be empty [%s:%i]",
 									   file_src.name,
 									   file_src_line_number);
-					exit(1);
+					autoCodeExit();
+					error_is_valid = false;
 				}
 			}
 			else if( strcmp(tok.tokens[2], "WARN") == 0 )
@@ -117,8 +125,10 @@ void globalError(const char *src_name, error_catalog_t *errors)
 			else
 			{
 				AUTOCODE_MSG_ERROR("wrong error level argument <%s>", tok.tokens[2]);
-				exit(1);
+				autoCodeExit();
+				error_is_valid = false;
 			}
+			if( error_is_valid == false ) { continue; }
 
 			error_index++;
 
@@ -128,7 +138,7 @@ void globalError(const char *src_name, error_catalog_t *errors)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file_src.name, file_src_line_number);
-		exit(1);
+		autoCodeExit();
 	}
 
 	tokenizerFree(&tok);

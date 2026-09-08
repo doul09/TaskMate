@@ -33,13 +33,13 @@ typedef struct
 	char **tokens;
 	int count;
 
-}tokenizer_t;
+} tokenizer_t;
 
 /* ============================================================================
  * Public API
  * ========================================================================== */
 
-void tokenizer(tokenizer_t *tok);
+int tokenizer(tokenizer_t *tok);
 void tokenizerFree(tokenizer_t *tok);
 
 #endif // AUTOCODE_TOKENIZER_H

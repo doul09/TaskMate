@@ -18,6 +18,8 @@
 
 #include "options.h"
 
+#include <errno.h>
+
 #include "fileUtility.h"
 #include "tokenizer.h"
 
@@ -31,17 +33,19 @@ static void setParseTagFile(const char *value, options_list_t *opt);
 static void setHalInitFile(const char *value, options_list_t *opt);
 static void setHalDefineFile(const char *value, options_list_t *opt);
 static void setGpioSignalsFile(const char *value, options_list_t *opt);
+static void setErrorCount(const char *value, options_list_t *opt);
 
 /* -----------------------------------------------
  * Option dispatch table
  * ---------------------------------------------*/
 
-#define HAVE_OPTIONS(X)                                \
-	X(HAVE_ERRORS, "--errors", setErrorsFile)          \
-	X(HAVE_INITRC, "--initrc", setInitrcFile)          \
-	X(HAVE_PARSETAG, "--parsetag", setParseTagFile)    \
-	X(HAVE_HALINIT, "--halinit", setHalInitFile)       \
-	X(HAVE_HALDEFINE, "--haldefine", setHalDefineFile) \
+#define HAVE_OPTIONS(X)                                 \
+	X(HAVE_ERROR_COUNT, "--error_count", setErrorCount) \
+	X(HAVE_ERRORS, "--errors", setErrorsFile)           \
+	X(HAVE_INITRC, "--initrc", setInitrcFile)           \
+	X(HAVE_PARSETAG, "--parsetag", setParseTagFile)     \
+	X(HAVE_HALINIT, "--halinit", setHalInitFile)        \
+	X(HAVE_HALDEFINE, "--haldefine", setHalDefineFile)  \
 	X(HAVE_GPIO_SIGNALS, "--gpio_signals", setGpioSignalsFile)
 
 static const struct
@@ -82,7 +86,8 @@ static void setFileName(char *destination, const size_t destination_size, const 
 	{
 		AUTOCODE_MSG_ERROR("option value is too long (maximum %zu characters)",
 						   destination_size - 1U);
-		exit(1);
+		autoCodeExit();
+		return;
 	}
 
 	memcpy(destination, value, value_length + 1U);
@@ -101,6 +106,26 @@ static void setErrorsFile(const char *value, options_list_t *opt)
 {
 	setFileName(opt->file_errors_list, sizeof(opt->file_errors_list), value);
 	have_options_count[HAVE_ERRORS]++;
+}
+
+static void setErrorCount(const char *value, options_list_t *opt)
+{
+	char *end = NULL;
+	errno = 0;
+	const unsigned long maximum_error_count = strtoul(value, &end, 10);
+	const unsigned int configured_error_count = (unsigned int)maximum_error_count;
+
+	if( (errno != 0) || (end == value) || (*end != '\0') || (value[0] == '-') ||
+		((unsigned long)configured_error_count != maximum_error_count) )
+	{
+		AUTOCODE_MSG_ERROR("invalid --error_count value <%s>", value);
+		autoCodeExit();
+		return;
+	}
+
+	opt->error_count = configured_error_count;
+	autoCodeErrorCountSet(opt->error_count);
+	have_options_count[HAVE_ERROR_COUNT]++;
 }
 
 static void setInitrcFile(const char *value, options_list_t *opt)
@@ -164,7 +189,7 @@ void options(const char *file_name, options_list_t *opt)
 	while( (line_result = fileGetLine(&file, tok.line, sizeof(tok.line))) == FILE_GET_LINE_SUCCESS )
 	{
 		file_line_number++;
-		tokenizer(&tok);
+		if( tokenizer(&tok) != 0 ) { continue; }
 
 		if( (tok.count != 0) && (tok.tokens[0][0] != '#') )
 		{
@@ -178,7 +203,7 @@ void options(const char *file_name, options_list_t *opt)
 				{
 					AUTOCODE_MSG_ERROR(
 						"unknown option [%s:%i] %s\n", file.name, file_line_number, tok.tokens[0]);
-					exit(1);
+					autoCodeExit();
 				}
 			}
 			else
@@ -187,14 +212,14 @@ void options(const char *file_name, options_list_t *opt)
 								   file.name,
 								   file_line_number,
 								   tok.count);
-				exit(1);
+				autoCodeExit();
 			}
 		}
 	}
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file.name, file_line_number);
-		exit(1);
+		autoCodeExit();
 	}
 	tokenizerFree(&tok);
 
@@ -204,13 +229,13 @@ void options(const char *file_name, options_list_t *opt)
 		if( have_options_count[i] == 0 )
 		{
 			AUTOCODE_MSG_ERROR("required autoCode option %s is not set", string_from_have(i));
-			exit(1);
+			autoCodeExit();
 		}
 
 		if( have_options_count[i] > 1 )
 		{
 			AUTOCODE_MSG_ERROR("required autoCode option %s is multiple set", string_from_have(i));
-			exit(1);
+			autoCodeExit();
 		}
 	}
 }
