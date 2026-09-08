@@ -200,7 +200,6 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 			{
 				AUTOCODE_MSG_ERROR(
 					"unknown tag [%s:%i] %s\n", file_name, file_line_number, tok.tokens[2]);
-				autoCodeExit();
 			}
 		}
 
@@ -217,14 +216,12 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file_src.name, file_line_number);
-		autoCodeExit();
 	}
 	tokenizerFree(&tok);
 
 	if( tag_section == 1 )
 	{
 		AUTOCODE_MSG_ERROR("missing end tag [/tag] [%s:%i]", file_src.name, file_line_number);
-		autoCodeExit();
 	}
 	fileClose(&file_src, __FILE__, __LINE__);
 	fileClose(&file_tmp, __FILE__, __LINE__);
@@ -238,13 +235,11 @@ void parseTagHave(void)
 		if( have_tag_count[i] == 0 )
 		{
 			AUTOCODE_MSG_ERROR("required autoCode tag %s is not set", string_from_have(i));
-			autoCodeExit();
 		}
 
 		if( have_tag_count[i] > 1 )
 		{
 			AUTOCODE_MSG_ERROR("required autoCode tag %s is multiple set", string_from_have(i));
-			autoCodeExit();
 		}
 	}
 }
@@ -277,7 +272,6 @@ static void writeGpioSignals(const parse_tag_t *parse)
 			{
 				AUTOCODE_MSG_ERROR(
 					"in file %s wrong token count line %i\n", file_signals.name, line);
-				autoCodeExit();
 			}
 			fprintf(parse->file, "\t%s,\n", tok.tokens[0]);
 		}
@@ -285,7 +279,6 @@ static void writeGpioSignals(const parse_tag_t *parse)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file_signals.name, line);
-		autoCodeExit();
 	}
 	fprintf(parse->file, "\tGPIO_SIGNAL_COUNT\n");
 	fprintf(parse->file, "} gpio_signal_t;\n");
@@ -313,7 +306,6 @@ static void writeHalInit(const parse_tag_t *parse)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", file_list.name);
-		autoCodeExit();
 	}
 	tokenizerFree(&tok);
 	fileClose(&file_list, __FILE__, __LINE__);
@@ -339,7 +331,6 @@ static void writeHalDefine(const parse_tag_t *parse)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", file_list.name);
-		autoCodeExit();
 	}
 	tokenizerFree(&tok);
 	fileClose(&file_list, __FILE__, __LINE__);
@@ -432,11 +423,7 @@ static void writeThreadsAlloc(const parse_tag_t *parse)
 	}
 	have_tag_count[HAVE_THREADS_ALLOC]++;
 
-	if( system_thread_found == false )
-	{
-		AUTOCODE_MSG_ERROR("thread system was not found.");
-		autoCodeExit();
-	}
+	if( system_thread_found == false ) { AUTOCODE_MSG_ERROR("thread system was not found."); }
 }
 
 static void writeDriversAlloc(const parse_tag_t *parse)
@@ -515,7 +502,7 @@ static const char *errorLevelName(const err_level_t level)
 	}
 
 	AUTOCODE_MSG_ERROR("unknown TaskMate error level <%i>", level);
-	autoCodeExit();
+
 	return "ERR_LEVEL_FAIL";
 }
 

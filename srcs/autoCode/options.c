@@ -86,7 +86,7 @@ static void setFileName(char *destination, const size_t destination_size, const 
 	{
 		AUTOCODE_MSG_ERROR("option value is too long (maximum %zu characters)",
 						   destination_size - 1U);
-		autoCodeExit();
+
 		return;
 	}
 
@@ -112,19 +112,16 @@ static void setErrorCount(const char *value, options_list_t *opt)
 {
 	char *end = NULL;
 	errno = 0;
-	const unsigned long maximum_error_count = strtoul(value, &end, 10);
-	const unsigned int configured_error_count = (unsigned int)maximum_error_count;
+	const unsigned int error_count = (int)strtoul(value, &end, 10);
 
-	if( (errno != 0) || (end == value) || (*end != '\0') || (value[0] == '-') ||
-		((unsigned long)configured_error_count != maximum_error_count) )
+	if( (errno != 0) || (end == value) || (*end != '\0') || (value[0] == '-') )
 	{
 		AUTOCODE_MSG_ERROR("invalid --error_count value <%s>", value);
-		autoCodeExit();
+
 		return;
 	}
 
-	opt->error_count = configured_error_count;
-	autoCodeErrorCountSet(opt->error_count);
+	opt->error_count = error_count;
 	have_options_count[HAVE_ERROR_COUNT]++;
 }
 
@@ -203,7 +200,6 @@ void options(const char *file_name, options_list_t *opt)
 				{
 					AUTOCODE_MSG_ERROR(
 						"unknown option [%s:%i] %s\n", file.name, file_line_number, tok.tokens[0]);
-					autoCodeExit();
 				}
 			}
 			else
@@ -212,14 +208,12 @@ void options(const char *file_name, options_list_t *opt)
 								   file.name,
 								   file_line_number,
 								   tok.count);
-				autoCodeExit();
 			}
 		}
 	}
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file.name, file_line_number);
-		autoCodeExit();
 	}
 	tokenizerFree(&tok);
 
@@ -229,13 +223,11 @@ void options(const char *file_name, options_list_t *opt)
 		if( have_options_count[i] == 0 )
 		{
 			AUTOCODE_MSG_ERROR("required autoCode option %s is not set", string_from_have(i));
-			autoCodeExit();
 		}
 
 		if( have_options_count[i] > 1 )
 		{
 			AUTOCODE_MSG_ERROR("required autoCode option %s is multiple set", string_from_have(i));
-			autoCodeExit();
 		}
 	}
 }

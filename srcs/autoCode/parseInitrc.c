@@ -60,7 +60,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 								   initrc_name,
 								   file_line_number,
 								   tok.count);
-				autoCodeExit();
+
 				continue;
 			}
 
@@ -82,7 +82,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 				{
 					AUTOCODE_MSG_ERROR(
 						"unknown command [%s:%i] %s", initrc_name, file_line_number, tok.tokens[i]);
-					autoCodeExit();
+
 					module_is_valid = false;
 				}
 				if( result == INITRC_DISPATCH_UNKNOWN_DATA )
@@ -92,7 +92,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 									   file_line_number,
 									   tok.tokens[i + 1],
 									   tok.tokens[i]);
-					autoCodeExit();
+
 					module_is_valid = false;
 				}
 			}
@@ -104,7 +104,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 				AUTOCODE_MSG_ERROR("Name too long <%s> (maximum %zu characters)",
 								   tok.tokens[0],
 								   sizeof(mod_tmp.name) - 1U);
-				autoCodeExit();
+
 				continue;
 			}
 
@@ -123,7 +123,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 									   initrc_name,
 									   file_line_number,
 									   tok.tokens[0]);
-					autoCodeExit();
+
 					module_is_valid = false;
 				}
 			}
@@ -132,38 +132,38 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 			if( mod_tmp.cnt_set_runlevel < 1 )
 			{
 				AUTOCODE_MSG_ERROR("Module %s : -run option is not set", tok.tokens[0]);
-				autoCodeExit();
+
 				module_is_valid = false;
 			}
 			if( mod_tmp.cnt_set_runlevel > 1 )
 			{
 				AUTOCODE_MSG_ERROR("Module %s : -run option is multiple set", tok.tokens[0]);
-				autoCodeExit();
+
 				module_is_valid = false;
 			}
 			if( mod_tmp.cnt_set_type < 1 )
 			{
 				AUTOCODE_MSG_ERROR("Module %s : -type option is not set", tok.tokens[0]);
-				autoCodeExit();
+
 				module_is_valid = false;
 			}
 			if( mod_tmp.cnt_set_type > 1 )
 			{
 				AUTOCODE_MSG_ERROR("Module %s : -type option is multiple set", tok.tokens[0]);
-				autoCodeExit();
+
 				module_is_valid = false;
 			}
 			if( mod_tmp.cnt_set_address > 1 )
 			{
 				AUTOCODE_MSG_ERROR("Module %s : -i2c option is multiple set", tok.tokens[0]);
-				autoCodeExit();
+
 				module_is_valid = false;
 			}
 			if( (mod_tmp.cnt_set_address == 1) && (mod_tmp.type != TM_MOD_DRIVER_ID) )
 			{
 				AUTOCODE_MSG_ERROR("Module %s : -i2c option is only valid for drivers",
 								   tok.tokens[0]);
-				autoCodeExit();
+
 				module_is_valid = false;
 			}
 			if( module_is_valid == false ) { continue; }
@@ -173,7 +173,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 			if( index > TM_MOD_COUNT_MAX - 1 )
 			{
 				AUTOCODE_MSG_ERROR("too much modules > %i type=%i\n", index, mod_tmp.type);
-				autoCodeExit();
+
 				continue;
 			}
 
@@ -188,7 +188,6 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", initrc_list.name, file_line_number);
-		autoCodeExit();
 	}
 	tokenizerFree(&tok);
 	fileClose(&initrc_list, __FILE__, __LINE__);

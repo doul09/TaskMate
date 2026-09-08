@@ -92,13 +92,11 @@ static void fileCmpReplace(file_t *file_old, file_t *file_new)
 	if( fseek(file_old->stream, 0L, SEEK_SET) != 0 )
 	{
 		AUTOCODE_MSG_ERROR("fseek file <%s>", file_old->name);
-		autoCodeExit();
 	}
 
 	if( fseek(file_new->stream, 0L, SEEK_SET) != 0 )
 	{
 		AUTOCODE_MSG_ERROR("fseek file <%s>", file_new->name);
-		autoCodeExit();
 	}
 
 	while( true )
@@ -109,7 +107,6 @@ static void fileCmpReplace(file_t *file_old, file_t *file_new)
 		if( (old_result == FILE_GET_LINE_ERROR) || (new_result == FILE_GET_LINE_ERROR) )
 		{
 			AUTOCODE_MSG_ERROR("reading files <%s> and <%s>", file_old->name, file_new->name);
-			autoCodeExit();
 		}
 		if( (old_result == FILE_GET_LINE_EOF) || (new_result == FILE_GET_LINE_EOF) )
 		{
@@ -187,7 +184,6 @@ void fileClose(file_t *file, const char *caller, const int line)
 		if( err != 0 )
 		{
 			AUTOCODE_MSG_ERROR("from [%s:%i] close file <%s>", caller, line, file->name);
-			autoCodeExit();
 		}
 		if( file->name_allocated ) { free(file->name); }
 		fileInit(file);
@@ -205,17 +201,12 @@ void fileInit(file_t *file)
 void fileOpen(file_t *file, const char *mode, const int special_mode, const char *caller,
 			  const int line)
 {
-	if( file->name == NULL )
-	{
-		AUTOCODE_MSG_ERROR("from [%s:%i] NULL name ", caller, line);
-		autoCodeExit();
-	}
+	if( file->name == NULL ) { AUTOCODE_MSG_ERROR("from [%s:%i] NULL name ", caller, line); }
 
 	file->stream = fopen(file->name, mode);
 	if( (file->stream == NULL) && (special_mode == FILE_READONLY) )
 	{
 		AUTOCODE_MSG_ERROR("from [%s:%i] opening file <%s>", caller, line, file->name);
-		autoCodeExit();
 	}
 
 	if( (file->stream == NULL) && (special_mode == FILE_CREATE) && (strcmp(mode, "r") == 0) )
@@ -225,14 +216,12 @@ void fileOpen(file_t *file, const char *mode, const int special_mode, const char
 		if( file->stream == NULL )
 		{
 			AUTOCODE_MSG_ERROR("from [%s:%i]creating file <%s>", caller, line, file->name);
-			autoCodeExit();
 		}
 		fclose(file->stream);
 		file->stream = fopen(file->name, mode);
 		if( file->stream == NULL )
 		{
 			AUTOCODE_MSG_ERROR("from [%s:%i]reopening file <%s>", caller, line, file->name);
-			autoCodeExit();
 		}
 	}
 	file->stream_opened = true;
@@ -246,7 +235,6 @@ void fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller
 	if( file_tmp->stream == NULL )
 	{
 		AUTOCODE_MSG_ERROR("from [%s:%i] creating file <%s>", caller, line, file_tmp->name);
-		autoCodeExit();
 	}
 	file_tmp->stream_opened = true;
 }
@@ -272,7 +260,6 @@ static char *fileTmpRegister(const char *file_src_name, const char *caller, cons
 		if( atexit(fileTmpCleanup) != 0 )
 		{
 			AUTOCODE_MSG_ERROR("from [%s:%i] registering temporary file cleanup", caller, line);
-			autoCodeExit();
 		}
 		file_tmp_cleanup_registered = true;
 	}
@@ -282,7 +269,6 @@ static char *fileTmpRegister(const char *file_src_name, const char *caller, cons
 	if( source_name == NULL )
 	{
 		AUTOCODE_MSG_ERROR("from [%s:%i] malloc <%s>", caller, line, file_src_name);
-		autoCodeExit();
 	}
 	memcpy(source_name, file_src_name, source_name_size);
 	char *temporary_name = fileTmpName(file_src_name, caller, line);
@@ -293,7 +279,6 @@ static char *fileTmpRegister(const char *file_src_name, const char *caller, cons
 		free(temporary_name);
 		free(source_name);
 		AUTOCODE_MSG_ERROR("from [%s:%i] realloc temporary file list", caller, line);
-		autoCodeExit();
 	}
 
 	file_tmp_list = list;
@@ -310,7 +295,6 @@ static char *fileTmpName(const char *file_src_name, const char *caller, const in
 	if( file_tmp_name == NULL )
 	{
 		AUTOCODE_MSG_ERROR("from [%s:%i] malloc <%s>", caller, line, file_src_name);
-		autoCodeExit();
 	}
 	snprintf(file_tmp_name, name_size, "%s.tmp", file_src_name);
 	return file_tmp_name;

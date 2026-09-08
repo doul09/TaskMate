@@ -62,7 +62,8 @@ static inline bool autoCodeBufferStringFits(const char *string, const size_t buf
 #define AUTOCODE_MSG_ERROR(format, ...)                                                          \
 	do {                                                                                         \
 		fprintf(stderr, "[%s:%d] error : " format "\n", __FILE_NAME__, __LINE__, ##__VA_ARGS__); \
-		perror("\t");                                                                            \
+		perror("\t"); \
+		autoCodeExit(AC_INCREMENT); \
 	} while( 0 )
 
 #define AUTOCODE_MSG_INFO(format, ...) \
@@ -72,9 +73,16 @@ static inline bool autoCodeBufferStringFits(const char *string, const size_t buf
  * Error handling
  * ---------------------------------------------*/
 
-void autoCodeExit(void);
-unsigned int autoCodeErrorCountGet(void);
-void autoCodeErrorCountSet(unsigned int maximum_error_count);
+typedef enum
+{
+	AC_INCREMENT,
+	AC_FORCE_EXIT
+} ac_error_cmd_t;
+
+void autoCodeExit(ac_error_cmd_t cmd);
+
+//unsigned int autoCodeErrorCountGet(void);
+//void autoCodeErrorCountSet(unsigned int error_count_maximum);
 
 /* -----------------------------------------------
  * Module database types

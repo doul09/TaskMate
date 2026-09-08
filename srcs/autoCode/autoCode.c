@@ -52,25 +52,32 @@ static void setupDatabase(modules_database_t *data_base);
  * ---------------------------------------------*/
 
 static unsigned int error_count = 0U;
-static unsigned int maximum_error_count = 0U;
+static unsigned int error_count_maximum = 10U;
 
 /* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
 
-void autoCodeExit(void)
+void autoCodeExit(ac_error_cmd_t cmd)
 {
-	error_count++;
-	if( error_count > maximum_error_count ) { exit(EXIT_FAILURE); }
+	if( cmd == AC_INCREMENT )
+	{
+		error_count++;
+		if( error_count > error_count_maximum ) { exit(EXIT_FAILURE); }
+	}
+	if( cmd == AC_FORCE_EXIT )
+	{
+		if( error_count > 0 ) { exit(EXIT_FAILURE); }
+	}
 }
 
-unsigned int autoCodeErrorCountGet(void) { return error_count; }
+/*unsigned int autoCodeErrorCountGet(void) { return error_count; }
 
-void autoCodeErrorCountSet(const unsigned int configured_maximum_error_count)
+void autoCodeErrorCountSet(const unsigned int configured_error_count_maximum)
 {
-	maximum_error_count = configured_maximum_error_count;
-	if( error_count > maximum_error_count ) { exit(EXIT_FAILURE); }
-}
+	error_count_maximum = configured_error_count_maximum;
+	if( error_count > error_count_maximum ) { exit(EXIT_FAILURE); }
+}*/
 
 int main(int argc, const char *argv[])
 {
@@ -81,13 +88,12 @@ int main(int argc, const char *argv[])
 	{
 		AUTOCODE_MSG_ERROR("autoCode bad argc (is %i, not 2)\n\tuse autoCode configuration_file",
 						   argc);
-		autoCodeExit();
 		return EXIT_FAILURE;
 	}
 
 	options_list_t auto_options = {0};
 	options(argv[1], &auto_options);
-	if( autoCodeErrorCountGet() != 0U ) { return EXIT_FAILURE; }
+	autoCodeExit(AC_FORCE_EXIT);
 
 	// Set up database
 	modules_database_t data_base;
@@ -112,10 +118,10 @@ int main(int argc, const char *argv[])
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", ferror.name);
-		autoCodeExit();
 	}
 	fileClose(&ferror, __FILE__, __LINE__);
 	tokenizerFree(&tok);
+	autoCodeExit(AC_FORCE_EXIT);
 
 	// Read init.rc files and store entries in the database
 	file_t finitrc;
@@ -132,10 +138,10 @@ int main(int argc, const char *argv[])
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", finitrc.name);
-		autoCodeExit();
 	}
 	fileClose(&finitrc, __FILE__, __LINE__);
 	tokenizerFree(&tok);
+	autoCodeExit(AC_FORCE_EXIT);
 
 	// Parse tags and generate code
 	file_t ftag;
@@ -152,21 +158,19 @@ int main(int argc, const char *argv[])
 			parseTag(&data_base, tok.tokens[0], &errors_catalog, &auto_options);
 		}
 	}
-	if( line_result == FILE_GET_LINE_ERROR )
-	{
-		AUTOCODE_MSG_ERROR("reading file <%s>", ftag.name);
-		autoCodeExit();
-	}
+	if( line_result == FILE_GET_LINE_ERROR ) { AUTOCODE_MSG_ERROR("reading file <%s>", ftag.name); }
 	fileClose(&ftag, __FILE__, __LINE__);
 	tokenizerFree(&tok);
 	parseTagHave();
-	if( autoCodeErrorCountGet() != 0U ) { return EXIT_FAILURE; }
+	autoCodeExit(AC_FORCE_EXIT);
+
+	// Compare and replace temp files
 	fileCmpReplaceAll();
 
 	// Print module information
 	printModules(&data_base);
 	filePrintModified();
-	return (autoCodeErrorCountGet() == 0U) ? EXIT_SUCCESS : EXIT_FAILURE;
+	return EXIT_SUCCESS;
 }
 
 static void setupDatabase(modules_database_t *data_base)

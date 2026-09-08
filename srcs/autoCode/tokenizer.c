@@ -57,7 +57,7 @@ int tokenizer(tokenizer_t *tok)
 		if( quoted_string && (*cursor != '"') )
 		{
 			AUTOCODE_MSG_ERROR("unterminated string");
-			autoCodeExit();
+
 			tokenizerFree(tok);
 			return 1;
 		}
@@ -68,7 +68,7 @@ int tokenizer(tokenizer_t *tok)
 		if( tokens == NULL )
 		{
 			AUTOCODE_MSG_ERROR("realloc tokenizer token %i", tok->count);
-			autoCodeExit();
+
 			tokenizerFree(tok);
 			return 1;
 		}
