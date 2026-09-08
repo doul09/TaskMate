@@ -22,7 +22,7 @@
  * Implementation - Functions
  * ===========================================================================*/
 
-void tokenizer(tokenizer_t *tok)
+int tokenizer(tokenizer_t *tok)
 {
 	char *cursor = tok->line;
 
@@ -57,7 +57,9 @@ void tokenizer(tokenizer_t *tok)
 		if( quoted_string && (*cursor != '"') )
 		{
 			AUTOCODE_MSG_ERROR("unterminated string");
-			exit(1);
+			autoCodeExit();
+			tokenizerFree(tok);
+			return 1;
 		}
 
 		if( *cursor == '"' ) { cursor++; }
@@ -66,7 +68,9 @@ void tokenizer(tokenizer_t *tok)
 		if( tokens == NULL )
 		{
 			AUTOCODE_MSG_ERROR("realloc tokenizer token %i", tok->count);
-			exit(1);
+			autoCodeExit();
+			tokenizerFree(tok);
+			return 1;
 		}
 		tok->tokens = tokens;
 		tok->tokens[tok->count] = token;
@@ -78,6 +82,8 @@ void tokenizer(tokenizer_t *tok)
 		}
 		tok->count++;
 	}
+
+	return 0;
 }
 
 void tokenizerFree(tokenizer_t *tok)

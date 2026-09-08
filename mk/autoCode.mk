@@ -59,6 +59,7 @@ ${FILE_AUTOCODE_STAMP}: ${FILE_AUTOCODE_TARGET} ${FILE_INITRC_LIST} ${FILE_ERROR
 
 	# Write autoCode options
 	@printf "# autoCode options\n" > "${FILE_AUTOCODE_CONFIG}"
+	@printf "%s\n" "--error_count 10" >> "${FILE_AUTOCODE_CONFIG}"
 	@printf "%s\n" "--errors ${FILE_ERROR_LIST}" >> "${FILE_AUTOCODE_CONFIG}"
 	@printf "%s\n" "--initrc ${FILE_INITRC_LIST}" >> "${FILE_AUTOCODE_CONFIG}"
 	@printf "%s\n" "--parsetag ${FILE_PARSE_TAG_LIST}" >> "${FILE_AUTOCODE_CONFIG}"

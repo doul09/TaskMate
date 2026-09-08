@@ -69,6 +69,14 @@ static inline bool autoCodeBufferStringFits(const char *string, const size_t buf
 	fprintf(stdout, "[%s] info : " format "\n", __FILE_NAME__, ##__VA_ARGS__)
 
 /* -----------------------------------------------
+ * Error handling
+ * ---------------------------------------------*/
+
+void autoCodeExit(void);
+unsigned int autoCodeErrorCountGet(void);
+void autoCodeErrorCountSet(unsigned int maximum_error_count);
+
+/* -----------------------------------------------
  * Module database types
  * ---------------------------------------------*/
 
@@ -95,7 +103,7 @@ typedef struct
 typedef struct
 {
 	module_type_t modules_type[TM_MOD_TYPE_COUNT];
-	
+
 } modules_database_t;
 
 #endif // AUTOCODE_AUTOCODE_H
