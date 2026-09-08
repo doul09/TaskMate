@@ -21,7 +21,8 @@
 
 #include <avr/io.h>
 
-#include "hal/arch/avr8/arch_define.h" // Get stack_word_t
+#include "hal/arch/avr8/arch_define.h" // Get AVR8 types
+#include "hal/arch/avr8/stack.h"
 
 /* ============================================================================
  * Public definitions
@@ -104,12 +105,13 @@
  * Public API
  * ========================================================================== */
 
-static inline __attribute__((always_inline)) void hal_contextRestore(void)
+static inline __attribute__((always_inline)) void hal_contextRestore(const hal_context_t *context)
 {
+	hal_setStackPointer(context->stack_pointer);
 	asm volatile(AVR8_CONTEXT_RESTORE);
 }
 
-void hal_threadContextInit(void (*func)(void), hal_stack_word_t **stack_pointer,
+void hal_threadContextInit(void (*func)(void), hal_context_t *context,
 						   hal_stack_word_t *stack_top);
 
 #endif // AVR8_CONTEXT_H

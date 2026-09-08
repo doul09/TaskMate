@@ -22,7 +22,6 @@
 
 #include "hal/arch/avr8/context.h"
 #include "hal/arch/avr8/interrupt.h"
-#include "hal/arch/avr8/stack.h"
 #include "interfaces/drv_timerSched.h"
 #include "interfaces/tm_define.h"
 #include "interfaces/tm_macros.h"
@@ -40,6 +39,7 @@ const uint16_t TIMER1_OVERFLOW_COUNT = 2000; // Interrupt every 1ms (1.10^-3 x 1
  * ---------------------------------------------*/
 
 static hal_timerSchedCallback_ptr_t sched_callback = NULL;
+static hal_context_t scheduler_context;
 static hal_driver_status_t timer_sched_status;
 static err_codes_t timer_sched_last_error = ERR_NO_ERROR;
 
@@ -175,17 +175,23 @@ static hal_driver_state_t hal_timerSchedStop(void)
  * Context-switch interrupt
  * ---------------------------------------------*/
 
-#define TM_SCHED_CALLBACK                        \
-	"in r24, 0x3d \n\t"                          \
-	"in r25, 0x3e \n\t"                          \
-	"lds r30, %0 \n\t"                           \
-	"lds r31, %0+1 \n\t"                         \
-	"movw r28,r24 \n\t"                          \
-	"sbiw r30,0x00 \n\t"                         \
-	"breq .+4 \n\t"                              \
-	"eicall \n\t"                                \
-	"out 0x3e, r25 \n\t"                         \
-	"out 0x3d, r24 \n\t" : : "m"(sched_callback) \
+#define TM_SCHED_CALLBACK                                                        \
+	"in r28, 0x3d \n\t"                                                         \
+	"in r29, 0x3e \n\t"                                                         \
+	"sts %0, r28 \n\t"                                                          \
+	"sts %0+1, r29 \n\t"                                                        \
+	"ldi r24, lo8(%0) \n\t"                                                     \
+	"ldi r25, hi8(%0) \n\t"                                                     \
+	"lds r30, %1 \n\t"                                                          \
+	"lds r31, %1+1 \n\t"                                                        \
+	"sbiw r30, 0x00 \n\t"                                                        \
+	"breq .+4 \n\t"                                                              \
+	"eicall \n\t"                                                                \
+	"movw r30, r24 \n\t"                                                        \
+	"ld r28, Z+ \n\t"                                                            \
+	"ld r29, Z \n\t"                                                             \
+	"out 0x3e, r29 \n\t"                                                        \
+	"out 0x3d, r28 \n\t" : : "m"(scheduler_context), "m"(sched_callback) \
 		: "r24", "r25", "r30", "r31", "r28", "r29"
 
 ISR(TIMER1_COMPA_vect, ISR_NAKED)

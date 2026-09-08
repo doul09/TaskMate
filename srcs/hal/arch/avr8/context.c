@@ -28,7 +28,7 @@
 // NOLINTBEGIN
 // NOLINT(readability-magic-numbers)
 
-void hal_threadContextInit(void (*func)(void), hal_stack_word_t **stack_pointer,
+void hal_threadContextInit(void (*func)(void), hal_context_t *context,
 						   hal_stack_word_t *stack_top)
 {
 	// Stack initialisation
@@ -43,6 +43,6 @@ void hal_threadContextInit(void (*func)(void), hal_stack_word_t **stack_pointer,
 	// Registers R1-R31
 	for( uint8_t i = 1; i < AVR8_REGISTER_COUNT; i++ ) { *(sp--) = 0x00; }
 
-	*stack_pointer = sp;
+	context->stack_pointer = sp;
 }
 // NOLINTEND

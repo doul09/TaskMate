@@ -20,7 +20,7 @@
 
 #include <stdint.h>
 
-#include "hal/public/define.h" // Get hal_stack_word_t from the selected architecture
+#include "hal/public/define.h" // Get architecture-specific types
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_string.h"
 
@@ -40,7 +40,7 @@ typedef struct
 
 	volatile uint16_t software_time_counter;
 
-	hal_stack_word_t *stack_pointer;
+	hal_context_t context;
 
 	uint16_t canary_low;
 	hal_stack_word_t stack[TM_MOD_THREAD_STACK_SIZE];

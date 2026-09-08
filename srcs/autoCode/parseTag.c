@@ -412,7 +412,7 @@ static void writeThreadsAlloc(const parse_tag_t *parse)
 		fprintf(parse->file, "\n\tmod = mod_threadGetPointer(%i);\n", thread_index);
 
 		fprintf(parse->file,
-				"\n\thal_threadContextInit(%s, &(mod->stack_pointer), "
+				"\n\thal_threadContextInit(%s, &(mod->context), "
 				"&(mod->stack[TM_MOD_THREAD_STACK_SIZE - 1]));\n",
 				mod->modules[i].name);
 

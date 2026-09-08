@@ -24,8 +24,9 @@
  * Public definitions
  * ========================================================================== */
 
-/* The scheduler context is opaque outside the architecture-specific implementation. */
-typedef void *hal_timerSchedCallback_func_t(void *context);
+/* The scheduler context representation is owned by the selected architecture. */
+struct hal_context;
+typedef struct hal_context *hal_timerSchedCallback_func_t(struct hal_context *context);
 typedef hal_timerSchedCallback_func_t *hal_timerSchedCallback_ptr_t;
 
 /* ============================================================================

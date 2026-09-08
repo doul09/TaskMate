@@ -38,6 +38,11 @@
 typedef uint8_t hal_stack_word_t;
 typedef uint8_t hal_atomic_state_t;
 
+typedef struct hal_context
+{
+	hal_stack_word_t *stack_pointer;
+} hal_context_t;
+
 typedef struct
 {
 	volatile uint8_t *ddr;
