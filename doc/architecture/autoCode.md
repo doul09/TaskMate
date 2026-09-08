@@ -30,5 +30,4 @@ addresses, error codes, GPIO identifiers, and configured driver-interface includ
 - Generation is build-integrated, logged, and stable when its inputs do not change.
 
 ### Remaining weaknesses
-- Fixed input-line bounds lack explicit overlong-line detection and can split one physical line.
 - There is no parser corpus, failure-injection suite, or manifest of input and tool versions.

@@ -21,14 +21,14 @@
 
 #include <stdint.h>
 
-/*
- * Bit manipulation macros
- */
-
 /* ============================================================================
  * Public definitions
  * ========================================================================== */
 
+/* -----------------------------------------------
+ * Bit manipulation macros
+ * ---------------------------------------------*/
+ 
 // Masks
 #define TM_BIT_MASK_8(bit) ((uint8_t)(1u << (bit)))
 #define TM_BIT_MASK_16(bit) ((uint16_t)(1u << (bit)))
@@ -65,9 +65,9 @@
 #define TM_CLEARBIT(reg, ...) ((reg) &= (__typeof__(reg))~(TM_SET_BITS((reg), __VA_ARGS__)))
 #define TM_GETBIT(reg, bit) ((reg) & TM_REGISTER_BIT_MASK((reg), (bit)))
 
-/*
+/* -----------------------------------------------
  * Other macros
- */
+ * ---------------------------------------------*/
 
 // String macros
 #define TM_CONCAT_INNER(a, b) a##b

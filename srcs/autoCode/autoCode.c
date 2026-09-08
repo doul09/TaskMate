@@ -71,14 +71,6 @@ void autoCodeExit(ac_error_cmd_t cmd)
 	}
 }
 
-/*unsigned int autoCodeErrorCountGet(void) { return error_count; }
-
-void autoCodeErrorCountSet(const unsigned int configured_error_count_maximum)
-{
-	error_count_maximum = configured_error_count_maximum;
-	if( error_count > error_count_maximum ) { exit(EXIT_FAILURE); }
-}*/
-
 int main(int argc, const char *argv[])
 {
 	tokenizer_t tok = {0};
