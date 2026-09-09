@@ -32,6 +32,7 @@ typedef struct
 {
 	FILE *stream;
 	bool stream_opened; // allow fclose()
+	bool write_access; // report buffered write errors on close
 	char *name;
 	bool name_allocated; // allow free()
 } file_t;

@@ -81,9 +81,6 @@ typedef enum
 
 void autoCodeExit(ac_error_cmd_t cmd);
 
-//unsigned int autoCodeErrorCountGet(void);
-//void autoCodeErrorCountSet(unsigned int error_count_maximum);
-
 /* -----------------------------------------------
  * Module database types
  * ---------------------------------------------*/

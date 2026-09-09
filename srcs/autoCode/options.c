@@ -19,6 +19,7 @@
 #include "options.h"
 
 #include <errno.h>
+#include <limits.h>
 
 #include "fileUtility.h"
 #include "tokenizer.h"
@@ -112,16 +113,17 @@ static void setErrorCount(const char *value, options_list_t *opt)
 {
 	char *end = NULL;
 	errno = 0;
-	const unsigned int error_count = (int)strtoul(value, &end, 10);
+	const unsigned long error_count = strtoul(value, &end, 10);
 
-	if( (errno != 0) || (end == value) || (*end != '\0') || (value[0] == '-') )
+	if( (errno != 0) || (end == value) || (*end != '\0') || (value[0] == '-') ||
+		(error_count > UINT_MAX) )
 	{
 		AUTOCODE_MSG_ERROR("invalid --error_count value <%s>", value);
 
 		return;
 	}
 
-	opt->error_count = error_count;
+	opt->error_count = (unsigned int)error_count;
 	have_options_count[HAVE_ERROR_COUNT]++;
 }
 

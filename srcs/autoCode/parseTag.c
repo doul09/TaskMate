@@ -33,6 +33,7 @@ typedef struct
 	FILE *file;
 	const error_catalog_t *errors;
 	const options_list_t *auto_options;
+	bool *file_error;
 } parse_tag_t;
 
 /* -----------------------------------------------
@@ -146,10 +147,12 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 		return;
 	}
 
+	bool file_error = false;
 	parse_tag_t parse = {.data_base = data_base,
 						 .file = file_tmp.stream,
 						 .errors = errors,
-						 .auto_options = auto_options};
+						 .auto_options = auto_options,
+						 .file_error = &file_error};
 
 	// Read from source
 	int tag_section = 0;
@@ -199,6 +202,11 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 			tag_section = 1;
 
 			int err = tagCmdDispatch(tok.tokens[2], &parse);
+			if( file_error )
+			{
+				tag_section = 0;
+				break;
+			}
 
 			if( err != 0 )
 			{
@@ -257,7 +265,11 @@ static void writeGpioSignals(const parse_tag_t *parse)
 	file_t file_signals;
 	fileInit(&file_signals);
 	file_signals.name = (char *)parse->auto_options->file_gpio_signals;
-	if( fileOpen(&file_signals, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
+	if( fileOpen(&file_signals, "r", FILE_READONLY, __FILE__, __LINE__) != 0 )
+	{
+		*parse->file_error = true;
+		return;
+	}
 
 	fprintf(parse->file, "typedef enum\n");
 	fprintf(parse->file, "{\n");
@@ -283,12 +295,14 @@ static void writeGpioSignals(const parse_tag_t *parse)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", file_signals.name, line);
+		*parse->file_error = true;
 	}
 	fprintf(parse->file, "\tGPIO_SIGNAL_COUNT\n");
 	fprintf(parse->file, "} gpio_signal_t;\n");
 
 	tokenizerFree(&tok);
-	fileClose(&file_signals, __FILE__, __LINE__);
+	if( fileClose(&file_signals, __FILE__, __LINE__) != 0 ) { *parse->file_error = true; }
+	if( *parse->file_error ) { return; }
 	have_tag_count[HAVE_GPIO_SIGNALS]++;
 }
 
@@ -297,7 +311,11 @@ static void writeHalInit(const parse_tag_t *parse)
 	file_t file_list;
 	fileInit(&file_list);
 	file_list.name = (char *)parse->auto_options->file_halinit_list;
-	if( fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
+	if( fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__) != 0 )
+	{
+		*parse->file_error = true;
+		return;
+	}
 
 	tokenizer_t tok = {0};
 	file_get_line_result_t line_result;
@@ -310,9 +328,11 @@ static void writeHalInit(const parse_tag_t *parse)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", file_list.name);
+		*parse->file_error = true;
 	}
 	tokenizerFree(&tok);
-	fileClose(&file_list, __FILE__, __LINE__);
+	if( fileClose(&file_list, __FILE__, __LINE__) != 0 ) { *parse->file_error = true; }
+	if( *parse->file_error ) { return; }
 
 	have_tag_count[HAVE_HAL_INIT]++;
 }
@@ -322,7 +342,11 @@ static void writeHalDefine(const parse_tag_t *parse)
 	file_t file_list;
 	fileInit(&file_list);
 	file_list.name = (char *)parse->auto_options->file_haldefine_list;
-	if( fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
+	if( fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__) != 0 )
+	{
+		*parse->file_error = true;
+		return;
+	}
 
 	tokenizer_t tok = {0};
 	file_get_line_result_t line_result;
@@ -335,9 +359,11 @@ static void writeHalDefine(const parse_tag_t *parse)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s>", file_list.name);
+		*parse->file_error = true;
 	}
 	tokenizerFree(&tok);
-	fileClose(&file_list, __FILE__, __LINE__);
+	if( fileClose(&file_list, __FILE__, __LINE__) != 0 ) { *parse->file_error = true; }
+	if( *parse->file_error ) { return; }
 
 	have_tag_count[HAVE_HAL_DEFINE]++;
 }
