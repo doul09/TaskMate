@@ -78,11 +78,11 @@ uint16_t sc_threadGetSTC(void)
  * Thread metadata
  * ---------------------------------------------*/
 
-uint16_t sc_threadGetCount(void) { return TM_MOD_THREAD_COUNT; }
+uint16_t sc_threadGetCount(void) { return MOD_THREAD_COUNT; }
 
 bool sc_threadGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level)
 {
-	if( (id >= TM_MOD_THREAD_COUNT) || (name == 0) || (run_level == 0) ) { return false; }
+	if( (id >= MOD_THREAD_COUNT) || (name == 0) || (run_level == 0) ) { return false; }
 
 	hal_atomic_state_t state = hal_atomicStart();
 	mod_thread_item_t *thread = mod_threadGetPointer((uint8_t)id);
@@ -144,7 +144,7 @@ bool sc_threadRunLevelIsReady(uint8_t run_level)
 
 	bool ready = true;
 	hal_atomic_state_t state = hal_atomicStart();
-	for( uint8_t i = 0; i < TM_MOD_THREAD_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_THREAD_COUNT; i++ )
 	{
 		mod_thread_item_t *thread = mod_threadGetPointer(i);
 		if( (RL_GET_RUN_LEVEL(thread->status) == run_level) &&
@@ -182,11 +182,11 @@ static mod_thread_item_t *sc_threadGetPointer(const char *name)
 {
 	if( name == 0 ) { return 0; }
 
-	for( uint8_t i = 0; i < TM_MOD_THREAD_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_THREAD_COUNT; i++ )
 	{
 		mod_thread_item_t *thread = mod_threadGetPointer(i);
 		if( (thread->name != 0) &&
-			tm_strncmp(*thread->name, TM_STR_RAM(name), TM_MOD_NAME_SIZE_MAX) == 0 )
+			tm_strncmp(*thread->name, TM_STR_RAM(name), MOD_NAME_SIZE_MAX) == 0 )
 		{
 			return thread;
 		}

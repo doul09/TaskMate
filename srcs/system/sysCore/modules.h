@@ -28,7 +28,7 @@
  * Public definitions
  * ========================================================================== */
 
-#define TM_MOD_CANARY 0xa5a5
+#define MOD_CANARY 0xa5a5
 
 typedef struct
 {
@@ -43,7 +43,7 @@ typedef struct
 	hal_stack_word_t *stack_pointer;
 
 	uint16_t canary_low;
-	hal_stack_word_t stack[TM_MOD_THREAD_STACK_SIZE];
+	hal_stack_word_t stack[MOD_THREAD_STACK_SIZE];
 	uint16_t canary_high;
 
 } mod_thread_item_t;

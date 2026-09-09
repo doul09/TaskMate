@@ -344,7 +344,7 @@ static void writeHalDefine(const parse_tag_t *parse)
 
 static void writeModulesList(const parse_tag_t *parse)
 {
-	const module_type_t *mod = &parse->data_base->modules_type[TM_MOD_THREAD_ID];
+	const module_type_t *mod = &parse->data_base->modules_type[MOD_THREAD_ID];
 
 	for( int i = 0; i < mod->modules_count; i++ )
 	{
@@ -359,7 +359,7 @@ static void writeModulesList(const parse_tag_t *parse)
 	}
 	fprintf(parse->file, "\n");
 
-	mod = &parse->data_base->modules_type[TM_MOD_DRIVER_ID];
+	mod = &parse->data_base->modules_type[MOD_DRIVER_ID];
 
 	for( int i = 0; i < mod->modules_count; i++ )
 	{
@@ -371,11 +371,11 @@ static void writeModulesList(const parse_tag_t *parse)
 static void writeModulesCount(const parse_tag_t *parse)
 {
 	fprintf(parse->file,
-			"#define TM_MOD_DRIVER_COUNT %i\n",
-			parse->data_base->modules_type[TM_MOD_DRIVER_ID].modules_count);
+			"#define MOD_DRIVER_COUNT %i\n",
+			parse->data_base->modules_type[MOD_DRIVER_ID].modules_count);
 	fprintf(parse->file,
-			"#define TM_MOD_THREAD_COUNT %i\n",
-			parse->data_base->modules_type[TM_MOD_THREAD_ID].modules_count);
+			"#define MOD_THREAD_COUNT %i\n",
+			parse->data_base->modules_type[MOD_THREAD_ID].modules_count);
 
 	have_tag_count[HAVE_MOD_COUNT]++;
 }
@@ -390,7 +390,7 @@ static void writeThreadsAlloc(const parse_tag_t *parse)
 
 	fprintf(parse->file, "\tmod_thread_item_t *mod;\n");
 
-	mod = &parse->data_base->modules_type[TM_MOD_THREAD_ID];
+	mod = &parse->data_base->modules_type[MOD_THREAD_ID];
 
 	// List other threads
 	for( int i = 0; i < mod->modules_count; i++ )
@@ -408,7 +408,7 @@ static void writeThreadsAlloc(const parse_tag_t *parse)
 
 		fprintf(parse->file,
 				"\n\thal_threadContextInit(%s, &(mod->stack_pointer), "
-				"&(mod->stack[TM_MOD_THREAD_STACK_SIZE - 1]));\n",
+				"&(mod->stack[MOD_THREAD_STACK_SIZE - 1]));\n",
 				mod->modules[i].name);
 
 		fprintf(parse->file, "\tmod->software_time_counter = 0;\n");
@@ -432,7 +432,7 @@ static void writeThreadsAlloc(const parse_tag_t *parse)
 
 static void writeDriversAlloc(const parse_tag_t *parse)
 {
-	const module_type_t *mod = &parse->data_base->modules_type[TM_MOD_DRIVER_ID];
+	const module_type_t *mod = &parse->data_base->modules_type[MOD_DRIVER_ID];
 
 	fprintf(parse->file, "\tmod_driver_item_t *mod;\n");
 	fprintf(parse->file, "\thal_driver_control_data_t control_data;\n");
@@ -447,9 +447,9 @@ static void writeDriversAlloc(const parse_tag_t *parse)
 		fprintf(parse->file, "\t*(mod) = (mod_driver_item_t)\n");
 		fprintf(parse->file, "\t{\n");
 		fprintf(parse->file, "\t\t.name = &driver%i_name,\n", i);
-		if( mod->modules[i].address == TM_MOD_DRIVER_ADDRESS_NONE )
+		if( mod->modules[i].address == MOD_DRIVER_ADDRESS_NONE )
 		{
-			fprintf(parse->file, "\t\t.address = TM_MOD_DRIVER_ADDRESS_NONE,\n");
+			fprintf(parse->file, "\t\t.address = MOD_DRIVER_ADDRESS_NONE,\n");
 		}
 		else { fprintf(parse->file, "\t\t.address = 0x%02X,\n", mod->modules[i].address); }
 		fprintf(parse->file, "\t\t.control = hal_%sControl\n", mod->modules[i].name);

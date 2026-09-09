@@ -77,13 +77,14 @@ Most importantly:
 
 ---
 
-### ● `mod_` — Module database
+### ● `mod_` / `MOD_` — Module database
 
 **System-wide description of threads and drivers**
 
 - Provides a global view of the system
 - Acts as a single source of truth
 - Implements a quasi *“kernel metadata”* logic
+- Uses `MOD_` for constants and `mod_` for functions and types
 
 Using a dedicated prefix avoids ambiguity:
 

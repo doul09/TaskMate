@@ -28,8 +28,8 @@
 
 static struct
 {
-	mod_driver_item_t drivers[TM_MOD_DRIVER_COUNT];
-	mod_thread_item_t threads[TM_MOD_THREAD_COUNT];
+	mod_driver_item_t drivers[MOD_DRIVER_COUNT];
+	mod_thread_item_t threads[MOD_THREAD_COUNT];
 	uint8_t thread_current;
 } mod_data_base;
 
@@ -66,11 +66,11 @@ mod_thread_item_t *mod_threadGetPointer(uint8_t id) { return &mod_data_base.thre
 
 void mod_threadsAlloc(void)
 {
-	for( uint8_t i = 0; i < TM_MOD_THREAD_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_THREAD_COUNT; i++ )
 	{
 		mod_thread_item_t *thread = mod_threadGetPointer(i);
-		thread->canary_low = TM_MOD_CANARY;
-		thread->canary_high = TM_MOD_CANARY;
+		thread->canary_low = MOD_CANARY;
+		thread->canary_high = MOD_CANARY;
 	}
 
 	// [autoCode_tag] threads_alloc
@@ -84,7 +84,7 @@ void mod_threadsAlloc(void)
 
 	mod = mod_threadGetPointer(1);
 
-	hal_threadContextInit(task1, &(mod->stack_pointer), &(mod->stack[TM_MOD_THREAD_STACK_SIZE - 1]));
+	hal_threadContextInit(task1, &(mod->stack_pointer), &(mod->stack[MOD_THREAD_STACK_SIZE - 1]));
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread1_name, "task1");
 	mod->name = &thread1_name;
@@ -94,7 +94,7 @@ void mod_threadsAlloc(void)
 
 	mod = mod_threadGetPointer(2);
 
-	hal_threadContextInit(task2, &(mod->stack_pointer), &(mod->stack[TM_MOD_THREAD_STACK_SIZE - 1]));
+	hal_threadContextInit(task2, &(mod->stack_pointer), &(mod->stack[MOD_THREAD_STACK_SIZE - 1]));
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread2_name, "task2");
 	mod->name = &thread2_name;
@@ -104,7 +104,7 @@ void mod_threadsAlloc(void)
 
 	mod = mod_threadGetPointer(0);
 
-	hal_threadContextInit(system, &(mod->stack_pointer), &(mod->stack[TM_MOD_THREAD_STACK_SIZE - 1]));
+	hal_threadContextInit(system, &(mod->stack_pointer), &(mod->stack[MOD_THREAD_STACK_SIZE - 1]));
 	mod->software_time_counter = 0;
 	TM_STR_ROM_NEW(thread0_name, "system");
 	mod->name = &thread0_name;
@@ -135,7 +135,7 @@ void mod_driversAlloc(void)
 	*(mod) = (mod_driver_item_t)
 	{
 		.name = &driver0_name,
-		.address = TM_MOD_DRIVER_ADDRESS_NONE,
+		.address = MOD_DRIVER_ADDRESS_NONE,
 		.control = hal_i2cControl
 	};
 
@@ -168,7 +168,7 @@ void mod_driversAlloc(void)
 	*(mod) = (mod_driver_item_t)
 	{
 		.name = &driver3_name,
-		.address = TM_MOD_DRIVER_ADDRESS_NONE,
+		.address = MOD_DRIVER_ADDRESS_NONE,
 		.control = hal_timerSchedControl
 	};
 
@@ -179,7 +179,7 @@ void mod_driversAlloc(void)
 	*(mod) = (mod_driver_item_t)
 	{
 		.name = &driver4_name,
-		.address = TM_MOD_DRIVER_ADDRESS_NONE,
+		.address = MOD_DRIVER_ADDRESS_NONE,
 		.control = hal_timerSTCControl
 	};
 
@@ -190,7 +190,7 @@ void mod_driversAlloc(void)
 	*(mod) = (mod_driver_item_t)
 	{
 		.name = &driver5_name,
-		.address = TM_MOD_DRIVER_ADDRESS_NONE,
+		.address = MOD_DRIVER_ADDRESS_NONE,
 		.control = hal_usartControl
 	};
 

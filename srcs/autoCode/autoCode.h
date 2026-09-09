@@ -90,7 +90,7 @@ void autoCodeExit(ac_error_cmd_t cmd);
 
 typedef struct
 {
-	char name[TM_MOD_NAME_SIZE_MAX];
+	char name[MOD_NAME_SIZE_MAX];
 	unsigned char status;
 	unsigned char type;
 	unsigned char subtype;
@@ -103,14 +103,14 @@ typedef struct
 
 typedef struct
 {
-	module_item_t modules[TM_MOD_COUNT_MAX];
+	module_item_t modules[MOD_COUNT_MAX];
 	int modules_count;
 
 } module_type_t;
 
 typedef struct
 {
-	module_type_t modules_type[TM_MOD_TYPE_COUNT];
+	module_type_t modules_type[MOD_TYPE_COUNT];
 
 } modules_database_t;
 

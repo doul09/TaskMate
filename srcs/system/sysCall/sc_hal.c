@@ -67,12 +67,12 @@ static void sc_i2cDriverSetOff(mod_driver_item_t *driver);
  * Driver metadata and life cycle
  * ---------------------------------------------*/
 
-uint16_t sc_driverGetCount(void) { return TM_MOD_DRIVER_COUNT; }
+uint16_t sc_driverGetCount(void) { return MOD_DRIVER_COUNT; }
 
 bool sc_driverGetInfo(uint16_t id, const tm_string_t **name, uint8_t *run_level,
 					  uint8_t *status_bits)
 {
-	if( (id >= TM_MOD_DRIVER_COUNT) || (name == 0) || (run_level == 0) || (status_bits == 0) )
+	if( (id >= MOD_DRIVER_COUNT) || (name == 0) || (run_level == 0) || (status_bits == 0) )
 	{
 		return false;
 	}
@@ -110,7 +110,7 @@ void sc_driverRunLevelStart(uint8_t run_level)
 {
 	if( (run_level == RL_RUN_NONE) || (run_level >= RL_LEVEL_COUNT) ) { return; }
 
-	for( uint8_t i = 0; i < TM_MOD_DRIVER_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_DRIVER_COUNT; i++ )
 	{
 		mod_driver_item_t *driver = mod_driverGetPointer(i);
 		hal_driver_control_data_t control_data;
@@ -128,7 +128,7 @@ bool sc_driverRunLevelIsReady(uint8_t run_level)
 {
 	if( run_level >= RL_LEVEL_COUNT ) { return false; }
 
-	for( uint8_t i = 0; i < TM_MOD_DRIVER_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_DRIVER_COUNT; i++ )
 	{
 		mod_driver_item_t *driver = mod_driverGetPointer(i);
 		hal_driver_control_data_t control_data;
@@ -217,17 +217,17 @@ err_codes_t sc_i2cScan(void)
 	if( address_buffer_full ) { return ERR_I2C_SCAN_ADDRESS_BUFFER_FULL; }
 
 	control_data.status_bit = DRV_BIT_DEAD;
-	for( uint8_t i = 0; i < TM_MOD_DRIVER_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_DRIVER_COUNT; i++ )
 	{
 		mod_driver_item_t *driver = mod_driverGetPointer(i);
-		if( (driver->address != TM_MOD_DRIVER_ADDRESS_NONE) &&
+		if( (driver->address != MOD_DRIVER_ADDRESS_NONE) &&
 			!sc_i2cAddressFound(driver->address) )
 		{
 			driver->control(DRV_CTRL_SETBIT, &control_data);
 		}
 	}
 
-	for( uint8_t i = 0; i < TM_MOD_DRIVER_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_DRIVER_COUNT; i++ )
 	{
 		mod_driver_item_t *driver = mod_driverGetPointer(i);
 		if( (driver->control(DRV_CTRL_GETSTATUS, 0) == DRV_STATE_DEAD) &&
@@ -280,11 +280,11 @@ static mod_driver_item_t *sc_driverGetPointer(const char *name)
 {
 	if( name == 0 ) { return 0; }
 
-	for( uint8_t i = 0; i < TM_MOD_DRIVER_COUNT; i++ )
+	for( uint8_t i = 0; i < MOD_DRIVER_COUNT; i++ )
 	{
 		mod_driver_item_t *driver = mod_driverGetPointer(i);
 		if( (driver->name != 0) && (driver->control != 0) &&
-			tm_strncmp(*driver->name, TM_STR_RAM(name), TM_MOD_NAME_SIZE_MAX) == 0 )
+			tm_strncmp(*driver->name, TM_STR_RAM(name), MOD_NAME_SIZE_MAX) == 0 )
 		{
 			return driver;
 		}
