@@ -177,7 +177,7 @@ void options(const char *file_name, options_list_t *opt)
 	file_t file;
 	fileInit(&file);
 	file.name = (char *)file_name;
-	fileOpen(&file, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&file, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
 
 	int file_line_number = 0;
 	tokenizer_t tok = {0};

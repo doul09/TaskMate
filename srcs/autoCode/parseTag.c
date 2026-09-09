@@ -136,11 +136,15 @@ void parseTag(modules_database_t *data_base, const char *file_name, const error_
 	file_t file_src;
 	fileInit(&file_src);
 	file_src.name = (char *)file_name;
-	fileOpen(&file_src, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&file_src, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
 
 	file_t file_tmp;
 	fileInit(&file_tmp);
-	fileMakeTmp(file_src.name, &file_tmp, __FILE__, __LINE__);
+	if( fileMakeTmp(file_src.name, &file_tmp, __FILE__, __LINE__) != 0 )
+	{
+		(void)fileClose(&file_src, __FILE__, __LINE__);
+		return;
+	}
 
 	parse_tag_t parse = {.data_base = data_base,
 						 .file = file_tmp.stream,
@@ -253,7 +257,7 @@ static void writeGpioSignals(const parse_tag_t *parse)
 	file_t file_signals;
 	fileInit(&file_signals);
 	file_signals.name = (char *)parse->auto_options->file_gpio_signals;
-	fileOpen(&file_signals, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&file_signals, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
 
 	fprintf(parse->file, "typedef enum\n");
 	fprintf(parse->file, "{\n");
@@ -293,7 +297,7 @@ static void writeHalInit(const parse_tag_t *parse)
 	file_t file_list;
 	fileInit(&file_list);
 	file_list.name = (char *)parse->auto_options->file_halinit_list;
-	fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
 
 	tokenizer_t tok = {0};
 	file_get_line_result_t line_result;
@@ -318,7 +322,7 @@ static void writeHalDefine(const parse_tag_t *parse)
 	file_t file_list;
 	fileInit(&file_list);
 	file_list.name = (char *)parse->auto_options->file_haldefine_list;
-	fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&file_list, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
 
 	tokenizer_t tok = {0};
 	file_get_line_result_t line_result;

@@ -33,7 +33,7 @@ void globalError(const char *src_name, error_catalog_t *errors)
 	file_t file_src;
 	fileInit(&file_src);
 	file_src.name = (char *)src_name;
-	fileOpen(&file_src, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&file_src, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
 
 	// Read from source
 	int file_src_line_number = 0;
