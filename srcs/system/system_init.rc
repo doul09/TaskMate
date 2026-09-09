@@ -1,6 +1,8 @@
-# mcu atmega2560 init.rc
+# system init.rc
 
 timerSched -type driver -run none
 timerSTC -type driver -run core
-i2c -type driver -run core
 usart -type driver -run none
+
+system -type service -run core
+

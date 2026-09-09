@@ -39,7 +39,7 @@
  */
 
 #define TM_MOD_DRIVER_COUNT 6
-#define TM_MOD_THREAD_COUNT 4
+#define TM_MOD_THREAD_COUNT 3
 
 // clang-format on
 // [/tag]

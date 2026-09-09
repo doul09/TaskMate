@@ -32,13 +32,12 @@
 #include "user/tasks/task1.h"
 #include "user/tasks/task2.h"
 #include "system/services/system.h"
-#include "system/services/scli.h"
 
+#include "interfaces/drv_i2c.h"
 #include "interfaces/drv_lcd.h"
 #include "interfaces/drv_rtc.h"
 #include "interfaces/drv_timerSched.h"
 #include "interfaces/drv_timerSTC.h"
-#include "interfaces/drv_i2c.h"
 #include "interfaces/drv_usart.h"
 
 // clang-format on

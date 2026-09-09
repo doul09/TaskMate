@@ -5,7 +5,5 @@ i2c -type driver -run core
 lcd -type driver -run driver -i2c 0x3C
 rtc -type driver -run driver -i2c 0x68
 
-scli -type service -run service
-
 task1 -type user -run user
 task2 -type user -run user

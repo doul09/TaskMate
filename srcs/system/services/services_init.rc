@@ -1,5 +1,0 @@
-# services init.rc
-# default run level run_service
-
-system -type service -run core
-scli -type service -run service
