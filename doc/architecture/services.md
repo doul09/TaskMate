@@ -10,8 +10,10 @@ behind sysCall, and later cooperative yield shortened deliberate polling waits.
 Commits `c843372` and `35f329d` moved boot work to `TaskMate.c`, then staged startup to `system`.
 
 ## Current implementation
-autoCode registers a core-level `system` thread and a service-level `scli` thread with fixed stacks.
-Each thread declares itself initialized through sysCall when its entry begins.
+autoCode always registers the core-level `system` thread. The default `test1` composition also
+registers the service-level `scli` thread; `test_noscli` declares a composition without it but does
+not currently pass Make evaluation. Every selected service has a fixed stack and declares itself
+initialized through sysCall at entry.
 
 The system service starts drivers one run level at a time, triggers I2C discovery, stores the RTC
 startup date, then waits for driver and thread readiness before enabling the next level. It reads
@@ -22,7 +24,7 @@ SCLI reads USART through sysCall into a fixed buffer and dispatches `date`, `dri
 
 ## Well-built code and implementation weaknesses
 ### Strengths
-- Service records, stacks, command tables, and buffers have fixed memory costs.
+- Selected service records, stacks, command tables, and buffers have fixed memory costs.
 - Startup follows explicit core, driver, service, and user stages with bounded readiness rounds.
 - Both services and all command handlers preserve the service -> sysCall boundary.
 - RTC command errors are translated through the generated error catalogue.

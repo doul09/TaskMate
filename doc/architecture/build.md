@@ -8,11 +8,12 @@ After tag `v0.28`, the source split made `HWT -> BOARD -> MCU -> ARCH` explicit.
 moved configuration and validated targets; `v0.29` (`9fc9513`) consolidated build rules.
 
 Header allow-list parsing, warnings, and role-based variable names were then tightened around the
-current AVR build pipeline.
+current AVR build pipeline. Commit `a2a7c65` added the integrated autoCode regression targets.
 
 ## Current implementation
-The default `test1` target selects Arduino Mega, ATmega2560, and AVR8 fragments. Together they
-provide sources, symbols, generated HAL lists, limits, programmer settings, and compiler flags.
+Configuration declares the default `test1` target and a `test_noscli` composition for the same
+Arduino Mega, ATmega2560, and AVR8 stack. The latter is intended to omit SCLI. System-wide and
+target-owned module declarations are discovered separately and combined by autoCode.
 
 The normal build checks tools and the hardware stack, regenerates autoCode, and verifies guarded
 headers. It then collects dependencies, builds AVR firmware, and reports memory use and line counts.
@@ -20,16 +21,18 @@ Target artefacts, generated lists, logs, and stamps remain under `build/`.
 
 Generic driver headers in `interfaces/` are explicit autoCode dependencies. The header checker scans
 sources against `conf/header_allow.conf`, while compile-time guards protect critical headers.
+Dedicated targets run autoCode by validation stage or as a complete black-box corpus, with an
+ASan/UBSan build available for host-side memory and undefined-behaviour checks.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
 - Orchestration, discovery, hardware selection, checks, and utilities are separated by concern.
 - Architecture, MCU, board, and target fragments contribute only their selected responsibilities.
 - Missing target data, generated inputs, HAL selection, or guarded access fails before execution.
-- AVR builds use broad warnings, LTO, section collection, dependencies, and flash/RAM reporting.
+- AVR builds and host autoCode tests use broad warnings and explicit diagnostic reporting.
 
 ### Remaining weaknesses
-- Missing optional tooling can block unrelated targets, including `clean`, until the stamp is valid.
+- The no-SCLI target overrides the test path, so Make stops before generation or even `clean`.
 - Unsorted source and `*.rc` discovery can make ordering depend on filesystem enumeration.
 - Build metadata varies with time and Git state, while tool versions are not pinned.
 - Only one hardware stack exercises portability; the build also assumes BSD and Unix tooling.
