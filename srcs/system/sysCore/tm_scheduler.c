@@ -109,15 +109,15 @@ static void *tm_schedulerRR(void *stack_pointer)
 	thread->stack_pointer = stack_pointer;
 
 	// Canary check
-	if( thread->canary_low != TM_MOD_CANARY ) { panic(TM_STR("canary low 1")); }
-	if( thread->canary_high != TM_MOD_CANARY ) { panic(TM_STR("canary high 1")); }
+	if( thread->canary_low != MOD_CANARY ) { panic(TM_STR("canary low 1")); }
+	if( thread->canary_high != MOD_CANARY ) { panic(TM_STR("canary high 1")); }
 
 	// Switch threads
 	thread = tm_schedulerSelectNext(mod_threadGetCurrent());
 
 	// Canary check
-	if( thread->canary_low != TM_MOD_CANARY ) { panic(TM_STR("canary low 2")); }
-	if( thread->canary_high != TM_MOD_CANARY ) { panic(TM_STR("canary high 2")); }
+	if( thread->canary_low != MOD_CANARY ) { panic(TM_STR("canary low 2")); }
+	if( thread->canary_high != MOD_CANARY ) { panic(TM_STR("canary high 2")); }
 
 	TM_CLEARBIT(thread->status, THREAD_BIT_YIELDED);
 	return thread->stack_pointer;
@@ -127,9 +127,9 @@ static mod_thread_item_t *tm_schedulerSelectNext(uint8_t current)
 {
 	uint8_t active_run_level = scheduler_run_level;
 
-	for( uint8_t count = 0; count < TM_MOD_THREAD_COUNT; count++ )
+	for( uint8_t count = 0; count < MOD_THREAD_COUNT; count++ )
 	{
-		if( ++current == TM_MOD_THREAD_COUNT ) { current = 0; }
+		if( ++current == MOD_THREAD_COUNT ) { current = 0; }
 
 		mod_thread_item_t *thread = mod_threadGetPointer(current);
 		uint8_t thread_run_level = RL_GET_RUN_LEVEL(thread->status);

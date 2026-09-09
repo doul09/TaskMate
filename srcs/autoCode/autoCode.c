@@ -176,10 +176,10 @@ int main(int argc, const char *argv[])
 
 static void setupDatabase(modules_database_t *data_base)
 {
-	for( int i = 0; i < TM_MOD_TYPE_COUNT; i++ )
+	for( int i = 0; i < MOD_TYPE_COUNT; i++ )
 	{
 		data_base->modules_type[i].modules_count = 0;
-		for( int j = 0; j < TM_MOD_COUNT_MAX; j++ )
+		for( int j = 0; j < MOD_COUNT_MAX; j++ )
 		{
 			data_base->modules_type[i].modules[j].cnt_set_runlevel = 0;
 			data_base->modules_type[i].modules[j].cnt_set_type = 0;

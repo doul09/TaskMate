@@ -68,7 +68,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 			mod_tmp.status = 0;
 			mod_tmp.type = 0;
 			mod_tmp.subtype = 0;
-			mod_tmp.address = TM_MOD_DRIVER_ADDRESS_NONE;
+			mod_tmp.address = MOD_DRIVER_ADDRESS_NONE;
 			mod_tmp.cnt_set_runlevel = 0;
 			mod_tmp.cnt_set_type = 0;
 			mod_tmp.cnt_set_address = 0;
@@ -159,7 +159,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 
 				module_is_valid = false;
 			}
-			if( (mod_tmp.cnt_set_address == 1) && (mod_tmp.type != TM_MOD_DRIVER_ID) )
+			if( (mod_tmp.cnt_set_address == 1) && (mod_tmp.type != MOD_DRIVER_ID) )
 			{
 				AUTOCODE_MSG_ERROR("Module %s : -i2c option is only valid for drivers",
 								   tok.tokens[0]);
@@ -170,7 +170,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 
 			// Copy the temporary module to the destination module
 			int index = mod->modules_count;
-			if( index > TM_MOD_COUNT_MAX - 1 )
+			if( index > MOD_COUNT_MAX - 1 )
 			{
 				AUTOCODE_MSG_ERROR("too much modules > %i type=%i\n", index, mod_tmp.type);
 

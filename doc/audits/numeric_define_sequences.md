@@ -50,8 +50,8 @@ risque de désynchroniser `RL_LEVEL_COUNT`.
 
 `tm_modules.h` juxtapose actuellement deux domaines différents :
 
-- `TM_MOD_DRIVER_ID` et `TM_MOD_THREAD_ID` indexent `modules_type[]` ;
-- `TM_MOD_THREAD_SYS_ID` et `TM_MOD_THREAD_USER_ID` décrivent le sous-type d'un thread.
+- `MOD_DRIVER_ID` et `MOD_THREAD_ID` indexent `modules_type[]` ;
+- `MOD_THREAD_SYS_ID` et `MOD_THREAD_USER_ID` décrivent le sous-type d'un thread.
 
 Ils ne devraient pas former artificiellement une seule suite 0 à 3. Deux types rendent la frontière
 explicite :
@@ -59,15 +59,15 @@ explicite :
 ```c
 typedef enum
 {
-	TM_MOD_DRIVER_ID,
-	TM_MOD_THREAD_ID,
-	TM_MOD_TYPE_COUNT
+	MOD_DRIVER_ID,
+	MOD_THREAD_ID,
+	MOD_TYPE_COUNT
 } mod_type_id_t;
 
 typedef enum
 {
-	TM_MOD_THREAD_SYS_ID = 2,
-	TM_MOD_THREAD_USER_ID
+	MOD_THREAD_SYS_ID = 2,
+	MOD_THREAD_USER_ID
 } mod_thread_type_id_t;
 ```
 
@@ -110,9 +110,9 @@ seules politiques acceptées.
   domaine fermé.
 - Les fréquences, durées et dimensions matérielles (`USART_BAUD_RATE`, `I2C_FREQ`, constantes RTC et
   LCD) sont des grandeurs avec unités, pas des suites.
-- Les adresses, masques et motifs binaires (`*_I2C_ADDR`, `TM_MOD_CANARY`, `RL_LEVEL_MASK`) doivent
+- Les adresses, masques et motifs binaires (`*_I2C_ADDR`, `MOD_CANARY`, `RL_LEVEL_MASK`) doivent
   conserver leur largeur, leur suffixe entier et leur rôle de constante de représentation.
-- `TM_MOD_DRIVER_COUNT` et `TM_MOD_THREAD_COUNT` sont générés depuis la configuration. Ils décrivent
+- `MOD_DRIVER_COUNT` et `MOD_THREAD_COUNT` sont générés depuis la configuration. Ils décrivent
   des quantités propres au build, et non des valeurs alternatives.
 - `DRV_CTRL_*`, `DRV_BIT_*`, `DRV_STATE_*` et `THREAD_BIT_*` sont déjà regroupés dans des `typedef
   enum`; aucune conversion n'est nécessaire.

@@ -132,7 +132,7 @@ hal_driver_state_t hal_i2cScan(uint8_t *address)
 	if( state != DRV_STATE_RUNNING ) { return state; }
 	if( address == 0 ) { return i2cSetError(ERR_NULL_POINTER); }
 
-	while( i2c_scan_address <= TM_MOD_I2C_ADDRESS_MAX )
+	while( i2c_scan_address <= MOD_I2C_ADDRESS_MAX )
 	{
 		TM_WRITEBIT(TWCR, TWSTA, TWEN, TWINT);
 		while( !(TM_GETBIT(TWCR, TWINT)) );

@@ -69,7 +69,7 @@ mod_thread_item_t *thread;
 - Use the established TaskMate prefixes only when they describe a real boundary
   or subsystem. Follow `doc/rules/TaskMate_prefixes.md`.
 - Current important prefixes:
-  `tm_`, `DRV_`, `sc_`, `gpio_`, `err_`, `mod_`, and `rl_`.
+  `tm_`, `DRV_`, `sc_`, `gpio_`, `err_`, `mod_` / `MOD_`, and `rl_`.
 - Public subsystem APIs use lower camel case after the prefix:
 
 ```c
@@ -90,7 +90,7 @@ typedef struct
 
 ```c
 GPIO_PIN_MODE_OUTPUT_PP
-TM_MOD_CANARY
+MOD_CANARY
 ```
 
 - Static file-local data uses descriptive snake case:

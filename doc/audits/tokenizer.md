@@ -92,7 +92,7 @@ un statut explicite, et l’appelant devra abandonner la ligne avant tout accès
 
 ### P1 — Les limites actuelles masquent des débordements dans les appelants
 
-Un nom de module de longueur exactement égale à `TM_MOD_NAME_SIZE_MAX` est accepté, puis copié avec
+Un nom de module de longueur exactement égale à `MOD_NAME_SIZE_MAX` est accepté, puis copié avec
 `strcpy()` dans un tableau qui n’a plus de place pour le caractère nul
 ([parseInitrc.c](../../srcs/autoCode/parseInitrc.c#L71)).
 
