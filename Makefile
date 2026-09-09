@@ -20,6 +20,7 @@ PATH_MAKEFILES = mk
 PATH_CONF = conf
 PATH_DOCS = doc
 PATH_SCRIPTS = scripts
+PATH_TEST = test
 
 # Build data
 .include "${PATH_MAKEFILES}/options.mk"
@@ -40,6 +41,7 @@ PATH_SCRIPTS = scripts
 .include "${PATH_MAKEFILES}/utils.mk"
 .include "${PATH_MAKEFILES}/backup.mk"
 .include "${PATH_MAKEFILES}/editors.mk"
+.include "${PATH_TEST}/autoCode_test.mk"
 
 # Architecture-specific Make logic
 .include "${FILE_ARCH_CC}"
