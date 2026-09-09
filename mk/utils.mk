@@ -19,12 +19,15 @@ clean:
 	@printf "${COLOUR_CLEAN_SOFT}"
 	@printf "${PATH_BUILD_TARGET}/**/*.o ${PATH_BUILD_TARGET}/**/*.d ${PATH_BUILD_TARGET}/TaskMate*\n"
 	@printf "{FILE_AUTOCODE_TARGET} {PATH_BUILD_TARGET}/.autoCode_stamp* {PATH_BUILD_TARGET}/autoCode_*\n"
+	@printf "${FILE_AUTOCODE_TEST_SANITIZE_TARGET} ${PATH_BUILD_AUTOCODE_TEST}\n"
 	@printf "${COLOUR_RESET}"	
 	@if [ -d "${PATH_BUILD_TARGET}" ]; then \
 		find "${PATH_BUILD_TARGET}" -type f \( -name "*.o" -o -name "*.d" \) -delete; \
 	fi
 	@rm -f ${PATH_BUILD_TARGET}/TaskMate*
 	@rm -f ${FILE_AUTOCODE_TARGET} ${PATH_BUILD_TARGET}/.autoCode_stamp* ${PATH_BUILD_TARGET}/autoCode_*
+	@rm -f "${FILE_AUTOCODE_TEST_SANITIZE_TARGET}"
+	@rm -rf "${PATH_BUILD_AUTOCODE_TEST}"
 .PHONY: clean
 
 doc:
