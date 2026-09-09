@@ -84,20 +84,30 @@ void mod_threadsAlloc(void)
 
 	mod = mod_threadGetPointer(1);
 
+	hal_threadContextInit(scli, &(mod->stack_pointer), &(mod->stack[MOD_THREAD_STACK_SIZE - 1]));
+	mod->software_time_counter = 0;
+	TM_STR_ROM_NEW(thread1_name, "scli");
+	mod->name = &thread1_name;
+	mod->status = 19;
+	mod->saved_run_level = 3;
+	mod->main = scli;
+
+	mod = mod_threadGetPointer(2);
+
 	hal_threadContextInit(task1, &(mod->stack_pointer), &(mod->stack[MOD_THREAD_STACK_SIZE - 1]));
 	mod->software_time_counter = 0;
-	TM_STR_ROM_NEW(thread1_name, "task1");
-	mod->name = &thread1_name;
+	TM_STR_ROM_NEW(thread2_name, "task1");
+	mod->name = &thread2_name;
 	mod->status = 12;
 	mod->saved_run_level = 4;
 	mod->main = task1;
 
-	mod = mod_threadGetPointer(2);
+	mod = mod_threadGetPointer(3);
 
 	hal_threadContextInit(task2, &(mod->stack_pointer), &(mod->stack[MOD_THREAD_STACK_SIZE - 1]));
 	mod->software_time_counter = 0;
-	TM_STR_ROM_NEW(thread2_name, "task2");
-	mod->name = &thread2_name;
+	TM_STR_ROM_NEW(thread3_name, "task2");
+	mod->name = &thread3_name;
 	mod->status = 12;
 	mod->saved_run_level = 4;
 	mod->main = task2;

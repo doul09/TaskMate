@@ -59,19 +59,6 @@ static unsigned int error_count_maximum = 10U;
  * Implementation - Functions
  * ===========================================================================*/
 
-void autoCodeExit(ac_error_cmd_t cmd)
-{
-	if( cmd == AC_INCREMENT )
-	{
-		error_count++;
-		if( error_count > error_count_maximum ) { exit(EXIT_FAILURE); }
-	}
-	if( cmd == AC_FORCE_EXIT )
-	{
-		if( error_count > 0 ) { exit(EXIT_FAILURE); }
-	}
-}
-
 static void errorCountMaximumSet(const unsigned int maximum) { error_count_maximum = maximum; }
 
 int main(int argc, const char *argv[])
@@ -176,6 +163,19 @@ int main(int argc, const char *argv[])
 	printModules(&data_base);
 	filePrintModified();
 	return EXIT_SUCCESS;
+}
+
+void autoCodeExit(ac_error_cmd_t cmd)
+{
+	if( cmd == AC_INCREMENT )
+	{
+		error_count++;
+		if( error_count > error_count_maximum ) { exit(EXIT_FAILURE); }
+	}
+	if( cmd == AC_FORCE_EXIT )
+	{
+		if( error_count > 0 ) { exit(EXIT_FAILURE); }
+	}
 }
 
 static void setupDatabase(modules_database_t *data_base)
