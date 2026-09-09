@@ -46,6 +46,7 @@ static bool file_tmp_cleanup_registered = false;
 
 static int fileCmpReplace(file_t *file_old, file_t *file_new);
 static void fileTmpCleanup(void);
+static int fileTmpCleanupAll(void);
 static char *fileTmpRegister(const char *file_src_name, const char *caller, int line);
 static char *fileTmpName(const char *file_src_name, const char *caller, int line);
 
@@ -73,7 +74,7 @@ int fileCmpReplaceAll(void)
 		if( fileOpen(&file_src, "r", FILE_READONLY, __FILE__, __LINE__) != 0 )
 		{
 			result = -1;
-			continue;
+			break;
 		}
 
 		file_t file_tmp;
@@ -83,15 +84,20 @@ int fileCmpReplaceAll(void)
 		{
 			result = -1;
 			(void)fileClose(&file_src, __FILE__, __LINE__);
-			continue;
+			break;
 		}
 
 		if( fileCmpReplace(&file_src, &file_tmp) != 0 ) { result = -1; }
 		if( fileClose(&file_src, __FILE__, __LINE__) != 0 ) { result = -1; }
 		if( fileClose(&file_tmp, __FILE__, __LINE__) != 0 ) { result = -1; }
+		if( result != 0 ) { break; }
 	}
 
-	fileTmpCleanup();
+	if( fileTmpCleanupAll() != 0 )
+	{
+		autoCodeExit(AC_INCREMENT);
+		result = -1;
+	}
 	return result;
 }
 
@@ -148,11 +154,6 @@ static int fileCmpReplace(file_t *file_old, file_t *file_new)
 	else
 	{
 		AUTOCODE_MSG_INFO("change for the new one, tmp -> <%s>", file_old->name);
-		if( remove(file_old->name) != 0 )
-		{
-			AUTOCODE_MSG_ERROR("removing old file <%s>", file_old->name);
-			return -1;
-		}
 		if( rename(file_new->name, file_old->name) != 0 )
 		{
 			AUTOCODE_MSG_ERROR("renaming file <%s> to <%s>", file_new->name, file_old->name);
@@ -210,6 +211,11 @@ int fileClose(file_t *file, const char *caller, const int line)
 
 	if( file->stream_opened )
 	{
+		if( file->write_access && (ferror(file->stream) != 0) )
+		{
+			AUTOCODE_MSG_ERROR("from [%s:%i] stream error for file <%s>", caller, line, file->name);
+			result = -1;
+		}
 		int err = fclose(file->stream);
 		if( err != 0 )
 		{
@@ -228,6 +234,7 @@ void fileInit(file_t *file)
 	file->name_allocated = false;
 	file->stream = NULL;
 	file->stream_opened = false;
+	file->write_access = false;
 }
 
 int fileOpen(file_t *file, const char *mode, const int special_mode, const char *caller,
@@ -274,6 +281,8 @@ int fileOpen(file_t *file, const char *mode, const int special_mode, const char 
 		return -1;
 	}
 	file->stream_opened = true;
+	file->write_access = (strchr(mode, 'w') != NULL) || (strchr(mode, 'a') != NULL) ||
+					 (strchr(mode, '+') != NULL);
 	return 0;
 }
 
@@ -289,14 +298,30 @@ int fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller,
 		return -1;
 	}
 	file_tmp->stream_opened = true;
+	file_tmp->write_access = true;
 	return 0;
 }
 
 static void fileTmpCleanup(void)
 {
+	(void)fileTmpCleanupAll();
+}
+
+static int fileTmpCleanupAll(void)
+{
+	int result = 0;
+
 	for( size_t i = 0; i < file_tmp_source_count; i++ )
 	{
-		remove(file_tmp_list[i].temporary_name);
+		if( (remove(file_tmp_list[i].temporary_name) != 0) && (errno != ENOENT) )
+		{
+			const int remove_error = errno;
+			fprintf(stderr,
+					"[fileUtility.c] error : removing temporary file <%s>: %s\n",
+					file_tmp_list[i].temporary_name,
+					strerror(remove_error));
+			result = -1;
+		}
 		free(file_tmp_list[i].temporary_name);
 		free(file_tmp_list[i].source_name);
 	}
@@ -304,6 +329,7 @@ static void fileTmpCleanup(void)
 	free(file_tmp_list);
 	file_tmp_list = NULL;
 	file_tmp_source_count = 0;
+	return result;
 }
 
 static char *fileTmpRegister(const char *file_src_name, const char *caller, const int line)

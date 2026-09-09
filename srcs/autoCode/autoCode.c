@@ -46,6 +46,7 @@
  * ---------------------------------------------*/
 
 static void setupDatabase(modules_database_t *data_base);
+static void errorCountMaximumSet(unsigned int maximum);
 
 /* -----------------------------------------------
  * Private variables
@@ -71,6 +72,8 @@ void autoCodeExit(ac_error_cmd_t cmd)
 	}
 }
 
+static void errorCountMaximumSet(const unsigned int maximum) { error_count_maximum = maximum; }
+
 int main(int argc, const char *argv[])
 {
 	tokenizer_t tok = {0};
@@ -85,6 +88,7 @@ int main(int argc, const char *argv[])
 
 	options_list_t auto_options = {0};
 	options(argv[1], &auto_options);
+	errorCountMaximumSet(auto_options.error_count);
 	autoCodeExit(AC_FORCE_EXIT);
 
 	// Set up database
