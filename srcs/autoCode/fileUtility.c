@@ -281,8 +281,8 @@ int fileOpen(file_t *file, const char *mode, const int special_mode, const char 
 		return -1;
 	}
 	file->stream_opened = true;
-	file->write_access = (strchr(mode, 'w') != NULL) || (strchr(mode, 'a') != NULL) ||
-					 (strchr(mode, '+') != NULL);
+	file->write_access =
+		(strchr(mode, 'w') != NULL) || (strchr(mode, 'a') != NULL) || (strchr(mode, '+') != NULL);
 	return 0;
 }
 
@@ -302,10 +302,7 @@ int fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller,
 	return 0;
 }
 
-static void fileTmpCleanup(void)
-{
-	(void)fileTmpCleanupAll();
-}
+static void fileTmpCleanup(void) { (void)fileTmpCleanupAll(); }
 
 static int fileTmpCleanupAll(void)
 {

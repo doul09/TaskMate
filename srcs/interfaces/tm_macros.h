@@ -28,7 +28,7 @@
 /* -----------------------------------------------
  * Bit manipulation macros
  * ---------------------------------------------*/
- 
+
 // Masks
 #define TM_BIT_MASK_8(bit) ((uint8_t)(1u << (bit)))
 #define TM_BIT_MASK_16(bit) ((uint16_t)(1u << (bit)))
