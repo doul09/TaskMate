@@ -48,11 +48,11 @@ typedef enum
  * ========================================================================== */
 
 void filePrintModified(void);
-void fileCmpReplaceAll(void);
-void fileClose(file_t *file, const char *caller, int line);
+int fileCmpReplaceAll(void);
+int fileClose(file_t *file, const char *caller, int line);
 file_get_line_result_t fileGetLine(file_t *file, char *line, size_t line_size);
 void fileInit(file_t *file);
-void fileOpen(file_t *file, const char *mode, int special_mode, const char *caller, int line);
-void fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller, int line);
+int fileOpen(file_t *file, const char *mode, int special_mode, const char *caller, int line);
+int fileMakeTmp(const char *file_src_name, file_t *file_tmp, const char *caller, int line);
 
 #endif // AUTOCODE_FILEUTILITY_H

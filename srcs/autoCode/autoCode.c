@@ -98,7 +98,10 @@ int main(int argc, const char *argv[])
 	file_t ferror;
 	fileInit(&ferror);
 	ferror.name = auto_options.file_errors_list;
-	fileOpen(&ferror, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&ferror, "r", FILE_READONLY, __FILE__, __LINE__) != 0 )
+	{
+		autoCodeExit(AC_FORCE_EXIT);
+	}
 
 	file_get_line_result_t line_result;
 	while( (line_result = fileGetLine(&ferror, tok.line, sizeof(tok.line))) ==
@@ -119,7 +122,10 @@ int main(int argc, const char *argv[])
 	file_t finitrc;
 	fileInit(&finitrc);
 	finitrc.name = auto_options.file_initrc_list;
-	fileOpen(&finitrc, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&finitrc, "r", FILE_READONLY, __FILE__, __LINE__) != 0 )
+	{
+		autoCodeExit(AC_FORCE_EXIT);
+	}
 
 	while( (line_result = fileGetLine(&finitrc, tok.line, sizeof(tok.line))) ==
 		   FILE_GET_LINE_SUCCESS )
@@ -139,7 +145,10 @@ int main(int argc, const char *argv[])
 	file_t ftag;
 	fileInit(&ftag);
 	ftag.name = auto_options.file_parsetag_list;
-	fileOpen(&ftag, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&ftag, "r", FILE_READONLY, __FILE__, __LINE__) != 0 )
+	{
+		autoCodeExit(AC_FORCE_EXIT);
+	}
 
 	parseTagInit();
 	while( (line_result = fileGetLine(&ftag, tok.line, sizeof(tok.line))) == FILE_GET_LINE_SUCCESS )
@@ -157,7 +166,7 @@ int main(int argc, const char *argv[])
 	autoCodeExit(AC_FORCE_EXIT);
 
 	// Compare and replace temp files
-	fileCmpReplaceAll();
+	if( fileCmpReplaceAll() != 0 ) { autoCodeExit(AC_FORCE_EXIT); }
 
 	// Print module information
 	printModules(&data_base);

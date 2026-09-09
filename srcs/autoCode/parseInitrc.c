@@ -34,7 +34,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 	file_t initrc_list;
 	fileInit(&initrc_list);
 	initrc_list.name = (char *)initrc_name;
-	fileOpen(&initrc_list, "r", FILE_READONLY, __FILE__, __LINE__);
+	if( fileOpen(&initrc_list, "r", FILE_READONLY, __FILE__, __LINE__) != 0 ) { return; }
 
 	// Variables
 	int file_line_number = 0;
