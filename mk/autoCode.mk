@@ -24,18 +24,21 @@ FILES_PARSE_TAG =  \
 	${PATH_SRCS}/system/sysCore/modules.c \
 	${PATH_SRCS}/system/sysCore/modules_list.h \
 	${PATH_SRCS}/system/sysCore/hal_init.h \
+	${PATH_SRCS}/system/TaskMate.c \
 	${PATH_SRCS}/hal/public/define.h \
 	${PATH_SRCS}/interfaces/gpio_signals.h 	
 		
 FILE_INITRC_LIST = ${PATH_BUILD_TARGET}/files_initrc
 FILE_PARSE_TAG_LIST = ${PATH_BUILD_TARGET}/files_to_parse
 FILE_HALINIT_LIST = ${PATH_BUILD_TARGET}/files_halinit
+FILE_FUNCINIT_LIST = ${PATH_BUILD_TARGET}/values_funcinit
 FILE_HALDEFINE_LIST = ${PATH_BUILD_TARGET}/files_haldefine
 FILE_ERROR_LIST = ${PATH_BUILD_TARGET}/files_error
 
 FILE_INITRC_DEPS = ${PATH_BUILD_TARGET}/files_initrc.deps
 FILE_PARSE_TAG_DEPS = ${PATH_BUILD_TARGET}/files_to_parse.deps
 FILE_HALINIT_DEPS = ${PATH_BUILD_TARGET}/files_halinit.deps
+FILE_FUNCINIT_DEPS = ${PATH_BUILD_TARGET}/values_funcinit.deps
 FILE_HALDEFINE_DEPS = ${PATH_BUILD_TARGET}/files_haldefine.deps
 FILE_ERROR_DEPS = ${PATH_BUILD_TARGET}/files_error.deps
 FILE_GPIO_SIGNALS_DEPS = ${PATH_BUILD_TARGET}/gpio_signals.deps
@@ -47,7 +50,8 @@ _autocode: _autocode_dependency_check .WAIT ${FILE_AUTOCODE_STAMP}
 
 # autoCode launch and required files
 ${FILE_AUTOCODE_STAMP}: ${FILE_AUTOCODE_TARGET} ${FILE_INITRC_LIST} ${FILE_ERROR_LIST} \
-						${FILE_PARSE_TAG_LIST} ${FILE_HALINIT_LIST} ${FILE_HALDEFINE_LIST} \
+						${FILE_PARSE_TAG_LIST} ${FILE_HALINIT_LIST} ${FILE_FUNCINIT_LIST} \
+						${FILE_HALDEFINE_LIST} \
 						${FILE_GPIO_SIGNALS} ${FILE_GPIO_SIGNALS_DEPS} \
 						${FILES_DRIVER_INTERFACES}
 
@@ -64,6 +68,7 @@ ${FILE_AUTOCODE_STAMP}: ${FILE_AUTOCODE_TARGET} ${FILE_INITRC_LIST} ${FILE_ERROR
 	@printf "%s\n" "--initrc ${FILE_INITRC_LIST}" >> "${FILE_AUTOCODE_CONFIG}"
 	@printf "%s\n" "--parsetag ${FILE_PARSE_TAG_LIST}" >> "${FILE_AUTOCODE_CONFIG}"
 	@printf "%s\n" "--halinit ${FILE_HALINIT_LIST}" >> "${FILE_AUTOCODE_CONFIG}"
+	@printf "%s\n" "--funcinit ${FILE_FUNCINIT_LIST}" >> "${FILE_AUTOCODE_CONFIG}"
 	@printf "%s\n" "--haldefine ${FILE_HALDEFINE_LIST}" >> "${FILE_AUTOCODE_CONFIG}"	
 	@printf "%s\n" "--gpio_signals ${FILE_GPIO_SIGNALS}" >> "${FILE_AUTOCODE_CONFIG}"
 		
@@ -93,7 +98,9 @@ _autocode_dependency_check:
 	@${PATH_SCRIPTS}/compare_replace.sh \
 		"${FILE_PARSE_TAG_DEPS}" "${FILES_PARSE_TAG}"
 	@${PATH_SCRIPTS}/compare_replace.sh \
-		"${FILE_HALINIT_DEPS}" "${FILES_HALINIT}"
+		"${FILE_HALINIT_DEPS}" "${FILES_HALINIT_HEADER}"
+	@${PATH_SCRIPTS}/compare_replace.sh \
+		"${FILE_FUNCINIT_DEPS}" "${VAL_FUNCINIT}"
 	@${PATH_SCRIPTS}/compare_replace.sh \
 		"${FILE_HALDEFINE_DEPS}" "${FILES_HALDEFINE}"
 	@${PATH_SCRIPTS}/compare_replace.sh \
@@ -121,10 +128,16 @@ ${FILE_PARSE_TAG_LIST}: ${FILES_PARSE_TAG} ${FILE_PARSE_TAG_DEPS}
 	@printf "%s\n" ${file} >> ${FILE_PARSE_TAG_LIST}
 .endfor
 
-${FILE_HALINIT_LIST}: ${FILES_HALINIT} ${FILE_HALINIT_DEPS}
+${FILE_HALINIT_LIST}: ${FILES_HALINIT_HEADER} ${FILE_HALINIT_DEPS}
 	@printf "" > ${FILE_HALINIT_LIST}
-.for file in ${FILES_HALINIT}
+.for file in ${FILES_HALINIT_HEADER}
 	@printf "%s\n" ${file} >> ${FILE_HALINIT_LIST}
+.endfor
+
+${FILE_FUNCINIT_LIST}: ${FILE_FUNCINIT_DEPS}
+	@printf "" > ${FILE_FUNCINIT_LIST}
+.for func in ${VAL_FUNCINIT}
+	@printf "%s\n" ${func} >> ${FILE_FUNCINIT_LIST}
 .endfor
 
 ${FILE_HALDEFINE_LIST}: ${FILES_HALDEFINE} ${FILE_HALDEFINE_DEPS}
