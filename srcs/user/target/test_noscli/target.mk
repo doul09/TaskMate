@@ -21,7 +21,7 @@ VAL_HW_STACK = test_noscli
 PATH_TEST_NOSCLI = ${PATH_SRCS}/user/target/test_noscli
 PATHS_SOURCES = ${PATH_TEST_NOSCLI}
 FILES_HALINIT = ${PATH_TEST_NOSCLI}/targetInit.h
-FILES_HALDEFINE = ${PATH_TEST_NOSCLI}/target_define.h
+FILES_HALDEFINE = ${PATH_TEST_NOSCLI}/define.h
 
 FILE_GPIO_SIGNALS = ${PATH_TEST_NOSCLI}/signals.gpio
 .if !exists(${FILE_GPIO_SIGNALS})
