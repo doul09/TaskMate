@@ -11,6 +11,10 @@
 .ifndef HAL_ARCH_AVR8_MAKE_MK
 HAL_ARCH_AVR8_MAKE_MK = 1
 
+################################################################################
+# AVR architecture makefile
+################################################################################
+
 # Registration in the global system
 VAL_HW_STACK += avr8
 

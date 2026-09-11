@@ -11,6 +11,10 @@
 .ifndef HAL_MCU_ATMEGA2560_MAKE_MK
 HAL_MCU_ATMEGA2560_MAKE_MK = 1
 
+################################################################################
+# ATMega 2560 makefile
+################################################################################
+
 # Registration in the global system
 VAL_HW_STACK += atmega2560
 

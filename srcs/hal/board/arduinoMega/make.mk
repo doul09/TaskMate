@@ -11,6 +11,10 @@
 .ifndef HAL_BOARD_ARDUINOMEGA_MAKE_MK
 HAL_BOARD_ARDUINOMEGA_MAKE_MK = 1
 
+################################################################################
+# Arduino Mega board makefile
+################################################################################
+
 # Registration in the global system
 VAL_HW_STACK += arduinoMega
 PATH_ARDUINOMEGA = ${PATH_SRCS}/hal/board/arduinoMega
