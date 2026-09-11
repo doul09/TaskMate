@@ -7,18 +7,18 @@
  */
 
 /**
- * @file archInit.h
- * @brief arch init header declarations.
+ * @file arduinoMega_init.h
+ * @brief Arduino Mega board initialization declarations.
  *
  */
 
-#ifndef AVR8_ARCHINIT_H
-#define AVR8_ARCHINIT_H
+#ifndef ARDUINOMEGA_ARDUINOMEGA_INIT_H
+#define ARDUINOMEGA_ARDUINOMEGA_INIT_H
 
 /* ============================================================================
  * Public API
  * ========================================================================== */
 
-void hal_archInit(void);
+void hal_arduinoMegaInit(void);
 
-#endif // AVR8_ARCHINIT_H
+#endif // ARDUINOMEGA_ARDUINOMEGA_INIT_H

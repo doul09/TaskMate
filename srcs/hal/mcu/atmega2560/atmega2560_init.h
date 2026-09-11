@@ -7,18 +7,18 @@
  */
 
 /**
- * @file mcuInit.h
- * @brief mcu init header declarations.
+ * @file atmega2560_init.h
+ * @brief ATmega2560 MCU initialization declarations.
  *
  */
 
-#ifndef ATMEGA2560_MCUINIT_H
-#define ATMEGA2560_MCUINIT_H
+#ifndef ATMEGA2560_ATMEGA2560_INIT_H
+#define ATMEGA2560_ATMEGA2560_INIT_H
 
 /* ============================================================================
  * Public API
  * ========================================================================== */
 
-void hal_mcuInit(void);
+void hal_atmega2560Init(void);
 
-#endif // ATMEGA2560_MCUINIT_H
+#endif // ATMEGA2560_ATMEGA2560_INIT_H

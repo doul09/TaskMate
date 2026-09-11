@@ -6,18 +6,18 @@
  * See the LICENSE file for full license terms.
  */
 /**
- * @file archInit.c
- * @brief arch init implementation.
+ * @file atmega2560_init.c
+ * @brief ATmega2560 MCU initialization implementation.
  */
 
 /* =============================================================================
  * Declarations - Include
  * ===========================================================================*/
 
-#include "archInit.h"
+#include "atmega2560_init.h"
 
 /* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
 
-void hal_archInit(void) {}
+void hal_atmega2560Init(void) {}

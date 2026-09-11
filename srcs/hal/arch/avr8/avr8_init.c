@@ -6,18 +6,18 @@
  * See the LICENSE file for full license terms.
  */
 /**
- * @file mcuInit.c
- * @brief mcu init implementation.
+ * @file avr8_init.c
+ * @brief AVR8 architecture initialization implementation.
  */
 
 /* =============================================================================
  * Declarations - Include
  * ===========================================================================*/
 
-#include "mcuInit.h"
+#include "avr8_init.h"
 
 /* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
 
-void hal_mcuInit(void) {}
+void hal_avr8Init(void) {}

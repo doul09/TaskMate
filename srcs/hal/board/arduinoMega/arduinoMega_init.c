@@ -7,8 +7,8 @@
  */
 
 /**
- * @file boardInit.c
- * @brief board init implementation.
+ * @file arduinoMega_init.c
+ * @brief Arduino Mega board initialization implementation.
  *
  */
 
@@ -16,10 +16,10 @@
  * Declarations - Include
  * ===========================================================================*/
 
-#include "boardInit.h"
+#include "arduinoMega_init.h"
 
 /* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
 
-void hal_boardInit(void) {}
+void hal_arduinoMegaInit(void) {}
