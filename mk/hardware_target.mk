@@ -13,14 +13,14 @@
 ################################################################################
 
 # Default target
-HWT ?= test1
-FILE_HWT_MK = ${PATH_SRCS}/user/target/${HWT}/hwt.mk
+VAL_TARGET ?= test1
+FILE_TARGET_MK = ${PATH_SRCS}/user/target/${VAL_TARGET}/hwt.mk
 
-.if !exists(${FILE_HWT_MK})
+.if !exists(${FILE_TARGET_MK})
 .error Target not found >>>${HWT}<<<
 .endif
 
-.include "${FILE_HWT_MK}"
+.include "${FILE_TARGET_MK}"
 
 # Check build hardware stack
 _hardware_target_check: ${FILE_HARDWARE_TARGETS_CONF} ${FILE_HARDWARE_TARGET_CHECK_SCRIPT}

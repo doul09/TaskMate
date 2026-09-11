@@ -11,6 +11,10 @@
 .ifndef HWT_MK
 HWT_MK = 1
 
+################################################################################
+# test_noscli hardware target, same as test1 without SCLI
+################################################################################
+
 # Registration in the global system
 VAL_HW_STACK = test_noscli
 
