@@ -7,13 +7,13 @@
  */
 
 /**
- * @file mcu_define.h
- * @brief mcu define header declarations.
+ * @file define.h
+ * @brief arch define header declarations.
  *
  */
 
-#ifndef ATMEGA2560_MCU_DEFINE_H
-#define ATMEGA2560_MCU_DEFINE_H
+#ifndef HAL_ARCH_AVR8_DEFINE_H
+#define HAL_ARCH_AVR8_DEFINE_H
 
 /* ============================================================================
  * Includes
@@ -21,47 +21,28 @@
 
 #include <stdint.h>
 
-#include "interfaces/gpio_common.h"
-
 /* ============================================================================
  * Public definitions
  * ========================================================================== */
 
 /* -----------------------------------------------
- * Peripheral constants
+ * Architecture constants
  * ---------------------------------------------*/
 
-#define USART_BAUD_RATE 9600
-#define I2C_FREQ 100000UL // Standard mode 100 kHz
+#define AVR8_REGISTER_COUNT 32 // from R0 to R31
 
 /* -----------------------------------------------
- * Ports and pins
+ * Architecture types
  * ---------------------------------------------*/
 
-typedef enum
-{
-	PORT_A,
-	PORT_B,
-	PORT_C,
-	PORT_D,
-	PORT_E,
-	PORT_F,
-	PORT_G,
-	PORT_H,
-	PORT_I,
-	PORT_J,
-	PORT_K,
-	PORT_L,
-
-	PORT_COUNT
-} hal_port_list_t;
+typedef uint8_t hal_stack_word_t;
+typedef uint8_t hal_atomic_state_t;
 
 typedef struct
 {
-	hal_port_list_t port;
-	uint8_t number;
-	gpio_pin_mode_t mode;
-	gpio_pin_pull_t pull;
-} hal_pin_t;
+	volatile uint8_t *ddr;
+	volatile uint8_t *port;
+	volatile uint8_t *pin;
+} hal_port_t;
 
-#endif // ATMEGA2560_MCU_DEFINE_H
+#endif // HAL_ARCH_AVR8_DEFINE_H

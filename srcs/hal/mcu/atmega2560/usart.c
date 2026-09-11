@@ -22,7 +22,7 @@
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
-#include "mcu_define.h" // Get the USART baud rate
+#include "define.h" // Get the USART baud rate
 #include "tmlibc.h"
 
 /* -----------------------------------------------

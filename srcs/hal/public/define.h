@@ -26,9 +26,9 @@
  */
 
 #include "srcs/user/target/test1/target_define.h"
-#include "srcs/hal/board/arduinoMega/board_define.h"
-#include "srcs/hal/mcu/atmega2560/mcu_define.h"
-#include "srcs/hal/arch/avr8/arch_define.h"
+#include "srcs/hal/board/arduinoMega/define.h"
+#include "srcs/hal/mcu/atmega2560/define.h"
+#include "srcs/hal/arch/avr8/define.h"
 
 // clang-format on
 // [/tag]
