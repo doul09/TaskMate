@@ -18,12 +18,12 @@ TARGET_MK = 1
 # Registration in the global system
 VAL_HW_STACK = test_noscli
 
-PATH_TEST = ${PATH_SRCS}/user/target/test_noscli
-PATHS_SOURCES = ${PATH_TEST}
-FILES_HALINIT = ${PATH_TEST}/targetInit.h
-FILES_HALDEFINE = ${PATH_TEST}/target_define.h
+PATH_TEST_NOSCLI = ${PATH_SRCS}/user/target/test_noscli
+PATHS_SOURCES = ${PATH_TEST_NOSCLI}
+FILES_HALINIT = ${PATH_TEST_NOSCLI}/targetInit.h
+FILES_HALDEFINE = ${PATH_TEST_NOSCLI}/target_define.h
 
-FILE_GPIO_SIGNALS = ${PATH_TEST}/signals.gpio
+FILE_GPIO_SIGNALS = ${PATH_TEST_NOSCLI}/signals.gpio
 .if !exists(${FILE_GPIO_SIGNALS})
 .error GPIO signals list not found >>>${FILE_GPIO_SIGNALS}<<<
 .endif
