@@ -57,5 +57,6 @@ CFLAGS += -I${PATH_SRCS} -I./
 CFLAGS += -ffunction-sections -fdata-sections -flto
 LDFLAGS = -Wl,--gc-sections -Wl,-Map=${FILE_TARGET}.map
 
+.else
+.error Multiple inclusion of ${.PARSEDIR}/${.PARSEFILE}
 .endif
-
