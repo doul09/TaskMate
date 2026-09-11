@@ -14,7 +14,7 @@
 
 # Default target
 VAL_TARGET ?= test1
-FILE_TARGET_MK = ${PATH_SRCS}/user/target/${VAL_TARGET}/hwt.mk
+FILE_TARGET_MK = ${PATH_SRCS}/user/target/${VAL_TARGET}/target.mk
 
 .if !exists(${FILE_TARGET_MK})
 .error Target not found >>>${HWT}<<<
