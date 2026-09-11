@@ -8,8 +8,8 @@
 #
 ################################################################################
 
-.ifndef HWT_MK
-HWT_MK = 1
+.ifndef TARGET_MK
+TARGET_MK = 1
 
 ################################################################################
 # test_noscli hardware target, same as test1 without SCLI
