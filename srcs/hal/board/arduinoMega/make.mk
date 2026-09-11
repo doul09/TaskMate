@@ -31,4 +31,6 @@ VAL_CPU_FREQ = 16000000UL
 VAL_PROGRAMMER = avrispmkII
 VAL_PROGRAMMER_PORT = /dev/ttyU0
 
+.else
+.error Multiple inclusion of ${.PARSEDIR}/${.PARSEFILE}
 .endif

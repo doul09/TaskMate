@@ -28,4 +28,6 @@ CFLAGS += -DHWT_test1
 
 .include "${PATH_SRCS}/hal/board/arduinoMega/make.mk"
 
+.else
+.error Multiple inclusion of ${.PARSEDIR}/${.PARSEFILE}
 .endif
