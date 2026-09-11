@@ -21,7 +21,7 @@
 #include <avr/io.h>
 #include <stdbool.h>
 
-#include "hal/arch/avr8/arch_define.h"
+#include "hal/arch/avr8/define.h"
 #include "interfaces/tm_macros.h"
 
 /* -----------------------------------------------

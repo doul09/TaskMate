@@ -23,7 +23,7 @@
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
-#include "mcu_define.h" // Get the I2C frequency
+#include "define.h" // Get the I2C frequency
 
 // NOLINTBEGIN
 // NOLINT(readability-magic-numbers)

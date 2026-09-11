@@ -26,6 +26,6 @@ FILE_GPIO_SIGNALS = ${PATH_TEST1}/signals.gpio
 
 CFLAGS += -DHWT_test1
 
-.include "${PATH_SRCS}/hal/board/arduinoMega/board_make.mk"
+.include "${PATH_SRCS}/hal/board/arduinoMega/make.mk"
 
 .endif

@@ -21,7 +21,7 @@
 
 #include <avr/io.h>
 
-#include "hal/arch/avr8/arch_define.h" // Get stack_word_t
+#include "hal/arch/avr8/define.h" // Get stack_word_t
 
 /* ============================================================================
  * Public definitions

@@ -22,7 +22,7 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
-#include "hal/arch/avr8/arch_define.h" // Get hal_atomic_state_t
+#include "hal/arch/avr8/define.h" // Get hal_atomic_state_t
 
 /* ============================================================================
  * Public API

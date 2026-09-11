@@ -21,7 +21,7 @@
 
 #include <stdbool.h>
 
-#include "mcu_define.h"
+#include "define.h"
 
 /* ============================================================================
  * Public definitions

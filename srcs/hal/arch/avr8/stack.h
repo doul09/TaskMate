@@ -22,7 +22,7 @@
 #include <avr/io.h> // Get SP
 #include <stdint.h>
 
-#include "hal/arch/avr8/arch_define.h"
+#include "hal/arch/avr8/define.h"
 
 /* ============================================================================
  * Public API

@@ -8,8 +8,8 @@
 #
 ################################################################################
 
-.ifndef HAL_ARCH_MAKE_MK
-HAL_ARCH_MAKE_MK = 1
+.ifndef HAL_ARCH_AVR8_MAKE_MK
+HAL_ARCH_AVR8_MAKE_MK = 1
 
 # Registration in the global system
 VAL_HW_STACK += avr8
@@ -17,12 +17,12 @@ VAL_HW_STACK += avr8
 PATH_AVR8 = ${PATH_SRCS}/hal/arch/avr8
 PATHS_SOURCES += ${PATH_AVR8}
 FILES_HALINIT += ${PATH_AVR8}/archInit.h
-FILES_HALDEFINE += ${PATH_AVR8}/arch_define.h
+FILES_HALDEFINE += ${PATH_AVR8}/define.h
 
 CFLAGS += -DARCH_avr8
 	
 # Compilation redirection
-FILE_ARCH_CC = ${PATH_SRCS}/hal/arch/avr8/archCC.mk
+FILE_ARCH_CC = ${PATH_SRCS}/hal/arch/avr8/avr8_CC.mk
 
 # Compiler for the AVR8 architecture
 CC = avr-gcc
