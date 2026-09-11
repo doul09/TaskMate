@@ -32,6 +32,7 @@ static void setErrorsFile(const char *value, options_list_t *opt);
 static void setInitrcFile(const char *value, options_list_t *opt);
 static void setParseTagFile(const char *value, options_list_t *opt);
 static void setHalInitFile(const char *value, options_list_t *opt);
+static void setFuncInitFile(const char *value, options_list_t *opt);
 static void setHalDefineFile(const char *value, options_list_t *opt);
 static void setGpioSignalsFile(const char *value, options_list_t *opt);
 static void setErrorCount(const char *value, options_list_t *opt);
@@ -46,6 +47,7 @@ static void setErrorCount(const char *value, options_list_t *opt);
 	X(HAVE_INITRC, "--initrc", setInitrcFile)           \
 	X(HAVE_PARSETAG, "--parsetag", setParseTagFile)     \
 	X(HAVE_HALINIT, "--halinit", setHalInitFile)        \
+	X(HAVE_FUNCINIT, "--funcinit", setFuncInitFile)     \
 	X(HAVE_HALDEFINE, "--haldefine", setHalDefineFile)  \
 	X(HAVE_GPIO_SIGNALS, "--gpio_signals", setGpioSignalsFile)
 
@@ -143,6 +145,12 @@ static void setHalInitFile(const char *value, options_list_t *opt)
 {
 	setFileName(opt->file_halinit_list, sizeof(opt->file_halinit_list), value);
 	have_options_count[HAVE_HALINIT]++;
+}
+
+static void setFuncInitFile(const char *value, options_list_t *opt)
+{
+	setFileName(opt->file_funcinit_list, sizeof(opt->file_funcinit_list), value);
+	have_options_count[HAVE_FUNCINIT]++;
 }
 
 static void setHalDefineFile(const char *value, options_list_t *opt)

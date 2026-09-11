@@ -20,8 +20,9 @@ VAL_HW_STACK += avr8
 
 PATH_AVR8 = ${PATH_SRCS}/hal/arch/avr8
 PATHS_SOURCES += ${PATH_AVR8}
-FILES_HALINIT += ${PATH_AVR8}/archInit.h
+FILES_HALINIT_HEADER += ${PATH_AVR8}/archInit.h
 FILES_HALDEFINE += ${PATH_AVR8}/define.h
+VAL_FUNCINIT := hal_archInit ${VAL_FUNCINIT}
 
 CFLAGS += -DARCH_avr8
 	
