@@ -7,18 +7,18 @@
  */
 
 /**
- * @file boardInit.h
- * @brief board init header declarations.
+ * @file avr8_init.h
+ * @brief AVR8 architecture initialization declarations.
  *
  */
 
-#ifndef ARDUINOMEGA_BOARDINIT_H
-#define ARDUINOMEGA_BOARDINIT_H
+#ifndef AVR8_AVR8_INIT_H
+#define AVR8_AVR8_INIT_H
 
 /* ============================================================================
  * Public API
  * ========================================================================== */
 
-void hal_boardInit(void);
+void hal_avr8Init(void);
 
-#endif // ARDUINOMEGA_BOARDINIT_H
+#endif // AVR8_AVR8_INIT_H

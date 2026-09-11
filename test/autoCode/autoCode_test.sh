@@ -69,7 +69,7 @@ caseBegin()
 	writeTags "${PATH_CASE}/tags.c"
 	printf '%s\n' "${PATH_CASE}/tags.c" > "${PATH_CASE}/tags.list"
 	: > "${PATH_CASE}/hal_init.list"
-	printf '%s\n' 'hal_archInit' 'hal_mcuInit' 'hal_boardInit' > "${PATH_CASE}/func_init.list"
+	printf '%s\n' 'hal_avr8Init' 'hal_atmega2560Init' 'hal_arduinoMegaInit' > "${PATH_CASE}/func_init.list"
 	: > "${PATH_CASE}/hal_define.list"
 	printf '%s\n' 'GPIO_SIGNAL_TEST' > "${PATH_CASE}/signals.gpio"
 	writeConfig
@@ -343,7 +343,7 @@ runParseTagTests()
 	runTagCase invalid_gpio "wrong token count"
 
 	caseBegin invalid_func_init
-	printf '%s\n' 'hal_archInit extra' > "${PATH_CASE}/func_init.list"
+	printf '%s\n' 'hal_avr8Init extra' > "${PATH_CASE}/func_init.list"
 	runTagCase invalid_func_init "wrong token count"
 
 	caseBegin missing_system_thread
@@ -377,7 +377,7 @@ runCompareReplaceTests()
 	expectSuccess initial_generation "${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
 	expectSuccess unchanged_generation "${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
 	logContains unchanged_generation "0 updated, 1 unchanged"
-	for VAL_FUNC in hal_archInit hal_mcuInit hal_boardInit
+	for VAL_FUNC in hal_avr8Init hal_atmega2560Init hal_arduinoMegaInit
 	do
 		if ! grep -F -q -- "${VAL_FUNC}();" "${PATH_CASE}/tags.c"; then
 			fail "generated init call missing for ${VAL_FUNC}"
