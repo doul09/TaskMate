@@ -1,4 +1,5 @@
-	autoCode test
+	add version control for autoCode
+	add tests for autoCode
 	replace autoCode immediate exits with error counting
 	upgrade autoCode line reading from file
 	refactor autoCode temporary file

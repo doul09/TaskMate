@@ -70,7 +70,7 @@ FILES_GIT_ALLOWED.${PATH_SRCS} = *.c *.h *.rc *.err *.mk *.gpio *.list *.awk
 FILES_GIT_ALLOWED.${PATH_SCRIPTS} = *.awk *.sh
 FILES_GIT_ALLOWED.${PATH_TEST} = *.mk *.sh
 FILES_GIT_ALLOWED = .clang-format .clang-tidy AGENTS.md\
-	audit_todo CHANGELOG LICENSE Makefile README.md
+	audit_todo CHANGELOG CHANGELOG_AUTOCODE_SYNTAX LICENSE Makefile README.md
 FILES_GIT_EXCLUDED = \
 	${FILE_TM_INFO}
 	

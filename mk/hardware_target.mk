@@ -17,7 +17,7 @@ VAL_TARGET ?= test1
 FILE_TARGET_MK = ${PATH_SRCS}/user/target/${VAL_TARGET}/target.mk
 
 .if !exists(${FILE_TARGET_MK})
-.error Target not found >>>${HWT}<<<
+.error Target not found >>>${VAL_TARGET}/target.mk<<<
 .endif
 
 .include "${FILE_TARGET_MK}"
