@@ -67,6 +67,7 @@ int main(void)
 	hal_avr8Init();
 	hal_atmega2560Init();
 	hal_arduinoMegaInit();
+	targetInit();
 
 // clang-format on
 	// [/tag]
