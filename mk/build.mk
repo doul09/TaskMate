@@ -76,8 +76,8 @@ ${FILE_PROGRAMS_CHECK_STAMP}: ${FILE_PROGRAMS_LIST} ${FILE_PROGRAMS_CHECK_SCRIPT
 	@printf "${COLOUR_RESET}"
 .endif
 
-all: ${FILE_GIT_IGNORE} _hardware_target_check _system_critical_check \
-	_autocode _dependency \
+all: ${FILE_GIT_IGNORE} _hardware_target_check _system_critical_check _autocode .WAIT \
+	_architecture_include_check .WAIT _dependency \
 	${FILE_TARGET} _mcu_memory_data _cloc_data
 #help [global] TaskMate build.
 	@printf "\n%sBuild complete%s\n\n" \
