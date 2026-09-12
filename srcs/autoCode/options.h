@@ -28,13 +28,13 @@
 typedef struct
 {
 	unsigned int error_count;
-	char file_errors_list[AUTOCODE_BUFFER_SIZE];
-	char file_initrc_list[AUTOCODE_BUFFER_SIZE];
-	char file_parsetag_list[AUTOCODE_BUFFER_SIZE];
-	char file_halinit_list[AUTOCODE_BUFFER_SIZE];
-	char file_funcinit_list[AUTOCODE_BUFFER_SIZE];
-	char file_haldefine_list[AUTOCODE_BUFFER_SIZE];
-	char file_gpio_signals[AUTOCODE_BUFFER_SIZE];
+	char file_errors_list[AC_BUFFER_SIZE];
+	char file_initrc_list[AC_BUFFER_SIZE];
+	char file_parsetag_list[AC_BUFFER_SIZE];
+	char file_halinit_list[AC_BUFFER_SIZE];
+	char file_funcinit_list[AC_BUFFER_SIZE];
+	char file_haldefine_list[AC_BUFFER_SIZE];
+	char file_gpio_signals[AC_BUFFER_SIZE];
 
 } options_list_t;
 

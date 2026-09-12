@@ -30,8 +30,8 @@
 
 typedef struct
 {
-	char name[AUTOCODE_BUFFER_SIZE];
-	char message[AUTOCODE_BUFFER_SIZE];
+	char name[AC_BUFFER_SIZE];
+	char message[AC_BUFFER_SIZE];
 	err_level_t level;
 } error_item_t;
 
