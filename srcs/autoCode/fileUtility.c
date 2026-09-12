@@ -103,8 +103,8 @@ int fileCmpReplaceAll(void)
 
 static int fileCmpReplace(file_t *file_old, file_t *file_new)
 {
-	char old[AUTOCODE_BUFFER_SIZE];
-	char new[AUTOCODE_BUFFER_SIZE];
+	char old[AC_BUFFER_SIZE];
+	char new[AC_BUFFER_SIZE];
 	bool same = true;
 
 	if( fseek(file_old->stream, 0L, SEEK_SET) != 0 )

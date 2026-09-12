@@ -36,6 +36,18 @@ hardware-specific implementation details.
 
 ---
 
+### ● `AC_` — autoCode constants and enumerations
+
+**Build-time code-generation definitions owned by autoCode**
+
+- Identifies constants and enumeration values used by the autoCode tool
+- Keeps build-time generator definitions distinct from generated TaskMate contracts
+- Does not apply to generated symbols, which retain the prefix of their owning subsystem
+
+👉 This prefix is reserved for definitions internal to the **autoCode generator**.
+
+---
+
 ### ● `sc_` — Task-visible API boundary (system calls)
 
 **Controlled and limited API access from tasks to system functionality**

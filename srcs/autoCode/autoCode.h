@@ -19,7 +19,7 @@
  * Constants
  * ========================================================================== */
 
-#define AUTOCODE_BUFFER_SIZE 256
+#define AC_BUFFER_SIZE 256
 
 /* ============================================================================
  * Includes
@@ -62,8 +62,8 @@ static inline bool autoCodeBufferStringFits(const char *string, const size_t buf
 #define AUTOCODE_MSG_ERROR(format, ...)                                                          \
 	do {                                                                                         \
 		fprintf(stderr, "[%s:%d] error : " format "\n", __FILE_NAME__, __LINE__, ##__VA_ARGS__); \
-		perror("\t"); \
-		autoCodeExit(AC_INCREMENT); \
+		perror("\t");                                                                            \
+		autoCodeExit(AC_INCREMENT);                                                              \
 	} while( 0 )
 
 #define AUTOCODE_MSG_INFO(format, ...) \
