@@ -11,9 +11,8 @@ Commits `c843372` and `35f329d` moved boot work to `TaskMate.c`, then staged sta
 
 ## Current implementation
 autoCode always registers the core-level `system` thread. The default `test1` composition also
-registers the service-level `scli` thread; `test_noscli` declares a composition without it but does
-not currently pass Make evaluation. Every selected service has a fixed stack and declares itself
-initialized through sysCall at entry.
+registers the service-level `scli` thread; `test_noscli` selects the same hardware without it. Every
+selected service has a fixed stack and declares itself initialized through sysCall at entry.
 
 The system service starts drivers one run level at a time, triggers I2C discovery, stores the RTC
 startup date, then waits for driver and thread readiness before enabling the next level. It reads

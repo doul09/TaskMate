@@ -8,7 +8,8 @@ After tag `v0.28`, the source split made `HWT -> BOARD -> MCU -> ARCH` explicit.
 moved configuration and validated targets; `v0.29` (`9fc9513`) consolidated build rules.
 
 Header allow-list parsing, warnings, and role-based variable names were then tightened around the
-current AVR build pipeline. Commit `a2a7c65` added the integrated autoCode regression targets.
+current AVR build pipeline. Commit `a2a7c65` added the integrated autoCode regression targets;
+`e1d320a` made startup-header and startup-function lists separate generated inputs.
 
 ## Current implementation
 Configuration declares the default `test1` target and a `test_noscli` composition for the same
@@ -18,6 +19,9 @@ target-owned module declarations are discovered separately and combined by autoC
 The normal build checks tools and the hardware stack, regenerates autoCode, and verifies guarded
 headers. It then collects dependencies, builds AVR firmware, and reports memory use and line counts.
 Target artefacts, generated lists, logs, and stamps remain under `build/`.
+
+Each selected target, board, MCU, and architecture fragment contributes its startup header and
+function. autoCode emits their includes and calls in architecture-to-target initialization order.
 
 Generic driver headers in `interfaces/` are explicit autoCode dependencies. The header checker scans
 sources against `conf/header_allow.conf`, while compile-time guards protect critical headers.
@@ -32,7 +36,7 @@ ASan/UBSan build available for host-side memory and undefined-behaviour checks.
 - AVR builds and host autoCode tests use broad warnings and explicit diagnostic reporting.
 
 ### Remaining weaknesses
-- The no-SCLI target overrides the test path, so Make stops before generation or even `clean`.
+- Invalid-target diagnostics still name the obsolete selector instead of the active target variable.
 - Unsorted source and `*.rc` discovery can make ordering depend on filesystem enumeration.
 - Build metadata varies with time and Git state, while tool versions are not pinned.
 - Only one hardware stack exercises portability; the build also assumes BSD and Unix tooling.
