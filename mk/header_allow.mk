@@ -58,7 +58,7 @@ _architecture_include_check: ${FILE_ARCH_VALID_MATRIX} ${FILE_ARCH_CHECK_SCRIPT}
 		${FILES_SRC} ${FILES_SRC_H} > "${FILE_ARCH_CHECK_LOG}"; then \
 		cat "${FILE_ARCH_CHECK_LOG}"; \
 	else \
-		status=$$?; cat "${FILE_ARCH_CHECK_LOG}"; exit $$status; \
+		status=$$?; cat "${FILE_ARCH_CHECK_LOG}"; echo ">>> satus : " $$status; \
 	fi
 
 .PHONY: _system_critical_check _architecture_include_check

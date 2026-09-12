@@ -1,0 +1,4 @@
+v1.3	add autoCode version control
+v1.2 	add optional I2C address
+v1.1 	remove default run level
+v1 		first stable layout

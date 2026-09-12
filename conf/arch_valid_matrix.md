@@ -1,6 +1,6 @@
-# Achitecture validation matrix
+# Architecture validation matrix
 
-first column caller, first raw callie
+first column caller, first raw callee
 
 |            | hal | sysCore | sysCall | interfaces | services | tasks |
 | ---        | --- | ---     | ---     | ---        | ---      | ---   |
