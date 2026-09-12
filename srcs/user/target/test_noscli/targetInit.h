@@ -8,7 +8,7 @@
 
 /**
  * @file targetInit.h
- * @brief target init header declarations.
+ * @brief test_noscli init header declarations.
  *
  */
 

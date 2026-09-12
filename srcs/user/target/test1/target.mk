@@ -22,7 +22,7 @@ PATH_TEST1 = ${PATH_SRCS}/user/target/test1
 PATHS_SOURCES = ${PATH_TEST1}
 FILES_HALINIT_HEADER = ${PATH_TEST1}/targetInit.h
 FILES_HALDEFINE = ${PATH_TEST1}/define.h
-VAL_FUNCINIT =
+VAL_FUNCINIT = void targetInit
 
 FILE_GPIO_SIGNALS = ${PATH_TEST1}/signals.gpio
 .if !exists(${FILE_GPIO_SIGNALS})

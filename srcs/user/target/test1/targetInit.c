@@ -8,7 +8,7 @@
 
 /**
  * @file targetInit.c
- * @brief target init implementation.
+ * @brief test1 init implementation.
  *
  */
 
@@ -24,6 +24,8 @@
 /* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
+
+void targetInit(void){}
 
 void targetWireSignal(hal_signal_t *table, gpio_signal_t signal)
 {
