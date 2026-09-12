@@ -47,3 +47,18 @@ _system_critical_check:
 
 	@awk ${COLOURS_AWK} -v PATH_SOURCES=${PATH_SRCS} -v h_check_log=${FILE_H_CHECK_LOG} \
 		-f ${PATH_SCRIPTS}/header_allow.awk "${FILE_H_ALLOW_CONF}"
+
+# Check direct includes against the architecture matrix
+_architecture_include_check: ${FILE_ARCH_VALID_MATRIX} ${FILE_ARCH_CHECK_SCRIPT}
+	@printf "\n%sChecking architecture direct includes ...%s\n" \
+		"${COLOUR_TARGET_INFO}" "${COLOUR_RESET}"
+
+	@if awk -v matrix_file="${FILE_ARCH_VALID_MATRIX}" -v path_sources="${PATH_SRCS}" \
+		-f "${FILE_ARCH_CHECK_SCRIPT}" "${FILE_ARCH_VALID_MATRIX}" \
+		${FILES_SRC} ${FILES_SRC_H} > "${FILE_ARCH_CHECK_LOG}"; then \
+		cat "${FILE_ARCH_CHECK_LOG}"; \
+	else \
+		status=$$?; cat "${FILE_ARCH_CHECK_LOG}"; exit $$status; \
+	fi
+
+.PHONY: _system_critical_check _architecture_include_check

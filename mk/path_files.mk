@@ -55,15 +55,18 @@ PATHS_SOURCES += ${PATH_SRCS}/user/tasks
 FILE_AUTOCODE_LOG = ${PATH_LOGS}/autoCode_log
 FILE_RSYNC_LOG = ${PATH_LOGS}/rsync.log
 FILE_H_CHECK_LOG = ${PATH_LOGS}/headers_check.log
+FILE_ARCH_CHECK_LOG = ${PATH_LOGS}/architecture_check.log
 
 # Scripts
 FILE_H_ALLOW_CONF = ${PATH_CONF}/header_allow.conf
+FILE_ARCH_VALID_MATRIX = ${PATH_CONF}/arch_valid_matrix.md
+FILE_ARCH_CHECK_SCRIPT = ${PATH_SCRIPTS}/arch_include.awk
 
 # Git
 FILE_GIT_IGNORE = .gitignore
 PATHS_GIT_ALLOWED = \
 	${PATH_CONF} ${PATH_DOCS} ${PATH_MAKEFILES} ${PATH_SCRIPTS} ${PATH_SRCS} ${PATH_TEST}
-FILES_GIT_ALLOWED.${PATH_CONF} = *.conf
+FILES_GIT_ALLOWED.${PATH_CONF} = *.conf *.md
 FILES_GIT_ALLOWED.${PATH_DOCS} = *.c *.md *.txt *.png *.jpg Doxyfile
 FILES_GIT_ALLOWED.${PATH_MAKEFILES} = *.mk *
 FILES_GIT_ALLOWED.${PATH_SRCS} = *.c *.h *.rc *.err *.mk *.gpio *.list *.awk
