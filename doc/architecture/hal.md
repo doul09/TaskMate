@@ -18,19 +18,20 @@ The only implemented stack is `avr8 / atmega2560 / arduinoMega`, selected by `te
 - reusable drivers implement the AMC2004 LCD and ZS042 RTC contracts.
 
 Public HAL headers select architecture or MCU mechanisms. Generic driver APIs come from neutral
-interfaces and are bound by target sources and generated includes. Before scheduling, system startup
-initializes USART, HAL hooks, and GPIO. Once scheduled, the system service starts other drivers by
-run level through syscalls and checks their running state before advancing.
+interfaces and are bound by target sources and generated includes. Before scheduling, generated
+calls initialize architecture, MCU, board, then target hooks before logical GPIO initialization.
+USART still starts earlier as the boot-log path. Once scheduled, the system service starts other
+drivers by run level through syscalls and checks their running state before advancing.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
 - CPU context, interrupts, timers, and registers remain inside target-specific code.
 - Public selectors reject unavailable mechanisms at compile time.
+- The build-selected startup order is explicit, generated, and covered by host tests.
 - Registered drivers share one bounded life-cycle and status contract.
-- Static generated registration keeps allocation and dispatch deterministic.
 
 ### Remaining weaknesses
 - Driver capability requirements remain implicit in selected sources and `init.rc` names.
-- Startup hooks are empty; USART and the scheduler timer still follow special pre-service paths.
+- Startup hooks are empty; USART and scheduler timers still follow special initialization paths.
 - Start requests discard driver results, and startup cannot unwind a partial hardware state.
 - Polling, synchronous I/O, AVR frame assumptions, and ABI validation remain hardware risks.
