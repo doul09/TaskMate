@@ -1,3 +1,5 @@
+!set_version_major 1
+!set_version_minor 3
 # system init.rc
 
 timerSched -type driver -run none
@@ -5,4 +7,3 @@ timerSTC -type driver -run core
 usart -type driver -run none
 
 system -type service -run core
-
