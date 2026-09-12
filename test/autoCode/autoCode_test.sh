@@ -17,6 +17,11 @@ FILE_AUTOCODE=$2
 PATH_WORK_ROOT=$3
 VAL_TEST_COUNT=0
 
+writeInitrcVersion()
+{
+	printf '%s\n' '!set_version_major 1' '!set_version_minor 3'
+}
+
 fail()
 {
 	printf 'autoCode test failure: %s\n' "$1" >&2
@@ -64,7 +69,8 @@ caseBegin()
 	mkdir -p "${PATH_CASE}" || fail "cannot create ${PATH_CASE}"
 	printf '%s\n' 'ERR_TEST "" FLOW' > "${PATH_CASE}/errors.err"
 	printf '%s\n' "${PATH_CASE}/errors.err" > "${PATH_CASE}/errors.list"
-	printf '%s\n' 'system -type service -run core' > "${PATH_CASE}/init.rc"
+	writeInitrcVersion > "${PATH_CASE}/init.rc"
+	printf '%s\n' 'system -type service -run core' >> "${PATH_CASE}/init.rc"
 	printf '%s\n' "${PATH_CASE}/init.rc" > "${PATH_CASE}/initrc.list"
 	writeTags "${PATH_CASE}/tags.c"
 	printf '%s\n' "${PATH_CASE}/tags.c" > "${PATH_CASE}/tags.list"
@@ -237,7 +243,60 @@ runInitrcTests()
 	expectFailure missing_initrc_file "opening file" \
 		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
 
+	caseBegin missing_initrc_version
+	printf '%s\n' 'system -type service -run core' > "${PATH_CASE}/init.rc"
+	expectFailure missing_initrc_version "first init.rc line" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin empty_initrc
+	: > "${PATH_CASE}/init.rc"
+	expectFailure empty_initrc "missing !set_version_major 1" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin comment_before_initrc_version
+	printf '%s\n' '# version must be the physical file header' > "${PATH_CASE}/init.rc"
+	writeInitrcVersion >> "${PATH_CASE}/init.rc"
+	expectFailure comment_before_initrc_version "first init.rc line" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin missing_minor_initrc_version
+	printf '%s\n' '!set_version_major 1' > "${PATH_CASE}/init.rc"
+	expectFailure missing_minor_initrc_version "missing !set_version_minor 3" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin module_before_minor_initrc_version
+	printf '%s\n' '!set_version_major 1' 'system -type service -run core' \
+		> "${PATH_CASE}/init.rc"
+	expectFailure module_before_minor_initrc_version "second init.rc line" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin wrong_major_initrc_version
+	printf '%s\n' '!set_version_major 0' '!set_version_minor 3' \
+		> "${PATH_CASE}/init.rc"
+	expectFailure wrong_major_initrc_version "unsupported init.rc major syntax version" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin wrong_minor_initrc_version
+	printf '%s\n' '!set_version_major 1' '!set_version_minor 2' \
+		> "${PATH_CASE}/init.rc"
+	expectFailure wrong_minor_initrc_version "unsupported init.rc minor syntax version" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin wrong_initrc_version_order
+	printf '%s\n' '!set_version_minor 3' '!set_version_major 1' \
+		> "${PATH_CASE}/init.rc"
+	expectFailure wrong_initrc_version_order "first init.rc line" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
+	caseBegin late_initrc_version
+	writeInitrcVersion > "${PATH_CASE}/init.rc"
+	printf '%s\n' 'system -type service -run core' '!set_version_minor 3' \
+		>> "${PATH_CASE}/init.rc"
+	expectFailure late_initrc_version "init.rc version command outside header" \
+		"${FILE_AUTOCODE}" "${PATH_CASE}/autoCode.conf"
+
 	caseBegin malformed_initrc
+	writeInitrcVersion > "${PATH_CASE}/init.rc"
 	printf '%s\n' \
 		'system -type service -run core' \
 		'few -type user' \
@@ -252,7 +311,7 @@ runInitrcTests()
 		'no_type -run user -run user' \
 		'i2c_multi -type driver -i2c 1 -i2c 2' \
 		'i2c_thread -type user -run user -i2c 1' \
-		'unterminated -type "user -run user' > "${PATH_CASE}/init.rc"
+		'unterminated -type "user -run user' >> "${PATH_CASE}/init.rc"
 	VAL_INDEX=0
 	while [ "${VAL_INDEX}" -le 256 ]
 	do
@@ -347,7 +406,8 @@ runParseTagTests()
 	runTagCase invalid_func_init "wrong token count"
 
 	caseBegin missing_system_thread
-	printf '%s\n' 'task -type user -run user' > "${PATH_CASE}/init.rc"
+	writeInitrcVersion > "${PATH_CASE}/init.rc"
+	printf '%s\n' 'task -type user -run user' >> "${PATH_CASE}/init.rc"
 	runTagCase missing_system_thread "thread system was not found"
 
 	caseBegin unterminated_tag_line

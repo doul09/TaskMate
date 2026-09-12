@@ -18,13 +18,109 @@
 
 #include "parseInitrc.h"
 
+#include <errno.h>
+
 #include "fileUtility.h"
 #include "initrcCmdDispatch.h"
 #include "tokenizer.h"
 
 /* =============================================================================
+ * Declarations - Local types
+ * ===========================================================================*/
+
+typedef enum
+{
+	AC_INITRC_VERSION_EXPECT_MAJOR,
+	AC_INITRC_VERSION_EXPECT_MINOR,
+	AC_INITRC_VERSION_VALID,
+	AC_INITRC_VERSION_INVALID
+} initrc_version_state_t;
+
+/* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
+
+static bool initrcVersionValueMatches(const char *value, const unsigned long expected)
+{
+	char *end;
+
+	errno = 0;
+	const unsigned long parsed = strtoul(value, &end, 10);
+	if( (value[0] == 0) || (*end != 0) || (errno == ERANGE) ) { return false; }
+	return parsed == expected;
+}
+
+static bool initrcVersionHeaderParse(const tokenizer_t *tok,
+									 initrc_version_state_t *state,
+									 const char *initrc_name,
+									 const int file_line_number)
+{
+	if( *state == AC_INITRC_VERSION_EXPECT_MAJOR )
+	{
+		if( (file_line_number != 1) || (tok->count != 2) ||
+			(strcmp(tok->tokens[0], "!set_version_major") != 0) )
+		{
+			AUTOCODE_MSG_ERROR("first init.rc line [%s:%i] must be !set_version_major %i",
+							   initrc_name,
+							   file_line_number,
+							   AC_SYNTAX_VERSION_MAJOR);
+			*state = AC_INITRC_VERSION_INVALID;
+			return false;
+		}
+		if( initrcVersionValueMatches(tok->tokens[1], AC_SYNTAX_VERSION_MAJOR) == false )
+		{
+			AUTOCODE_MSG_ERROR("unsupported init.rc major syntax version [%s:%i] %s, expected %i",
+							   initrc_name,
+							   file_line_number,
+							   tok->tokens[1],
+							   AC_SYNTAX_VERSION_MAJOR);
+			*state = AC_INITRC_VERSION_INVALID;
+			return false;
+		}
+
+		*state = AC_INITRC_VERSION_EXPECT_MINOR;
+		return false;
+	}
+
+	if( *state == AC_INITRC_VERSION_EXPECT_MINOR )
+	{
+		if( (file_line_number != 2) || (tok->count != 2) ||
+			(strcmp(tok->tokens[0], "!set_version_minor") != 0) )
+		{
+			AUTOCODE_MSG_ERROR("second init.rc line [%s:%i] must be !set_version_minor %i",
+							   initrc_name,
+							   file_line_number,
+							   AC_SYNTAX_VERSION_MINOR);
+			*state = AC_INITRC_VERSION_INVALID;
+			return false;
+		}
+		if( initrcVersionValueMatches(tok->tokens[1], AC_SYNTAX_VERSION_MINOR) == false )
+		{
+			AUTOCODE_MSG_ERROR("unsupported init.rc minor syntax version [%s:%i] %s, expected %i",
+							   initrc_name,
+							   file_line_number,
+							   tok->tokens[1],
+							   AC_SYNTAX_VERSION_MINOR);
+			*state = AC_INITRC_VERSION_INVALID;
+			return false;
+		}
+
+		*state = AC_INITRC_VERSION_VALID;
+		return false;
+	}
+
+	if( *state == AC_INITRC_VERSION_INVALID ) { return false; }
+	if( (tok->count > 0) && (tok->tokens[0][0] == '!') )
+	{
+		AUTOCODE_MSG_ERROR("init.rc version command outside header [%s:%i] %s",
+						   initrc_name,
+						   file_line_number,
+						   tok->tokens[0]);
+		return false;
+	}
+
+	return true;
+}
 
 void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 {
@@ -41,6 +137,7 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 	tokenizer_t tok = {0};
 	module_item_t mod_tmp;
 	file_get_line_result_t line_result;
+	initrc_version_state_t version_state = AC_INITRC_VERSION_EXPECT_MAJOR;
 
 	while( (line_result = fileGetLine(&initrc_list, tok.line, sizeof(tok.line))) ==
 		   FILE_GET_LINE_SUCCESS )
@@ -48,6 +145,13 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 		// Start
 		file_line_number++;
 		if( tokenizer(&tok) != 0 ) { continue; }
+		const bool line_is_module =
+			initrcVersionHeaderParse(&tok, &version_state, initrc_name, file_line_number);
+		if( version_state == AC_INITRC_VERSION_INVALID ) { break; }
+		if( line_is_module == false )
+		{
+			continue;
+		}
 
 		// Process arguments
 		if( (tok.count > 0) && (strcmp(tok.tokens[0], "#") != 0) ) // skip empty line or comment
@@ -188,6 +292,18 @@ void parseInitrc(modules_database_t *data_base, const char *initrc_name)
 	if( line_result == FILE_GET_LINE_ERROR )
 	{
 		AUTOCODE_MSG_ERROR("reading file <%s> after line %i", initrc_list.name, file_line_number);
+	}
+	if( version_state == AC_INITRC_VERSION_EXPECT_MAJOR )
+	{
+		AUTOCODE_MSG_ERROR("missing !set_version_major %i on first line of init.rc file <%s>",
+						   AC_SYNTAX_VERSION_MAJOR,
+						   initrc_name);
+	}
+	if( version_state == AC_INITRC_VERSION_EXPECT_MINOR )
+	{
+		AUTOCODE_MSG_ERROR("missing !set_version_minor %i after init.rc major version <%s>",
+						   AC_SYNTAX_VERSION_MINOR,
+						   initrc_name);
 	}
 	tokenizerFree(&tok);
 	fileClose(&initrc_list, __FILE__, __LINE__);
