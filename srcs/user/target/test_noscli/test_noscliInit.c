@@ -7,7 +7,7 @@
  */
 
 /**
- * @file targetInit.c
+ * @file test_noscliInit.c
  * @brief test_noscli init implementation.
  *
  */
@@ -16,7 +16,7 @@
  * Declarations - Include
  * ===========================================================================*/
 
-#include "targetInit.h"
+#include "test_noscliInit.h"
 
 #include <avr/io.h>
 #include <stdbool.h>
@@ -25,7 +25,7 @@
  * Implementation - Functions
  * ===========================================================================*/
 
-void targetInit(void){}
+void test_noscliInit(void) {}
 
 void targetWireSignal(hal_signal_t *table, gpio_signal_t signal)
 {

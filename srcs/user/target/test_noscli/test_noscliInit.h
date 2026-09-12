@@ -7,7 +7,7 @@
  */
 
 /**
- * @file targetInit.h
+ * @file test_noscliInit.h
  * @brief test_noscli init header declarations.
  *
  */
@@ -23,5 +23,5 @@
  * Public API
  * ========================================================================== */
 
-void targetInit(void);
+void test_noscliInit(void);
 void targetWireSignal(hal_signal_t *table, gpio_signal_t signal);
