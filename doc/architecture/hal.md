@@ -12,14 +12,15 @@ Generic driver contracts later moved to `interfaces/`; HAL retained selection an
 ## Current implementation
 The only implemented stack is `avr8 / atmega2560 / arduinoMega`, selected by `test1`:
 
-- architecture code owns context, stack, interrupt, atomic, startup, and panic mechanisms;
+- architecture code owns context, stack, interrupt, atomic, startup, and halt mechanisms;
 - MCU code owns GPIO, I2C, USART, timers, startup, and AVR text/output support;
 - board code provides the Arduino Mega startup hook;
 - reusable drivers implement the AMC2004 LCD and ZS042 RTC contracts.
 
-Public HAL headers select architecture or MCU mechanisms. Generic driver APIs come from neutral
-interfaces and are bound by target sources and generated includes. Before scheduling, generated
-calls initialize architecture, MCU, board, then target hooks before logical GPIO initialization.
+Public HAL headers still select most architecture or MCU mechanisms. The halt contract and generic
+driver APIs come from neutral interfaces and are bound to selected target sources. Before
+scheduling, generated calls initialize architecture, MCU, board, then target hooks before logical
+GPIO initialization.
 USART still starts earlier as the boot-log path. Once scheduled, the system service starts other
 drivers by run level through syscalls and checks their running state before advancing.
 

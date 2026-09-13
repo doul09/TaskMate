@@ -7,36 +7,24 @@
  */
 
 /**
- * @file panic.c
- * @brief panic implementation
- *
+ * @file halt.c
+ * @brief AVR8 halt implementation.
  */
 
 /* =============================================================================
  * Declarations - Include
  * ===========================================================================*/
 
-#include "panic.h"
+#include "interfaces/hal_halt.h"
 
-#include "hal/arch/avr8/interrupt.h"
-#include "hal/public/tmlibc.h"
-#include "interfaces/drv_usart.h"
+#include <avr/interrupt.h>
 
 /* =============================================================================
  * Implementation - Functions
  * ===========================================================================*/
 
-void panic(tm_string_t msg)
+_Noreturn void hal_halt(void)
 {
-	hal_clearGlobalInterrupt();
-	hal_usartSendTXBuffer();
-	hal_usartWriteString(TM_STR("\nSYSTEM PANIC : "));
-	hal_usartSendTXBuffer();
-	hal_usartWriteString(msg);
-	hal_usartSendTXBuffer();
-	hal_usartWriteString(TM_STR(", halt."));
-	hal_usartSendTXBuffer();
-	while( 1 );
+	cli();
+	for( ;; ) {}
 }
-
-// the end, really.

@@ -14,6 +14,7 @@ The layer has no HAL, sysCore, sysCall, service, task, or target-implementation 
 
 - common GPIO types and generated logical signal identifiers;
 - generic LCD, RTC, I2C, timer, and USART driver contracts;
+- the terminal halt contract implemented by the selected architecture;
 - generated error codes and shared error levels;
 - string storage, options, bit helpers, run levels, and generated module limits.
 

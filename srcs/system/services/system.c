@@ -100,7 +100,7 @@ static void systemStart(void)
 	uint8_t run_level = sc_runLevelGet();
 	uint8_t incomplete_round_count = 0;
 
-	if( run_level != RL_RUN_CORE ) { sc_panic(TM_STR("invalid initial run level")); }
+	if( run_level != RL_RUN_CORE ) { sc_halt(); }
 	systemRunLevelStart(run_level);
 
 	while( 1 )
@@ -113,7 +113,7 @@ static void systemStart(void)
 			if( run_level == RL_RUN_USER ) { return; }
 
 			run_level++;
-			if( !sc_runLevelSet(run_level) ) { sc_panic(TM_STR("run level transition failed")); }
+			if( !sc_runLevelSet(run_level) ) { sc_halt(); }
 			systemRunLevelStart(run_level);
 			incomplete_round_count = 0;
 		}
@@ -122,7 +122,7 @@ static void systemStart(void)
 			incomplete_round_count++;
 			if( incomplete_round_count >= SYSTEM_RUN_LEVEL_RR_ROUND_COUNT )
 			{
-				sc_panic(TM_STR("run level initialization failed"));
+				sc_halt();
 			}
 		}
 	}
