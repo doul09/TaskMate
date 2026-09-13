@@ -18,12 +18,6 @@
  * Public API
  * ========================================================================== */
 
-/**
- * Stop execution permanently.
- *
- * The selected HAL implementation must leave the target in a deterministic state and must not
- * depend on scheduling, allocation, logging, or interrupts.
- */
 _Noreturn void hal_halt(void);
 
 #endif // INTERFACES_HAL_HALT_H

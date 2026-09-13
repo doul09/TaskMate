@@ -26,5 +26,5 @@
 _Noreturn void hal_halt(void)
 {
 	cli();
-	for( ;; ) {}
+	while( 1 ) {}
 }
