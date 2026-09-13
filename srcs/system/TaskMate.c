@@ -18,8 +18,8 @@
 
 #include <stdint.h>
 
-#include "hal/public/panic.h"
 #include "interfaces/drv_usart.h"
+#include "interfaces/hal_halt.h"
 #include "interfaces/tm_info.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
@@ -84,7 +84,5 @@ int main(void)
 	tm_schedulerInit();
 	tm_schedulerStart();
 
-	panic(TM_STR("\n[boot] system launch fail"));
-
-	return 0; // You should never get here
+	hal_halt();
 }

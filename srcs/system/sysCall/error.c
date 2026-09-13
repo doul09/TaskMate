@@ -20,7 +20,7 @@
 
 #include <stddef.h>
 
-#include "hal/public/panic.h"
+#include "interfaces/hal_halt.h"
 #include "tm_libc/tm_string.h"
 
 /* -----------------------------------------------
@@ -93,4 +93,4 @@ const tm_string_t *err_getMessage(uint8_t num)
 	return 0;
 }
 
-void sc_panic(tm_string_t message) { panic(message); }
+void sc_halt(void) { hal_halt(); }

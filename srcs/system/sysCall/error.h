@@ -40,6 +40,6 @@ typedef struct
  * ========================================================================== */
 
 const tm_string_t *err_getMessage(uint8_t num);
-void sc_panic(tm_string_t message);
+void sc_halt(void);
 
 #endif // SYSCALL_ERROR_H

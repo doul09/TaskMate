@@ -4,15 +4,15 @@ Date : 13 septembre 2026
 
 Branche auditée : `codex/remove-hal-public`
 
-Révision auditée : `95e0a1c`
+Révision de base : `04f0603`
 
 ## Objet, périmètre et verdict
 
 Cet audit décrit la feuille de route permettant de supprimer `srcs/hal/public/` au profit de
 contrats neutres dans `srcs/interfaces/` et d'une sélection explicite des implémentations au moment
-du build. Il couvre les huit en-têtes de la façade, leurs consommateurs, autoCode et les fragments
-BSD `bmake`. Il ne modifie pas le firmware et ne considère pas les sections inutilisées par le
-linker comme une sélection de sources.
+du build. Il couvre les sept en-têtes restants de la façade, leurs consommateurs, autoCode et
+les fragments BSD `bmake`. Il ne modifie pas le firmware et ne considère pas les sections
+inutilisées par le linker comme une sélection de sources.
 
 La suppression est **faisable sous conditions**, mais ce n'est pas un déplacement mécanique
 d'en-têtes. Les contrats de pilotes sont déjà correctement placés dans `interfaces/`. Les éléments
@@ -41,9 +41,9 @@ aucun en-tête sous `hal/`.
 
 ## État actuel de la façade
 
-`hal/public` contient huit en-têtes et possède quatorze consommateurs directs dans les sources des
-deux profils. Sept en-têtes choisissent une implémentation avec `ARCH_avr8` ou `MCU_atmega2560`. Le
-huitième, `define.h`, est une agrégation générée des définitions de la cible, de la carte, du MCU et
+`hal/public` contient sept en-têtes et possède onze consommateurs directs dans les sources des
+deux profils. Six en-têtes choisissent une implémentation avec `ARCH_avr8` ou `MCU_atmega2560`. Le
+septième, `define.h`, est une agrégation générée des définitions de la cible, de la carte, du MCU et
 de l'architecture.
 
 | En-tête public | Contenu sélectionné | Consommateurs ou rôle | Difficulté principale |
@@ -53,9 +53,8 @@ de l'architecture.
 | `define.h` | quatre `define.h` générés | type de pile dans `modules.h` | mélange de types arch, MCU et réglages |
 | `gpio.h` | `mcu/atmega2560/gpio.h` | sysCore et câblage des deux cibles | descripteur physique propre au MCU |
 | `interrupt.h` | `arch/avr8/interrupt.h` | démarrage de l'ordonnanceur | `sei`, `cli` et `reti` inline |
-| `panic.h` | `arch/avr8/panic.h` | boot, ordonnanceur et erreurs | chemin d'urgence hors services |
 | `stack.h` | `arch/avr8/stack.h` | démarrage de l'ordonnanceur | changement de `SP` non appelable seul |
-| `tmlibc.h` | `mcu/atmega2560/tmlibc.h` | formatage, chaînes, LCD et panique | macros `PROGMEM` et cycle avec USART |
+| `tmlibc.h` | `mcu/atmega2560/tmlibc.h` | formatage, chaînes et LCD | macros `PROGMEM` et cycle avec USART |
 
 La façade ne contient aucune implémentation `.c`. Son retrait ne sélectionnera donc rien à lui
 seul : il faut simultanément rendre le build responsable du choix de l'unique implémentation de
@@ -89,6 +88,7 @@ Le build choisit donc aujourd'hui une **arborescence**, pas une liste exacte d'i
 
 ## Points déjà prêts
 
+- Le contrat `hal_halt()` est dans `interfaces/` et son implémentation est sélectionnée avec AVR8.
 - Les six contrats de pilotes sont dans `interfaces/drv_*.h` et leurs implémentations les incluent
   directement.
 - autoCode génère les inclusions de pilotes depuis ces contrats neutres.
@@ -142,19 +142,18 @@ l'initialisation, la lecture ou l'écriture d'un signal logique ; le fichier cib
 build possède la table logique-vers-physique et les types MCU privés. Ainsi sysCore ne stocke plus
 de descripteur matériel et `targetWireSignal()` n'est plus exposé par un en-tête généré.
 
-### 4. Backend des chaînes et sortie d'urgence
+### 4. Backend des chaînes
 
 `hal/public/tmlibc.h` ne contient pas seulement deux prototypes : il définit `TM_STR*` avec
 `PSTR` et `PROGMEM`. Cette représentation économise la RAM AVR et ne peut pas être remplacée par des
-littéraux C ordinaires sans mesure. Le backend contient aussi le cycle déjà identifié entre lecture
-de chaîne et USART, tandis que `panic()` doit fonctionner avant l'ordonnanceur et interruptions
-coupées.
+littéraux C ordinaires sans mesure. Le backend contient encore le cycle déjà identifié entre lecture
+de chaîne et USART. Le remplacement de `panic()` par `hal_halt()` a déjà retiré de ce chemin les
+chaînes, le formatage et la sortie USART.
 
-Il faut séparer trois contrats : représentation portable de `tm_string_t`, accès sélectionné à la
-mémoire programme et sortie d'urgence par octets. Déplacer les macros AVR dans `interfaces/` serait
-une fausse suppression de la dépendance matérielle. La solution retenue devra conserver les chaînes
-en flash, éviter l'allocation, supprimer le cycle USART/backend et garder un chemin de panique
-synchrone indépendant de `sysCall`.
+Il faut séparer la représentation portable de `tm_string_t` de l'accès sélectionné à la mémoire
+programme. Déplacer les macros AVR dans `interfaces/` serait une fausse suppression de la dépendance
+matérielle. La solution retenue devra conserver les chaînes en flash, éviter l'allocation et
+supprimer le cycle USART/backend.
 
 ## Feuille de route proposée
 
@@ -190,16 +189,15 @@ observable et empêche qu'un deuxième backend soit compilé par accident.
 
 ### Étape 2 — Introduire les contrats neutres simples
 
-1. Créer dans `interfaces/` des contrats ciblés pour la panique et les opérations atomiques, puis
-   migrer leurs consommateurs sans inclure de fichier concret.
+1. Prendre le contrat `hal_halt()` comme modèle pour introduire le contrat atomique, puis migrer
+   ses consommateurs sans inclure de fichier concret.
 2. Déplacer uniquement prototypes, types portables et sémantique documentée ; laisser registres,
    attributs AVR, assembleur et tables physiques dans HAL.
 3. Faire compiler exactement une implémentation par contrat via les listes de l'étape 1.
 4. Mesurer les fonctions atomiques hors ligne et avec LTO : elles ne doivent ni rouvrir une fenêtre
    d'interruption ni augmenter la pile de façon non maîtrisée.
 
-`panic()` peut conserver son nom pendant la migration afin de ne pas mêler renommage d'API et
-changement d'architecture.
+`hal_halt()` remplace désormais `panic()` sans chaîne, journalisation ni dépendance USART.
 
 ### Étape 3 — Fermer les trois contrats structurants
 
@@ -209,8 +207,8 @@ changement d'architecture.
    l'allocation générée et `hal_threadContextInit()`.
 3. Déplacer le câblage GPIO physique dans le fichier de cible sélectionné et limiter le contrat
    partagé aux signaux logiques.
-4. Découpler le cœur de chaînes, l'accès RAM/ROM, USART et la sortie d'urgence avant de retirer le
-   dernier relais `tmlibc.h`.
+4. Découpler le cœur de chaînes, l'accès RAM/ROM et USART avant de retirer le dernier relais
+   `tmlibc.h`; une future panique enrichie reste hors de cette migration.
 5. Garder le contexte d'ISR et les registres volatils dans les sources privées AVR8/ATmega2560.
 
 Cette étape est le principal point de décision. Elle doit être découpée en changements indépendants
@@ -233,7 +231,7 @@ suivent les décisions des étapes 2 et 3.
 
 ### Étape 5 — Supprimer la façade et durcir les frontières
 
-1. Migrer les derniers consommateurs, puis supprimer les huit fichiers et le répertoire
+1. Migrer les derniers consommateurs, puis supprimer les sept fichiers restants et le répertoire
    `srcs/hal/public`.
 2. Retirer ce chemin de `PATHS_SOURCES`, `conf/header_allow.conf` et de toute documentation.
 3. Remplacer les autorisations fondées sur les anciens chemins par des gardes attachées aux nouveaux
@@ -263,14 +261,14 @@ La migration est terminée seulement si les conditions suivantes sont toutes sat
 - flash, RAM statique et pile restent dans les seuils fixés à l'étape 0 ;
 - le désassemblage confirme la séquence de contexte et l'absence de prologue/épilogue parasite ;
 - les essais Arduino Mega confirment préemption, atomiques, GPIO, USART, timers, LCD/RTC, boot et
-  panique.
+  halt terminal.
 
 ## Risques et séquencement des livraisons
 
 Le risque fonctionnel le plus élevé est le contexte, suivi des sections atomiques et de la mémoire
-programme. La sélection Make et la panique sont plus faciles à isoler. L'ordre de publication
+programme. La sélection Make et l'arrêt terminal minimal sont plus faciles à isoler. L'ordre de publication
 recommandé est donc : sélection explicite des sources, contrats simples, contexte/pile, GPIO,
-chaînes/panique, retrait autoCode, puis suppression finale.
+chaînes, retrait autoCode, puis suppression finale.
 
 Chaque livraison doit conserver un firmware constructible. Aucun changement ne doit introduire de
 dispatch à l'exécution, d'allocation dynamique, de table de callbacks en RAM ou de `#if` matériel
@@ -279,8 +277,8 @@ propriété de structure et de contrats jusqu'à validation sur une autre pile m
 
 ## Validation effectuée pour cet audit
 
-- lecture des huit en-têtes de `hal/public` et de leurs implémentations sélectionnées ;
-- recherche des quatorze consommateurs directs et des inclusions HAL concrètes ;
+- lecture des sept en-têtes restants de `hal/public` et de leurs implémentations sélectionnées ;
+- recherche des onze consommateurs directs et des inclusions HAL concrètes ;
 - inspection de `target.mk`, des fragments carte/MCU/architecture, de `sources.mk`,
   `path_files.mk`, `autoCode.mk` et des règles d'accès ;
 - inspection des contrats de pilotes, du GPIO, de la pile, des atomiques, du contexte et du backend

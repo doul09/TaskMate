@@ -20,7 +20,8 @@ Each declaration contains a symbolic name, quoted message, and one of four level
 
 The build sorts selected catalogues before generation. `FLOW` entries retain codes and levels but
 generate null message pointers; other entries retain program-memory text. Firmware code can resolve
-a message through sysCall, and system code can request panic there without including HAL panic.
+a message through sysCall, and system code can request a halt there without including a concrete HAL
+header.
 
 ## Well-built code and implementation weaknesses
 ### Strengths
@@ -33,4 +34,5 @@ a message through sysCall, and system code can request panic there without inclu
 - The public lookup exposes text but not severity, owner, or recovery policy.
 - Driver dependencies collapse underlying causes, so callers cannot inspect an error chain.
 - Catalogue size and several 8-bit consumers do not share a documented extension policy.
-- Panic is a direct halt path; no structured runtime record or tested safe-state escalation exists.
+- Halt is a direct terminal path; no structured runtime record or tested safe-state escalation
+  exists.

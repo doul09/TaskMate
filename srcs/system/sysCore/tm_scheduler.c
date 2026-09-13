@@ -22,14 +22,13 @@
 
 #include "hal/public/context.h"
 #include "hal/public/interrupt.h"
-#include "hal/public/panic.h"
 #include "hal/public/stack.h"
 #include "interfaces/drv_timerSched.h"
+#include "interfaces/hal_halt.h"
 #include "interfaces/tm_macros.h"
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
 #include "system/sysCore/modules.h"
-#include "tm_libc/tm_string.h"
 
 /* -----------------------------------------------
  * Private variables
@@ -108,15 +107,15 @@ static void *tm_schedulerRR(void *stack_pointer)
 	thread->stack_pointer = stack_pointer;
 
 	// Canary check
-	if( thread->canary_low != MOD_CANARY ) { panic(TM_STR("canary low 1")); }
-	if( thread->canary_high != MOD_CANARY ) { panic(TM_STR("canary high 1")); }
+	if( thread->canary_low != MOD_CANARY ) { hal_halt(); }
+	if( thread->canary_high != MOD_CANARY ) { hal_halt(); }
 
 	// Switch threads
 	thread = tm_schedulerSelectNext(mod_threadGetCurrent());
 
 	// Canary check
-	if( thread->canary_low != MOD_CANARY ) { panic(TM_STR("canary low 2")); }
-	if( thread->canary_high != MOD_CANARY ) { panic(TM_STR("canary high 2")); }
+	if( thread->canary_low != MOD_CANARY ) { hal_halt(); }
+	if( thread->canary_high != MOD_CANARY ) { hal_halt(); }
 
 	TM_CLEARBIT(thread->status, THREAD_BIT_YIELDED);
 	return thread->stack_pointer;
@@ -139,5 +138,5 @@ static mod_thread_item_t *tm_schedulerSelectNext(uint8_t current)
 		}
 	}
 
-	panic(TM_STR("no runnable thread"));
+	hal_halt();
 }

@@ -15,7 +15,7 @@ Four focused groups provide the boundary:
 - HAL calls mediate driver life cycle, LCD, RTC, I2C discovery, and USART RX;
 - module calls mediate run levels, threads, counters, readiness, and cooperative yield;
 - GPIO calls delegate logical signal operations to sysCore;
-- error calls expose generated messages and controlled panic.
+- error calls expose generated messages and a controlled halt.
 
 Run-level changes are atomic, monotonic, and bounded. Driver stages use generated callbacks.
 Readiness requires matching drivers to run and matching threads to declare initialization. The
