@@ -29,7 +29,6 @@
 #include "interfaces/tm_modules.h"
 #include "interfaces/tm_runLevel.h"
 #include "system/sysCore/modules.h"
-#include "system/sysCore/modules_list.h"
 #include "tm_libc/tm_string.h"
 
 /* -----------------------------------------------
