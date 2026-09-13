@@ -27,7 +27,7 @@ state == "outside" {
 	{
 		block_id++
 		state = "in_block"
-		block_has_pattern[block_id] = 0
+		block_has_source_file[block_id] = 0
 		block_has_allow[block_id] = 0
 		next
 	}
@@ -38,25 +38,25 @@ state == "outside" {
 state == "in_block" {
 	if (line ~ /^[ \t]*\}[ \t]*$/)
 	{
-		if (!block_has_pattern[block_id])
-			error("missing pattern in block")
+		if (!block_has_source_file[block_id])
+			error("missing source_file in block")
 		if (!block_has_allow[block_id])
 			error("missing allow block")
 		state = "outside"
 		next
 	}
 
-	if (line ~ /^[ \t]*pattern[ \t]+[^ \t{}][^{}]*$/)
+	if (line ~ /^[ \t]*source_file[ \t]+[^ \t{}][^{}]*$/)
 	{
-		if (block_has_pattern[block_id])
-			error("duplicate pattern in block")
+		if (block_has_source_file[block_id])
+			error("duplicate source_file in block")
 
-		pat = line
-		sub(/^[ \t]*pattern[ \t]+/, "", pat)
-		sub(/[ \t]+$/, "", pat)
+		file = line
+		sub(/^[ \t]*source_file[ \t]+/, "", file)
+		sub(/[ \t]+$/, "", file)
 
-		pattern[block_id] = pat
-		block_has_pattern[block_id] = 1
+		source_file[block_id] = file
+		block_has_source_file[block_id] = 1
 		next
 	}
 
@@ -105,8 +105,8 @@ END {
 
 	for (i = 1; i <= block_id; i++)
 	{
-		if (!block_has_pattern[i])
-			error_end("block " i ": missing pattern")
+		if (!block_has_source_file[i])
+			error_end("block " i ": missing source_file")
 		if (!block_has_allow[i])
 			error_end("block " i ": missing allow block")
 		if (allow_count[i] == 0)
@@ -117,7 +117,7 @@ END {
 	print "Headers allow check report" > h_check_log
 	for (i = 1; i <= block_id; i++)
 	{
-		check_pattern(i)
+		check_source_file(i)
 	}
 	if (scan_failed) exit 3
 }
@@ -140,14 +140,14 @@ function trim(t)
 	return t
 }
 
-function check_pattern(block, cmd, file, found_any)
+function check_source_file(block, cmd, file, found_any)
 {
 	found_any = 0
 
-	printf("Checking pattern %s ...\n", pattern[block])
-	printf("\nChecking pattern %s ...\n", pattern[block]) > h_check_log
+	printf("Checking source file %s ...\n", source_file[block])
+	printf("\nChecking source file %s ...\n", source_file[block]) > h_check_log
 
-	cmd = "grep -R -l \"" pattern[block] "\" \"" PATH_SOURCES "\" 2>/dev/null"
+	cmd = "grep -R -l \"" source_file[block] "\" \"" PATH_SOURCES "\" 2>/dev/null"
 
 	while ((cmd | getline file) > 0)
 	{
@@ -168,5 +168,5 @@ function check_pattern(block, cmd, file, found_any)
 	close(cmd)
 
 	if (!found_any)
-		printf("[ INFO ] No file matched pattern: %s\n", pattern[block])
+		printf("[ INFO ] No file matched source file: %s\n", source_file[block])
 }

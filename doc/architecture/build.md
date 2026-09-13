@@ -24,7 +24,7 @@ Each selected target, board, MCU, and architecture fragment contributes its star
 function. autoCode emits their includes and calls in architecture-to-target initialization order.
 
 Generic driver headers in `interfaces/` are explicit autoCode dependencies. The header checker scans
-sources against `conf/header_allow.conf`, while compile-time guards protect critical headers.
+sources against `conf/system_header_allow.conf`, while compile-time guards protect critical headers.
 Dedicated targets run autoCode by validation stage or as a complete black-box corpus, with an
 ASan/UBSan build available for host-side memory and undefined-behaviour checks.
 
