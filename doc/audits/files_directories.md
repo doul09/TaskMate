@@ -69,9 +69,9 @@ drivers et services non sélectionnés restent compilables avec une future chaî
 
 ### 4. Contrôle de frontières incomplet
 
-`conf/header_allow.conf` protège cinq en-têtes critiques. Le contrôle passe et apporte une défense
-utile, mais il ne représente pas l'ensemble des règles de couches. Il ne détecterait pas, par
-exemple, toute nouvelle dépendance `HAL -> services` ou `interfaces -> HAL`.
+`conf/system_header_allow.conf` protège cinq en-têtes critiques. Le contrôle passe et apporte une
+défense utile, mais il ne représente pas l'ensemble des règles de couches. Il ne détecterait pas,
+par exemple, toute nouvelle dépendance `HAL -> services` ou `interfaces -> HAL`.
 
 Le message « Checking forbidden system critical includes » doit donc être compris comme un contrôle
 ciblé, et non comme une validation exhaustive du graphe architectural.

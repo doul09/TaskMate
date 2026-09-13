@@ -58,7 +58,7 @@ FILE_H_CHECK_LOG = ${PATH_LOGS}/headers_check.log
 FILE_ARCH_CHECK_LOG = ${PATH_LOGS}/architecture_check.log
 
 # Scripts
-FILE_H_ALLOW_CONF = ${PATH_CONF}/header_allow.conf
+FILE_SYSTEM_HEADER_ALLOW_CONF = ${PATH_CONF}/system_header_allow.conf
 FILE_ARCH_VALID_MATRIX = ${PATH_CONF}/arch_valid_matrix.md
 FILE_ARCH_CHECK_SCRIPT = ${PATH_SCRIPTS}/arch_include.awk
 
